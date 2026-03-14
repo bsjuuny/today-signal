@@ -21,6 +21,7 @@ interface TokenCache {
 }
 
 let _token: TokenCache | null = null;
+let _tokenPromise: Promise<string> | null = null;
 
 function loadTokenCache(): TokenCache | null {
   try {
@@ -37,7 +38,7 @@ function saveTokenCache(cache: TokenCache) {
   } catch {}
 }
 
-/** OAuth 토큰 발급 (메모리 + 파일 캐시, 1분 제한 대응) */
+/** OAuth 토큰 발급 (메모리 + 파일 캐시, 1분 제한 및 동시 요청 대응) */
 async function getToken(): Promise<string> {
   // 1) 메모리 캐시
   if (_token && Date.now() < _token.expiresAt) return _token.value;
@@ -45,6 +46,21 @@ async function getToken(): Promise<string> {
   const cached = loadTokenCache();
   if (cached) { _token = cached; return _token.value; }
 
+  // 3) 중복 요청 방지 (Singleton Promise)
+  if (_tokenPromise) return _tokenPromise;
+
+  _tokenPromise = (async () => {
+    try {
+      return await _issueToken();
+    } finally {
+      _tokenPromise = null;
+    }
+  })();
+
+  return _tokenPromise;
+}
+
+async function _issueToken(retry = true): Promise<string> {
   const res = await fetch(`${BASE_URL}/oauth2/tokenP`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -55,12 +71,18 @@ async function getToken(): Promise<string> {
     }),
   });
 
+  const body = await res.text().catch(() => '');
   if (!res.ok) {
-    const body = await res.text().catch(() => '');
+    // 1분 제한 오류(EGW00133)인 경우 1회 대기 후 재시도
+    if (retry && body.includes('EGW00133')) {
+      console.warn(`[KIS] 토큰 발급 제한(1분) 감지됨. 65초 대기 후 재시도합니다...`);
+      await new Promise(r => setTimeout(r, 65000));
+      return await _issueToken(false);
+    }
     throw new Error(`KIS 토큰 발급 실패: HTTP ${res.status}\n  ${body.slice(0, 300)}`);
   }
-  const data = await res.json();
 
+  const data = JSON.parse(body);
   _token = {
     value: data.access_token,
     expiresAt: Date.now() + (data.expires_in - 60) * 1000,
