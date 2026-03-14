@@ -9,6 +9,9 @@ on:
       - master
   workflow_dispatch: # 수동 실행 허용
 
+permissions:
+  contents: write
+
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
@@ -36,6 +39,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase --autostash origin master
           git add public/data/today_signal.json
           git diff --staged --quiet && exit 0
           git commit -m "data: update stock signals [skip ci]"
