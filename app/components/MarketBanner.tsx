@@ -23,7 +23,17 @@ export default function MarketBanner({ market, date }: Props) {
   return (
     <div className="rounded-xl bg-zinc-900 border border-zinc-800 p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs text-zinc-500 font-medium">{dateStr} 장 마감</span>
+        <span className="text-xs font-medium flex items-center gap-1.5">
+          <span className="text-zinc-500">{dateStr}</span>
+          {market.isIntraday ? (
+            <span className="flex items-center gap-1 text-emerald-400">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              장중
+            </span>
+          ) : (
+            <span className="text-zinc-600">장 마감</span>
+          )}
+        </span>
         <span className="text-xs text-zinc-600">
           거래대금 {market.kospiVolume.toLocaleString()}억
         </span>

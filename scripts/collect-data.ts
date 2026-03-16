@@ -72,7 +72,14 @@ async function main() {
     process.exit(1);
   }
 
-  console.log('[collect-data] 데이터 수집 시작...');
+  // ── 장중 여부 판단 (KST 09:00~15:30) ──
+  const nowKST = new Date(Date.now() + 9 * 60 * 60 * 1000);
+  const kstHour = nowKST.getUTCHours();
+  const kstMin = nowKST.getUTCMinutes();
+  const kstMinutes = kstHour * 60 + kstMin;
+  const isIntraday = kstMinutes >= 9 * 60 && kstMinutes < 15 * 60 + 30;
+
+  console.log(`[collect-data] 데이터 수집 시작... (${isIntraday ? '장중' : '장마감'} 모드)`);
 
   // ── 1. 시장 지수 ──
   console.log('  [시장] 코스피/코스닥 지수 조회...');
@@ -86,6 +93,7 @@ async function main() {
     kospiChange: kospi.changePct,
     kosdaqChange: kosdaq.changePct,
     kospiVolume: Math.round(kospi.volume / 100000000),
+    isIntraday,
     fetchedAt: new Date().toISOString(),
   };
 

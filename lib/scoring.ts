@@ -40,9 +40,15 @@ export function scoreInstBuy(
   // ── 필수 조건 ──
   if (!isValidStock(stock)) return null;
   if (supply.instNetBuy <= 0) return null;           // 기관 순매수 > 0
-  if (stock.price <= stock.open) return null;         // 양봉 필수 (종가 > 시가)
-  if (stock.changePct < 0) return null;               // 플러스 마감
   if (stock.marketCap < 500) return null;             // 500억 이상
+  if (market.isIntraday) {
+    // 장중: 등락률 -1% 이상만 (급락 종목 제외)
+    if (stock.changePct < -1) return null;
+  } else {
+    // 장마감: 양봉 + 플러스 마감 필수
+    if (stock.price <= stock.open) return null;
+    if (stock.changePct < 0) return null;
+  }
 
   const reasons: ScoreReason[] = [];
   let score = 0;
@@ -67,9 +73,11 @@ export function scoreInstBuy(
     }
   }
 
-  // 강한 마감 (종가 = 당일 고가의 97% 이상)
-  if (stock.high > 0 && stock.price / stock.high >= 0.97) {
+  // 강한 마감/상승 (장마감: 고가 97% 이상 / 장중: 상승 중이면 가점)
+  if (!market.isIntraday && stock.high > 0 && stock.price / stock.high >= 0.97) {
     score += 10; reasons.push({ label: '강한 마감 (고가 근접)', score: 10 });
+  } else if (market.isIntraday && stock.changePct >= 1) {
+    score += 10; reasons.push({ label: `장중 상승 +${stock.changePct.toFixed(1)}%`, score: 10 });
   }
 
   score = Math.round(score * marketMultiplier(market));
@@ -149,11 +157,15 @@ export function scoreVolumeSurge(
   const volRatio = stock.avgVolume20 > 0 ? stock.volume / stock.avgVolume20 : 0;
   if (volRatio < 3) return null;                       // 평균 3배 이상 필수
 
-  if (stock.price <= stock.open) return null;           // 양봉 필수
-  if (stock.changePct < 1) return null;                 // +1% 이상 상승 필수
-
-  // 장 막판 밀리지 않음: 종가 ≥ 고가의 90%
-  if (stock.high > 0 && stock.price / stock.high < 0.90) return null;
+  if (market.isIntraday) {
+    // 장중: 거래량 폭발 + 소폭 상승이면 충분
+    if (stock.changePct < 0.5) return null;
+  } else {
+    // 장마감: 양봉 + +1% 이상 + 강한 마감 필수
+    if (stock.price <= stock.open) return null;
+    if (stock.changePct < 1) return null;
+    if (stock.high > 0 && stock.price / stock.high < 0.90) return null;
+  }
 
   const reasons: ScoreReason[] = [];
   let score = 0;
@@ -205,9 +217,16 @@ export function scoreStrongDemand(
 
   // ── STEP 2: 가격 패턴 확인 ──
   if (!isValidStock(stock)) return null;
-  if (stock.price <= stock.open) return null;              // 양봉 필수
-  if (stock.changePct < 1 || stock.changePct > 9) return null; // +1~9% (이미 상한가면 제외)
-  if (stock.high > 0 && stock.price / stock.high < 0.95) return null; // 강한 마감
+  if (stock.changePct > 9) return null;                    // 상한가 제외
+  if (market.isIntraday) {
+    // 장중: 급락 종목만 제외 (-1% 이하)
+    if (stock.changePct < -1) return null;
+  } else {
+    // 장마감: 양봉 + 강한 마감 필수
+    if (stock.price <= stock.open) return null;
+    if (stock.changePct < 1) return null;
+    if (stock.high > 0 && stock.price / stock.high < 0.95) return null;
+  }
 
   // ── STEP 3: 시장 컨텍스트 ──
   if (market.kospiChange < -0.5 && market.kosdaqChange < -0.5) return null;
@@ -243,8 +262,8 @@ export function scoreStrongDemand(
 
   score = Math.round(score * marketMultiplier(market));
 
-  // 60점 이상만 후보
-  if (score < 60) return null;
+  // 장중: 50점 이상 / 장마감: 60점 이상
+  if (score < (market.isIntraday ? 50 : 60)) return null;
 
   return {
     stock,
