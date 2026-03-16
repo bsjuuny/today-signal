@@ -34,7 +34,7 @@ export interface SupplyDemand {
 export interface MarketContext {
   kospiChange: number;    // 코스피 등락률 (%)
   kosdaqChange: number;   // 코스닥 등락률 (%)
-  kospiVolume: number;    // 코스피 거래대금 (억원)
+  kospiVolume: number;    // 코스피 거래대금 (억원, acml_tr_pbmn 기준)
   vix?: number;           // VIX (선택)
   isIntraday: boolean;    // 장중 여부 (09:00~15:30 KST)
   fetchedAt: string;

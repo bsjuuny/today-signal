@@ -145,6 +145,7 @@ export interface IndexQuote {
   change: number;
   changePct: number;
   volume: number;
+  tradingValue: number; // 거래대금 (원)
 }
 
 export async function getIndexQuote(code: '0001' | '1001'): Promise<IndexQuote> {
@@ -159,6 +160,7 @@ export async function getIndexQuote(code: '0001' | '1001'): Promise<IndexQuote> 
     change: parseFloat(o.bstp_nmix_prdy_vrss),
     changePct: parseFloat(o.bstp_nmix_prdy_ctrt),
     volume: parseInt(o.acml_vol),
+    tradingValue: parseInt(o.acml_tr_pbmn || '0'), // 누적거래대금 (원)
   };
 }
 

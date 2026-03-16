@@ -92,7 +92,7 @@ async function main() {
   const market: MarketContext = {
     kospiChange: kospi.changePct,
     kosdaqChange: kosdaq.changePct,
-    kospiVolume: Math.round(kospi.volume / 100000000),
+    kospiVolume: Math.round(kospi.tradingValue / 100000000), // 거래대금(원) → 억원
     isIntraday,
     fetchedAt: new Date().toISOString(),
   };
