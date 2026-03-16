@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import { StockSignal, SignalGrade } from '@/types/stock';
+import ProfitCalculator from './ProfitCalculator';
+import { Calculator, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Props {
   signal: StockSignal;
@@ -24,70 +27,99 @@ function scoreBarWidth(score: number) {
 }
 
 export default function SignalCard({ signal, rank }: Props) {
+  const [showCalculator, setShowCalculator] = useState(false);
   const grade = GRADE_STYLE[signal.grade];
   const changePct = signal.stock.changePct;
   const changeColor = changePct > 0 ? 'text-rose-400' : changePct < 0 ? 'text-blue-400' : 'text-zinc-400';
   const changeStr = `${changePct > 0 ? '+' : ''}${changePct.toFixed(2)}%`;
 
   return (
-    <div className="rounded-xl bg-zinc-900 border border-zinc-800 p-4 flex flex-col gap-3">
-      {/* 헤더 */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-xs font-bold text-zinc-600 tabular-nums shrink-0">#{rank}</span>
-          <div className="min-w-0">
-            <div className="font-bold text-white truncate">{signal.stock.name}</div>
-            <div className="text-xs text-zinc-500 font-mono">{signal.stock.code} · {signal.stock.market}</div>
+    <div className="rounded-xl bg-zinc-900 border border-zinc-800 flex flex-col overflow-hidden">
+      <div className="p-4 flex flex-col gap-3">
+        {/* 헤더 */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-xs font-bold text-zinc-600 tabular-nums shrink-0">#{rank}</span>
+            <div className="min-w-0">
+              <div className="font-bold text-white truncate">{signal.stock.name}</div>
+              <div className="text-xs text-zinc-500 font-mono">{signal.stock.code} · {signal.stock.market}</div>
+            </div>
+          </div>
+          <div className="flex flex-col items-end gap-1 shrink-0">
+            <span className={`text-xs font-bold px-2 py-0.5 rounded border ${grade.badge}`}>
+              {signal.grade}등급
+            </span>
+            <span className="text-xs font-bold text-zinc-300 tabular-nums">{signal.score}점</span>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1 shrink-0">
-          <span className={`text-xs font-bold px-2 py-0.5 rounded border ${grade.badge}`}>
-            {signal.grade}등급
-          </span>
-          <span className="text-xs font-bold text-zinc-300 tabular-nums">{signal.score}점</span>
-        </div>
-      </div>
 
-      {/* 점수 바 */}
-      <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
-        <div className={`h-full rounded-full ${grade.bar}`} style={{ width: scoreBarWidth(signal.score) }} />
-      </div>
-
-      {/* 가격 정보 */}
-      <div className="flex items-center justify-between">
-        <div>
-          <span className="font-mono font-bold text-white tabular-nums">
-            {signal.stock.price.toLocaleString('ko-KR')}원
-          </span>
-          <span className={`ml-2 text-sm font-semibold tabular-nums ${changeColor}`}>
-            {changeStr}
-          </span>
+        {/* 점수 바 */}
+        <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
+          <div className={`h-full rounded-full ${grade.bar}`} style={{ width: scoreBarWidth(signal.score) }} />
         </div>
-        <div className="text-xs text-zinc-600 tabular-nums">
-          {(signal.stock.volume / 10000).toFixed(0)}만주
-        </div>
-      </div>
 
-      {/* 분류 태그 + 이유 */}
-      <div className="flex flex-wrap gap-1.5">
-        <span className="text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">
-          {CATEGORY_LABEL[signal.category] ?? signal.category}
-        </span>
-        {signal.reasons.map((r, i) => (
-          <span
-            key={i}
-            className={`text-xs px-2 py-0.5 rounded border ${
-              r.direction === 'bullish'
-                ? 'bg-emerald-950/30 border-emerald-800/30 text-emerald-400'
-                : r.direction === 'bearish'
-                  ? 'bg-red-950/30 border-red-800/30 text-red-400'
-                  : 'bg-zinc-800 border-zinc-700 text-zinc-400'
+        {/* 가격 정보 */}
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="font-mono font-bold text-white tabular-nums">
+              {signal.stock.price.toLocaleString('ko-KR')}원
+            </span>
+            <span className={`ml-2 text-sm font-semibold tabular-nums ${changeColor}`}>
+              {changeStr}
+            </span>
+          </div>
+          <div className="text-xs text-zinc-600 tabular-nums">
+            {(signal.stock.volume / 10000).toFixed(0)}만주
+          </div>
+        </div>
+
+        {/* 분류 태그 + 이유 */}
+        <div className="flex flex-wrap gap-1.5">
+          <span className="text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">
+            {CATEGORY_LABEL[signal.category] ?? signal.category}
+          </span>
+          {signal.reasons.map((r, i) => (
+            <span
+              key={i}
+              className={`text-xs px-2 py-0.5 rounded border ${
+                r.direction === 'bullish'
+                  ? 'bg-emerald-950/30 border-emerald-800/30 text-emerald-400'
+                  : r.direction === 'bearish'
+                    ? 'bg-red-950/30 border-red-800/30 text-red-400'
+                    : 'bg-zinc-800 border-zinc-700 text-zinc-400'
+              }`}
+            >
+              {r.label} {r.score > 0 ? `+${r.score}` : r.score}
+            </span>
+          ))}
+        </div>
+
+        {/* 푸터 액션 */}
+        <div className="pt-2 border-t border-zinc-800/50 mt-1 flex justify-end">
+          <button
+            onClick={() => setShowCalculator(!showCalculator)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              showCalculator 
+                ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' 
+                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
             }`}
           >
-            {r.label} {r.score > 0 ? `+${r.score}` : r.score}
-          </span>
-        ))}
+            <Calculator size={14} />
+            수익 계산기
+            {showCalculator ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+        </div>
       </div>
+
+      {/* 확장 영역: 계산기 */}
+      {showCalculator && (
+        <div className="p-4 bg-black/50 border-t border-zinc-800 animate-in slide-in-from-top duration-300">
+          <ProfitCalculator 
+            currentPrice={signal.stock.price} 
+            stockName={signal.stock.name} 
+          />
+        </div>
+      )}
     </div>
   );
 }
