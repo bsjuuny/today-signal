@@ -154,6 +154,9 @@ export async function getIndexQuote(code: '0001' | '1001'): Promise<IndexQuote> 
   const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-index-price?FID_COND_MRKT_DIV_CODE=U&FID_INPUT_ISCD=${code}`;
   const data = await fetchJson(url, h);
   const o = data.output as Record<string, string>;
+  if (!o.acml_tr_pbmn) {
+    console.warn(`  [KIS] acml_tr_pbmn 필드 누락 (code=${code}). output keys: ${Object.keys(o).join(', ')}`);
+  }
   return {
     name: o.hts_kor_isnm,
     currentPrice: parseFloat(o.bstp_nmix_prpr),
@@ -195,7 +198,7 @@ export async function getStockQuote(code: string): Promise<StockQuote> {
     high: parseInt(o.stck_hgpr),
     low: parseInt(o.stck_lwpr),
     volume: parseInt(o.acml_vol),
-    marketCap: Math.round(parseInt(o.hts_avls) / 100000000), // 원 → 억원
+    marketCap: parseInt(o.hts_avls || '0'), // 억원 (KIS API가 이미 억원 단위로 반환)
   };
 }
 

@@ -161,10 +161,10 @@ export function scoreVolumeSurge(
     // 장중: 거래량 폭발 + 소폭 상승이면 충분
     if (stock.changePct < 0.5) return null;
   } else {
-    // 장마감: 양봉 + +1% 이상 + 강한 마감 필수
+    // 장마감: 양봉 + +0.5% 이상 + 강한 마감 필수
     if (stock.price <= stock.open) return null;
-    if (stock.changePct < 1) return null;
-    if (stock.high > 0 && stock.price / stock.high < 0.90) return null;
+    if (stock.changePct < 0.5) return null;
+    if (stock.high > 0 && stock.price / stock.high < 0.85) return null;
   }
 
   const reasons: ScoreReason[] = [];
