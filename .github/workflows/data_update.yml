@@ -35,10 +35,11 @@ jobs:
         run: npm ci
 
       - name: Restore KIS token cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: .kis_token_cache.json
-          key: kis-token-cache
+          key: kis-token-${{ github.run_id }}
+          restore-keys: kis-token-
 
       - name: Collect stock signal data
         env:
@@ -51,7 +52,7 @@ jobs:
         if: always()
         with:
           path: .kis_token_cache.json
-          key: kis-token-cache
+          key: kis-token-${{ github.run_id }}
 
       - name: Commit updated data
         run: |
