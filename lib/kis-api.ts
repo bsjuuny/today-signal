@@ -111,10 +111,10 @@ const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 /** 가장 최근 거래일(평일) 날짜 반환 — YYYYMMDD */
 export function getLastTradingDate(): string {
   const d = new Date();
-  // KST 기준으로 오늘이 장 마감(16:00) 이전이면 전일로
   const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
-  const hour = kst.getUTCHours();
-  if (hour < 16) kst.setUTCDate(kst.getUTCDate() - 1);
+  const kstMinutes = kst.getUTCHours() * 60 + kst.getUTCMinutes();
+  // 장 시작 전(09:00 이전)에만 전일로 — 장중/장마감은 오늘 날짜 유지
+  if (kstMinutes < 9 * 60) kst.setUTCDate(kst.getUTCDate() - 1);
   // 토=6, 일=0 → 금요일로 이동
   const dow = kst.getUTCDay();
   if (dow === 0) kst.setUTCDate(kst.getUTCDate() - 2);
