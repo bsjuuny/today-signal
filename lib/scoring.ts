@@ -40,10 +40,10 @@ export function scoreInstBuy(
   // ── 필수 조건 ──
   if (!isValidStock(stock)) return null;
   if (supply.instNetBuy <= 0) return null;           // 기관 순매수 > 0
-  if (stock.marketCap < 500) return null;             // 500억 이상
+  if (stock.marketCap < 300) return null;             // 300억 이상
   if (market.isIntraday) {
-    // 장중: 등락률 -1% 이상만 (급락 종목 제외)
-    if (stock.changePct < -1) return null;
+    // 장중: 급락 종목 제외 (-3% 미만)
+    if (stock.changePct < -3) return null;
   } else {
     // 장마감: 양봉 + 플러스 마감 필수
     if (stock.price <= stock.open) return null;
@@ -103,8 +103,8 @@ export function scoreForeignBuy(
 ): StockSignal | null {
   // ── 필수 조건 ──
   if (!isValidStock(stock)) return null;
-  if (supply.foreignConsecutiveDays < 3) return null;  // 연속 3일+ 필수
-  if (stock.marketCap < 1000) return null;              // 1,000억 이상 (외국인 담을 규모)
+  if (supply.foreignConsecutiveDays < 2) return null;  // 연속 2일+ 필수
+  if (stock.marketCap < 500) return null;              // 500억 이상
 
   const reasons: ScoreReason[] = [];
   let score = 0;
@@ -155,7 +155,7 @@ export function scoreVolumeSurge(
   if (stock.marketCap < 200) return null;
 
   const volRatio = stock.avgVolume20 > 0 ? stock.volume / stock.avgVolume20 : 0;
-  if (volRatio < 3) return null;                       // 평균 3배 이상 필수
+  if (volRatio < 2) return null;                       // 평균 2배 이상 필수
 
   if (market.isIntraday) {
     // 장중: 거래량 폭발 + 소폭 상승이면 충분
@@ -175,6 +175,8 @@ export function scoreVolumeSurge(
     score += 30; reasons.push({ label: `거래량 평균 ${volRatio.toFixed(0)}배 폭발`, score: 30 });
   } else if (volRatio >= 3) {
     score += 20; reasons.push({ label: `거래량 평균 ${volRatio.toFixed(1)}배`, score: 20 });
+  } else {
+    score += 10; reasons.push({ label: `거래량 평균 ${volRatio.toFixed(1)}배`, score: 10 });
   }
 
   if (supply.instNetBuy > 0 && supply.foreignNetBuy > 0) {
@@ -211,7 +213,7 @@ export function scoreStrongDemand(
   // ── STEP 1: 수급 확인 (하나라도 해당) ──
   const hasInstAndVol = supply.instNetBuy > 0 &&
     stock.avgVolume20 > 0 && stock.volume / stock.avgVolume20 >= 2;
-  const hasForeignConsec = supply.foreignConsecutiveDays >= 3 && supply.instNetBuy > 0;
+  const hasForeignConsec = supply.foreignConsecutiveDays >= 2 && supply.instNetBuy > 0;
 
   if (!hasInstAndVol && !hasForeignConsec) return null;
 
@@ -224,8 +226,8 @@ export function scoreStrongDemand(
   } else {
     // 장마감: 양봉 + 강한 마감 필수
     if (stock.price <= stock.open) return null;
-    if (stock.changePct < 1) return null;
-    if (stock.high > 0 && stock.price / stock.high < 0.95) return null;
+    if (stock.changePct < 0) return null;
+    if (stock.high > 0 && stock.price / stock.high < 0.90) return null;
   }
 
   // ── STEP 3: 시장 컨텍스트 ──
@@ -248,7 +250,7 @@ export function scoreStrongDemand(
     score += 15; reasons.push({ label: `거래량 ${volRatio.toFixed(1)}배`, score: 15 });
   }
 
-  if (supply.foreignConsecutiveDays >= 3) {
+  if (supply.foreignConsecutiveDays >= 2) {
     score += 20; reasons.push({ label: `외국인 연속 ${supply.foreignConsecutiveDays}일`, score: 20 });
   }
 
@@ -262,8 +264,8 @@ export function scoreStrongDemand(
 
   score = Math.round(score * marketMultiplier(market));
 
-  // 장중: 50점 이상 / 장마감: 60점 이상
-  if (score < (market.isIntraday ? 50 : 60)) return null;
+  // 장중: 40점 이상 / 장마감: 50점 이상
+  if (score < (market.isIntraday ? 40 : 50)) return null;
 
   return {
     stock,

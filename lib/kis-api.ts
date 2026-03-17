@@ -323,22 +323,16 @@ export interface InvestorDaily {
 }
 
 export async function getInvestorHistory(code: string, days = 10): Promise<InvestorDaily[]> {
-  const today = new Date();
-  const from = new Date(today);
-  from.setDate(from.getDate() - days * 2); // 영업일 보정
-
-  const toStr = today.toISOString().slice(0, 10).replace(/-/g, '');
-  const fromStr = from.toISOString().slice(0, 10).replace(/-/g, '');
-
-  const h = await headers('FHKST03010100');
-  const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice`
-    + `?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=${code}`
-    + `&FID_INPUT_DATE_1=${fromStr}&FID_INPUT_DATE_2=${toStr}&FID_PERIOD_DIV_CODE=D&FID_ORG_ADJ_PRC=0`;
+  const h = await headers('FHKST01010900');
+  const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor`
+    + `?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=${code}`;
   const data = await fetchJson(url, h);
-
-  return ((data.output2 as Record<string, string>[]) ?? []).slice(0, days).map((o) => ({
+  // 장중에는 당일 entry의 투자자 필드가 빈 문자열 → 확정 데이터만 사용
+  const confirmed = ((data.output as Record<string, string>[]) ?? [])
+    .filter(o => o.orgn_ntby_qty !== '' || o.frgn_ntby_qty !== '');
+  return confirmed.slice(0, days).map((o) => ({
     date: o.stck_bsop_date,
-    instNetBuy: parseInt(o.inst_ntby_qty || '0'),
+    instNetBuy: parseInt(o.orgn_ntby_qty || '0'),
     foreignNetBuy: parseInt(o.frgn_ntby_qty || '0'),
   }));
 }

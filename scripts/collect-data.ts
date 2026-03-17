@@ -53,12 +53,15 @@ async function buildSupply(code: string, instNetBuy: number, foreignNetBuy: numb
   await sleep(150);
   const instConsec = calcConsecutiveDays(history, 'inst');
   const foreignConsec = calcConsecutiveDays(history, 'foreign');
+  // history[0]이 가장 최근 거래일 실제 수치 — 리스트 API가 0을 반환할 때 fallback
+  const actualInstNetBuy = instNetBuy !== 0 ? instNetBuy : (history[0]?.instNetBuy ?? 0);
+  const actualForeignNetBuy = foreignNetBuy !== 0 ? foreignNetBuy : (history[0]?.foreignNetBuy ?? 0);
   return {
     code,
-    instNetBuy,
-    instNetBuyAmt: 0, // 금액은 별도 조회 필요 시 추가
+    instNetBuy: actualInstNetBuy,
+    instNetBuyAmt: 0,
     instConsecutiveDays: instConsec,
-    foreignNetBuy,
+    foreignNetBuy: actualForeignNetBuy,
     foreignNetBuyAmt: 0,
     foreignConsecutiveDays: foreignConsec,
     foreignHoldPct: 0,
@@ -136,60 +139,44 @@ async function main() {
     }
   }
 
-  // 기관 순매수 처리
-  console.log('\n  [스코어링] 기관 순매수...');
+  // ── 3개 리스트 통합 → 종목별 instBuy/foreignBuy 머지 후 중복 제거 ──
+  const candidateMap = new Map<string, { code: string; name: string; price: number; changePct: number; volume: number; instBuy: number; foreignBuy: number }>();
+  for (const i of instList) {
+    candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: i.netBuyQty, foreignBuy: 0 });
+  }
+  for (const i of foreignList) {
+    const existing = candidateMap.get(i.code);
+    if (existing) existing.foreignBuy = i.netBuyQty;
+    else candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: i.netBuyQty });
+  }
+  for (const i of volList) {
+    if (!candidateMap.has(i.code)) {
+      candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: 0 });
+    }
+  }
+  const allCandidates = [...candidateMap.values()];
+
   const instSignals: StockSignal[] = [];
-  for (const item of instList) {
-    const { stock, supply } = await processItem(item.code, item.name, item.price, item.changePct, item.volume, item.netBuyQty, 0);
-    if (!stock || !supply) continue;
-    const signal = scoreInstBuy(stock, supply, market);
-    if (signal) {
-      instSignals.push(signal);
-      console.log(`    ✓ ${stock.name} (${stock.code}) 점수: ${signal.score}`);
-    }
-  }
-
-  // 외국인 매집 처리
-  console.log('\n  [스코어링] 외국인 매집...');
   const foreignSignals: StockSignal[] = [];
-  for (const item of foreignList) {
-    const { stock, supply } = await processItem(item.code, item.name, item.price, item.changePct, item.volume, 0, item.netBuyQty);
-    if (!stock || !supply) continue;
-    const signal = scoreForeignBuy(stock, supply, market);
-    if (signal) {
-      foreignSignals.push(signal);
-      console.log(`    ✓ ${stock.name} (${stock.code}) 점수: ${signal.score}`);
-    }
-  }
-
-  // 거래량 급등 처리
-  console.log('\n  [스코어링] 거래량 급등...');
   const volSignals: StockSignal[] = [];
-  for (const item of volList) {
-    const { stock, supply } = await processItem(item.code, item.name, item.price, item.changePct, item.volume, 0, 0);
-    if (!stock || !supply) continue;
-    const signal = scoreVolumeSurge(stock, supply, market);
-    if (signal) {
-      volSignals.push(signal);
-      console.log(`    ✓ ${stock.name} (${stock.code}) 점수: ${signal.score}`);
-    }
-  }
-
-  // 강한 수급 후보 (전체 후보에서)
-  console.log('\n  [스코어링] 강한 수급 후보...');
-  const allCandidates = [
-    ...instList.map(i => ({ code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: i.netBuyQty, foreignBuy: 0 })),
-    ...foreignList.map(i => ({ code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: i.netBuyQty })),
-  ];
   const strongSignals: StockSignal[] = [];
+
+  console.log('\n  [스코어링] 전체 후보 처리...');
   for (const item of allCandidates) {
     const { stock, supply } = await processItem(item.code, item.name, item.price, item.changePct, item.volume, item.instBuy, item.foreignBuy);
     if (!stock || !supply) continue;
-    const signal = scoreStrongDemand(stock, supply, market);
-    if (signal) {
-      strongSignals.push(signal);
-      console.log(`    ✓ ${stock.name} (${stock.code}) 점수: ${signal.score}`);
-    }
+
+    const inst = scoreInstBuy(stock, supply, market);
+    if (inst) { instSignals.push(inst); console.log(`    [기관] ✓ ${stock.name} (${stock.code}) 점수: ${inst.score}`); }
+
+    const foreign = scoreForeignBuy(stock, supply, market);
+    if (foreign) { foreignSignals.push(foreign); console.log(`    [외국인] ✓ ${stock.name} (${stock.code}) 점수: ${foreign.score}`); }
+
+    const vol = scoreVolumeSurge(stock, supply, market);
+    if (vol) { volSignals.push(vol); console.log(`    [거래량] ✓ ${stock.name} (${stock.code}) 점수: ${vol.score}`); }
+
+    const strong = scoreStrongDemand(stock, supply, market);
+    if (strong) { strongSignals.push(strong); console.log(`    [강한수급] ✓ ${stock.name} (${stock.code}) 점수: ${strong.score}`); }
   }
 
   // ── 4. 정렬 + TOP N 추출 ──
