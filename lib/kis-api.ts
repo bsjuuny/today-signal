@@ -224,8 +224,8 @@ export interface NetBuyItem {
 export async function getInstNetBuyTop(limit = 30): Promise<NetBuyItem[]> {
   const h = await headers('FHPTJ04400000');
   const date = getLastTradingDate();
-  const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/investor-trend-estimate`
-    + `?FID_COND_MRKT_DIV_CODE=J&FID_COND_SCR_DIV_CODE=20172&FID_INPUT_ISCD=0000`
+  const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/foreign-institution-total`
+    + `?FID_COND_MRKT_DIV_CODE=J&FID_COND_SCR_DIV_CODE=20171&FID_INPUT_ISCD=0001`
     + `&FID_DIV_CLS_CODE=0&FID_BLNG_CLS_CODE=1&FID_TRGT_CLS_CODE=111111111`
     + `&FID_TRGT_EXLS_CLS_CODE=000000&FID_INPUT_PRICE_1=&FID_INPUT_PRICE_2=`
     + `&FID_VOL_CNT=&FID_INPUT_DATE_1=${date}&FID_RANK_SORT_CLS_CODE=0&FID_ETC_CLS_CODE=0`;
@@ -240,8 +240,8 @@ export async function getInstNetBuyTop(limit = 30): Promise<NetBuyItem[]> {
     name: o.hts_kor_isnm,
     price: parseInt(o.stck_prpr || '0'),
     changePct: parseFloat(o.prdy_ctrt || '0'),
-    netBuyQty: parseInt(o.inst_ntby_qty || '0'),
-    netBuyAmt: parseInt(o.inst_ntby_tr_pbmn || '0'),
+    netBuyQty: parseInt(o.orgn_ntby_qty || '0'),
+    netBuyAmt: parseInt(o.orgn_ntby_tr_pbmn || '0'),
     volume: parseInt(o.acml_vol || '0'),
   }));
   return rows;
@@ -253,8 +253,8 @@ export async function getInstNetBuyTop(limit = 30): Promise<NetBuyItem[]> {
 export async function getForeignNetBuyTop(limit = 30): Promise<NetBuyItem[]> {
   const h = await headers('FHPTJ04400000');
   const date = getLastTradingDate();
-  const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/investor-trend-estimate`
-    + `?FID_COND_MRKT_DIV_CODE=J&FID_COND_SCR_DIV_CODE=20172&FID_INPUT_ISCD=0000`
+  const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/foreign-institution-total`
+    + `?FID_COND_MRKT_DIV_CODE=J&FID_COND_SCR_DIV_CODE=20171&FID_INPUT_ISCD=0001`
     + `&FID_DIV_CLS_CODE=0&FID_BLNG_CLS_CODE=2&FID_TRGT_CLS_CODE=111111111`
     + `&FID_TRGT_EXLS_CLS_CODE=000000&FID_INPUT_PRICE_1=&FID_INPUT_PRICE_2=`
     + `&FID_VOL_CNT=&FID_INPUT_DATE_1=${date}&FID_RANK_SORT_CLS_CODE=0&FID_ETC_CLS_CODE=0`;
