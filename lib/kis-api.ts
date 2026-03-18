@@ -123,10 +123,19 @@ export function getLastTradingDate(): string {
 }
 
 /** fetch + JSON 파싱 (오류 시 상세 메시지 포함) */
-async function fetchJson(url: string, h: Record<string, string>): Promise<Record<string, unknown>> {
+async function fetchJson(url: string, h: Record<string, string>, retry = true): Promise<Record<string, unknown>> {
   const res = await fetch(url, { headers: h });
   const text = await res.text();
   if (!res.ok) {
+    // 토큰 만료(EGW00123) → 캐시 무효화 후 1회 재시도
+    if (retry && text.includes('EGW00123')) {
+      console.warn('[KIS] 토큰 만료 감지 — 재발급 후 재시도');
+      _token = null;
+      try { fs.unlinkSync(TOKEN_CACHE_PATH); } catch {}
+      const trId = h['tr_id'] ?? '';
+      const newHeaders = await headers(trId);
+      return fetchJson(url, newHeaders, false);
+    }
     throw new Error(`KIS API 오류 ${res.status}: ${text.slice(0, 200)}`);
   }
   try {
