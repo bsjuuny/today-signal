@@ -17,22 +17,24 @@ interface Props {
 
 export default function TabBar({ active, onChange, counts }: Props) {
   return (
-    <div className="flex gap-1 bg-zinc-900 rounded-xl p-1 border border-zinc-800">
+    <div className="flex gap-1 bg-zinc-900 rounded-2xl p-1 border border-zinc-800">
       {TABS.map(({ key, label, emoji }) => (
         <button
           key={key}
           onClick={() => onChange(key)}
-          className={`flex-1 flex flex-col items-center gap-0.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
+          className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
             active === key
-              ? 'bg-zinc-700 text-white'
-              : 'text-zinc-500 hover:text-zinc-300'
+              ? 'bg-white text-zinc-900 shadow-sm'
+              : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
           }`}
         >
-          <span className="text-base leading-none">{emoji}</span>
-          <span>{label}</span>
+          <span className="text-sm leading-none">{emoji}</span>
+          <span className="mt-0.5">{label}</span>
           {counts[key] > 0 && (
-            <span className={`text-[10px] tabular-nums ${active === key ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              {counts[key]}개
+            <span className={`text-[10px] tabular-nums font-semibold ${
+              active === key ? 'text-zinc-500' : 'text-zinc-600'
+            }`}>
+              {counts[key]}
             </span>
           )}
         </button>
