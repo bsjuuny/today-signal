@@ -13,7 +13,7 @@ import fs from 'fs';
 import path from 'path';
 
 const BASE_URL = 'https://openapi.koreainvestment.com:9443';
-const TOKEN_CACHE_PATH = path.join(process.cwd(), '.kis_token_cache.json');
+const TOKEN_CACHE_PATH = path.join('c:/github', '.kis_token_cache.json');
 
 interface TokenCache {
   value: string;
@@ -168,10 +168,10 @@ export async function getIndexQuote(code: '0001' | '1001'): Promise<IndexQuote> 
   }
   return {
     name: o.hts_kor_isnm,
-    currentPrice: parseFloat(o.bstp_nmix_prpr),
-    change: parseFloat(o.bstp_nmix_prdy_vrss),
-    changePct: parseFloat(o.bstp_nmix_prdy_ctrt),
-    volume: parseInt(o.acml_vol),
+    currentPrice: parseFloat(o.bstp_nmix_prpr || '0'),
+    change: parseFloat(o.bstp_nmix_prdy_vrss || '0'),
+    changePct: parseFloat(o.bstp_nmix_prdy_ctrt || '0'),
+    volume: parseInt(o.acml_vol || '0'),
     tradingValue: parseInt(o.acml_tr_pbmn || '0'), // 누적거래대금 (원)
   };
 }
@@ -200,13 +200,13 @@ export async function getStockQuote(code: string): Promise<StockQuote> {
   return {
     code,
     name: o.hts_kor_isnm,
-    price: parseInt(o.stck_prpr),
-    priceChange: parseInt(o.prdy_vrss),
-    changePct: parseFloat(o.prdy_ctrt),
-    open: parseInt(o.stck_oprc),
-    high: parseInt(o.stck_hgpr),
-    low: parseInt(o.stck_lwpr),
-    volume: parseInt(o.acml_vol),
+    price: parseInt(o.stck_prpr || '0'),
+    priceChange: parseInt(o.prdy_vrss || '0'),
+    changePct: parseFloat(o.prdy_ctrt || '0'),
+    open: parseInt(o.stck_oprc || '0'),
+    high: parseInt(o.stck_hgpr || '0'),
+    low: parseInt(o.stck_lwpr || '0'),
+    volume: parseInt(o.acml_vol || '0'),
     marketCap: parseInt(o.hts_avls || '0'), // 억원 (KIS API가 이미 억원 단위로 반환)
   };
 }
