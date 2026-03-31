@@ -191,13 +191,14 @@ async function main() {
   const noNewForeignData = foreignList.length === 0 && foreignSignals.length === 0;
 
   const result: TodaySignalData = {
+    status: 'completed',
     date: today(),
     market,
     signals: {
-      instBuy: noNewInstData && prevData ? prevData.signals.instBuy : sort(instSignals).slice(0, 5),
-      foreignBuy: noNewForeignData && prevData ? prevData.signals.foreignBuy : sort(foreignSignals).slice(0, 5),
-      volumeSurge: sort(volSignals).slice(0, 5),
-      strongDemand: sort(strongSignals).slice(0, 10),
+      instBuy: noNewInstData && prevData ? prevData.signals.instBuy : sort(instSignals).slice(0, 10),
+      foreignBuy: noNewForeignData && prevData ? prevData.signals.foreignBuy : sort(foreignSignals).slice(0, 10),
+      volumeSurge: sort(volSignals).slice(0, 10),
+      strongDemand: sort(strongSignals).slice(0, 15),
     },
     updatedAt: new Date().toISOString(),
   };

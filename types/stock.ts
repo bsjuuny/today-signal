@@ -70,6 +70,7 @@ export interface StockSignal {
 
 /** 저장 데이터 구조 */
 export interface TodaySignalData {
+  status: 'completed' | 'generating' | 'failed'; // 🔔 상태 필드 추가 (시나리오 v3)
   date: string;             // YYYYMMDD
   market: MarketContext;
   signals: {

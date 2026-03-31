@@ -34,7 +34,7 @@ export default function SignalView({ data }: Props) {
     : tab === 'instBuy' ? signals.instBuy
     : tab === 'foreignBuy' ? signals.foreignBuy
     : signals.volumeSurge
-  ).slice(0, 10);
+  ).slice(0, 15);
 
   return (
     <div className="flex flex-col gap-6">
