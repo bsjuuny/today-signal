@@ -22,7 +22,8 @@ import {
 } from '../lib/scoring';
 import { StockItem, SupplyDemand, MarketContext, TodaySignalData, StockSignal } from '../types/stock';
 
-const OUTPUT_PATH = path.join(process.cwd(), 'public', 'data', 'today_signal.json');
+const OUTPUT_PATH       = path.join(process.cwd(), 'public', 'data', 'today_signal.json');
+const SHORT_BALANCE_PATH = path.join(process.cwd(), 'public', 'data', 'short_balance.json');
 
 function today(): string {
   return getLastTradingDate();
@@ -68,6 +69,67 @@ async function buildSupply(code: string, instNetBuy: number, foreignNetBuy: numb
   };
 }
 
+/** 전날 18:30에 수집된 공매도 잔고 감소 종목 로드 */
+function loadShortCoveringMap(): Map<string, { consecDays: number; totalDeclinePct: number; latestRatio: number }> {
+  const map = new Map<string, { consecDays: number; totalDeclinePct: number; latestRatio: number }>();
+  try {
+    if (!fs.existsSync(SHORT_BALANCE_PATH)) return map;
+    const data = JSON.parse(fs.readFileSync(SHORT_BALANCE_PATH, 'utf-8'));
+    // 날짜 체크: 어제 데이터여야 함 (오늘 날짜면 오늘 18:30 이전이므로 당일 데이터)
+    const today = getLastTradingDate();
+    if (!data?.date) return map;
+    // 최근 3거래일 이내 데이터만 유효로 인정
+    for (const item of (data.items ?? [])) {
+      if (item?.code) {
+        map.set(item.code, {
+          consecDays:     item.consecDays     ?? 0,
+          totalDeclinePct: item.totalDeclinePct ?? 0,
+          latestRatio:    item.latestRatio    ?? 0,
+        });
+      }
+    }
+    if (map.size > 0) {
+      console.log(`  [공매도] short_balance.json 로드: ${map.size}개 (기준일: ${data.date})`);
+    }
+  } catch (e) {
+    console.warn('  [공매도] short_balance.json 로드 실패:', (e as Error).message);
+  }
+  return map;
+}
+
+/** 공매도 잔고 감소 보너스 점수 계산 */
+function shortCoveringBonus(code: string, shortMap: Map<string, { consecDays: number; totalDeclinePct: number; latestRatio: number }>): { bonus: number; reason: string } | null {
+  const info = shortMap.get(code);
+  if (!info) return null;
+
+  let bonus = 0;
+  const parts: string[] = [];
+
+  // 연속 감소 일수
+  if (info.consecDays >= 5) {
+    bonus += 20; parts.push(`공매도 ${info.consecDays}일 연속 감소`);
+  } else if (info.consecDays >= 3) {
+    bonus += 12; parts.push(`공매도 ${info.consecDays}일 연속 감소`);
+  }
+
+  // 총 감소율
+  if (info.totalDeclinePct >= 20) {
+    bonus += 15; parts.push(`잔고 -${info.totalDeclinePct.toFixed(0)}% 급감`);
+  } else if (info.totalDeclinePct >= 10) {
+    bonus += 8; parts.push(`잔고 -${info.totalDeclinePct.toFixed(0)}% 감소`);
+  }
+
+  // 잔고 비율이 높을수록 숏 커버링 임팩트 큼
+  if (info.latestRatio >= 3) {
+    bonus += 10; parts.push(`잔고비율 ${info.latestRatio.toFixed(1)}% (고압력)`);
+  } else if (info.latestRatio >= 1) {
+    bonus += 5; parts.push(`잔고비율 ${info.latestRatio.toFixed(1)}%`);
+  }
+
+  if (bonus === 0) return null;
+  return { bonus, reason: parts.join(' + ') };
+}
+
 async function main() {
   if (!process.env.KIS_APP_KEY || !process.env.KIS_APP_SECRET) {
     console.error('[collect-data] 오류: KIS_APP_KEY, KIS_APP_SECRET 환경변수가 없습니다.');
@@ -83,6 +145,9 @@ async function main() {
   const isIntraday = kstMinutes >= 9 * 60 && kstMinutes < 15 * 60 + 30;
 
   console.log(`[collect-data] 데이터 수집 시작... (${isIntraday ? '장중' : '장마감'} 모드)`);
+
+  // 공매도 잔고 감소 맵 로드 (전날 18:30 수집분)
+  const shortMap = loadShortCoveringMap();
 
   // ── 1. 시장 지수 ──
   console.log('  [시장] 코스피/코스닥 지수 조회...');
@@ -166,17 +231,50 @@ async function main() {
     const { stock, supply } = await processItem(item.code, item.name, item.price, item.changePct, item.volume, item.instBuy, item.foreignBuy);
     if (!stock || !supply) continue;
 
+    // 공매도 잔고 감소 보너스
+    const scBonus = shortCoveringBonus(stock.code, shortMap);
+
     const inst = scoreInstBuy(stock, supply, market);
-    if (inst) { instSignals.push(inst); console.log(`    [기관] ✓ ${stock.name} (${stock.code}) 점수: ${inst.score}`); }
+    if (inst) {
+      if (scBonus) {
+        inst.score += scBonus.bonus;
+        inst.reasons.push({ label: scBonus.reason, score: scBonus.bonus });
+        console.log(`    [기관] ✓ ${stock.name} (${stock.code}) 점수: ${inst.score} (+${scBonus.bonus} 숏커버링)`);
+      } else {
+        console.log(`    [기관] ✓ ${stock.name} (${stock.code}) 점수: ${inst.score}`);
+      }
+      instSignals.push(inst);
+    }
 
     const foreign = scoreForeignBuy(stock, supply, market);
-    if (foreign) { foreignSignals.push(foreign); console.log(`    [외국인] ✓ ${stock.name} (${stock.code}) 점수: ${foreign.score}`); }
+    if (foreign) {
+      if (scBonus) {
+        foreign.score += scBonus.bonus;
+        foreign.reasons.push({ label: scBonus.reason, score: scBonus.bonus });
+      }
+      foreignSignals.push(foreign);
+      console.log(`    [외국인] ✓ ${stock.name} (${stock.code}) 점수: ${foreign.score}`);
+    }
 
     const vol = scoreVolumeSurge(stock, supply, market);
-    if (vol) { volSignals.push(vol); console.log(`    [거래량] ✓ ${stock.name} (${stock.code}) 점수: ${vol.score}`); }
+    if (vol) {
+      if (scBonus) {
+        vol.score += scBonus.bonus;
+        vol.reasons.push({ label: scBonus.reason, score: scBonus.bonus });
+      }
+      volSignals.push(vol);
+      console.log(`    [거래량] ✓ ${stock.name} (${stock.code}) 점수: ${vol.score}`);
+    }
 
     const strong = scoreStrongDemand(stock, supply, market);
-    if (strong) { strongSignals.push(strong); console.log(`    [강한수급] ✓ ${stock.name} (${stock.code}) 점수: ${strong.score}`); }
+    if (strong) {
+      if (scBonus) {
+        strong.score += scBonus.bonus;
+        strong.reasons.push({ label: scBonus.reason, score: scBonus.bonus });
+      }
+      strongSignals.push(strong);
+      console.log(`    [강한수급] ✓ ${stock.name} (${stock.code}) 점수: ${strong.score}`);
+    }
   }
 
   // ── 4. 정렬 + TOP N 추출 ──
@@ -206,9 +304,18 @@ async function main() {
   if (noNewInstData && prevData) console.log('  [기관] 데이터 없음 — 이전 신호 유지');
   if (noNewForeignData && prevData) console.log('  [외국인] 데이터 없음 — 이전 신호 유지');
 
-  // ── 5. 저장 ──
+  // ── 5. 저장 및 kis-trader 자동 전파 ──
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(result, null, 2));
+
+  try {
+    const KIS_DATA_DEST = path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today_signal.json');
+    fs.mkdirSync(path.dirname(KIS_DATA_DEST), { recursive: true });
+    fs.copyFileSync(OUTPUT_PATH, KIS_DATA_DEST);
+    console.log(`  [자동화] kis-trader로 today_signal.json 자동 전파 완료: ${KIS_DATA_DEST}`);
+  } catch (e) {
+    console.warn('  [자동화] kis-trader 전파 실패:', (e as Error).message);
+  }
 
   console.log(`\n[collect-data] 완료!`);
   console.log(`  기관 순매수: ${result.signals.instBuy.length}개`);

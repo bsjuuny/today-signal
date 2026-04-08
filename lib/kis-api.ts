@@ -381,4 +381,45 @@ export async function getAvgVolume20(code: string): Promise<number> {
   return Math.round(vols.reduce((a, b) => a + b, 0) / vols.length);
 }
 
+// ──────────────────────────────────────────────
+// 6. 공매도 잔고 히스토리 (종목별)
+// ──────────────────────────────────────────────
+export interface ShortBalanceDay {
+  date: string;   // YYYYMMDD
+  qty: number;    // 공매도 잔고 수량
+  ratio: number;  // 공매도 잔고 비율 (유동주식 대비 %)
+}
+
+/**
+ * 종목별 공매도 잔고 히스토리 조회
+ * TR: FHPST04830000
+ * 반환: 최신순 정렬 (history[0] = 가장 최근)
+ */
+export async function getShortBalanceHistory(code: string, days = 7): Promise<ShortBalanceDay[]> {
+  const h = await headers('FHPST04830000');
+  const today = new Date();
+  const from = new Date(today);
+  from.setDate(from.getDate() - days * 2); // 주말 포함 여유 있게
+  const toStr   = today.toISOString().slice(0, 10).replace(/-/g, '');
+  const fromStr = from.toISOString().slice(0, 10).replace(/-/g, '');
+
+  const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-daily-short-sale-status`
+    + `?FID_COND_MRKT_DIV_CODE=J`
+    + `&FID_INPUT_ISCD=${code}`
+    + `&FID_INPUT_DATE_1=${fromStr}`
+    + `&FID_INPUT_DATE_2=${toStr}`;
+
+  const data = await fetchJson(url, h);
+  const output = (data.output as Record<string, string>[]) ?? [];
+
+  return output
+    .slice(0, days)
+    .map(o => ({
+      date:  o.stck_bsop_date ?? '',
+      qty:   parseInt(o.shnu_rsdq  ?? '0'),
+      ratio: parseFloat(o.shnu_rsdg_rt ?? '0'),
+    }))
+    .filter(d => d.date && d.qty > 0);
+}
+
 export { sleep };
