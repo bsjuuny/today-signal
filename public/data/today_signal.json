@@ -2,28 +2,76 @@
   "status": "completed",
   "date": "20260427",
   "market": {
-    "kospiChange": 1.37,
-    "kosdaqChange": 1.2,
+    "kospiChange": 1.92,
+    "kosdaqChange": 1.58,
     "kospiVolume": 0,
     "isIntraday": true,
-    "fetchedAt": "2026-04-27T00:35:02.278Z"
+    "fetchedAt": "2026-04-27T01:05:02.162Z"
   },
   "signals": {
     "instBuy": [
       {
         "stock": {
+          "code": "042700",
+          "name": "한미반도체",
+          "market": "KOSPI",
+          "price": 332500,
+          "priceChange": 37000,
+          "changePct": 12.52,
+          "open": 305000,
+          "high": 339500,
+          "low": 302000,
+          "volume": 1732528,
+          "avgVolume20": 725434,
+          "marketCap": 316913
+        },
+        "supply": {
+          "code": "042700",
+          "instNetBuy": 70121,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 88506,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": 1,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 65,
+        "reasons": [
+          {
+            "label": "기관 연속 4일 순매수",
+            "score": 25
+          },
+          {
+            "label": "외국인 동반 순매수",
+            "score": 20
+          },
+          {
+            "label": "거래량 평균 2.4배",
+            "score": 10
+          },
+          {
+            "label": "장중 상승 +12.5%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "098460",
           "name": "고영",
           "market": "KOSPI",
-          "price": 43900,
-          "priceChange": 1600,
-          "changePct": 3.78,
+          "price": 43400,
+          "priceChange": 1100,
+          "changePct": 2.6,
           "open": 43250,
           "high": 44800,
           "low": 41650,
-          "volume": 8962831,
-          "avgVolume20": 4003529,
-          "marketCap": 30139
+          "volume": 11023258,
+          "avgVolume20": 4106541,
+          "marketCap": 29796
         },
         "supply": {
           "code": "098460",
@@ -48,11 +96,11 @@
             "score": 20
           },
           {
-            "label": "거래량 평균 2.2배",
+            "label": "거래량 평균 2.7배",
             "score": 10
           },
           {
-            "label": "장중 상승 +3.8%",
+            "label": "장중 상승 +2.6%",
             "score": 10
           }
         ],
@@ -63,15 +111,15 @@
           "code": "001360",
           "name": "삼성제약",
           "market": "KOSPI",
-          "price": 2250,
-          "priceChange": 75,
-          "changePct": 3.45,
+          "price": 2230,
+          "priceChange": 55,
+          "changePct": 2.53,
           "open": 2180,
-          "high": 2260,
+          "high": 2280,
           "low": 2060,
-          "volume": 1714537,
-          "avgVolume20": 2070736,
-          "marketCap": 2119
+          "volume": 2414646,
+          "avgVolume20": 2105741,
+          "marketCap": 2100
         },
         "supply": {
           "code": "001360",
@@ -96,7 +144,7 @@
             "score": 20
           },
           {
-            "label": "장중 상승 +3.5%",
+            "label": "장중 상승 +2.5%",
             "score": 10
           }
         ],
@@ -107,15 +155,15 @@
           "code": "092220",
           "name": "KEC",
           "market": "KOSPI",
-          "price": 2050,
-          "priceChange": 179,
-          "changePct": 9.57,
+          "price": 1960,
+          "priceChange": 89,
+          "changePct": 4.76,
           "open": 1872,
           "high": 2050,
           "low": 1812,
-          "volume": 28479855,
-          "avgVolume20": 26284558,
-          "marketCap": 4116
+          "volume": 40712498,
+          "avgVolume20": 26895709,
+          "marketCap": 3935
         },
         "supply": {
           "code": "092220",
@@ -140,7 +188,7 @@
             "score": 20
           },
           {
-            "label": "장중 상승 +9.6%",
+            "label": "장중 상승 +4.8%",
             "score": 10
           }
         ],
@@ -151,15 +199,15 @@
           "code": "002780",
           "name": "진흥기업",
           "market": "KOSPI",
-          "price": 1082,
-          "priceChange": 61,
-          "changePct": 5.97,
+          "price": 1066,
+          "priceChange": 45,
+          "changePct": 4.41,
           "open": 1083,
           "high": 1150,
-          "low": 1068,
-          "volume": 7455997,
-          "avgVolume20": 3153914,
-          "marketCap": 1574
+          "low": 1061,
+          "volume": 8355660,
+          "avgVolume20": 3198897,
+          "marketCap": 1551
         },
         "supply": {
           "code": "002780",
@@ -184,11 +232,11 @@
             "score": 20
           },
           {
-            "label": "거래량 평균 2.4배",
+            "label": "거래량 평균 2.6배",
             "score": 10
           },
           {
-            "label": "장중 상승 +6.0%",
+            "label": "장중 상승 +4.4%",
             "score": 10
           }
         ],
@@ -196,27 +244,27 @@
       },
       {
         "stock": {
-          "code": "000680",
-          "name": "LS네트웍스",
+          "code": "009900",
+          "name": "명신산업",
           "market": "KOSPI",
-          "price": 4190,
-          "priceChange": 330,
-          "changePct": 8.55,
-          "open": 3920,
-          "high": 4285,
-          "low": 3885,
-          "volume": 1340128,
-          "avgVolume20": 476507,
-          "marketCap": 3302
+          "price": 13840,
+          "priceChange": 1840,
+          "changePct": 15.33,
+          "open": 12490,
+          "high": 13950,
+          "low": 12290,
+          "volume": 1984904,
+          "avgVolume20": 540353,
+          "marketCap": 7262
         },
         "supply": {
-          "code": "000680",
-          "instNetBuy": 27112,
+          "code": "009900",
+          "instNetBuy": 37817,
           "instNetBuyAmt": 0,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 197345,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": -85963,
           "foreignNetBuyAmt": 0,
-          "foreignConsecutiveDays": 1,
+          "foreignConsecutiveDays": -2,
           "foreignHoldPct": 0
         },
         "category": "INST_BUY",
@@ -224,19 +272,15 @@
         "score": 45,
         "reasons": [
           {
-            "label": "기관 당일 순매수",
-            "score": 5
+            "label": "기관 연속 4일 순매수",
+            "score": 25
           },
           {
-            "label": "외국인 동반 순매수",
-            "score": 20
-          },
-          {
-            "label": "거래량 평균 2.8배",
+            "label": "거래량 평균 3.7배",
             "score": 10
           },
           {
-            "label": "장중 상승 +8.6%",
+            "label": "장중 상승 +15.3%",
             "score": 10
           }
         ],
@@ -247,15 +291,15 @@
           "code": "009830",
           "name": "한화솔루션",
           "market": "KOSPI",
-          "price": 48700,
-          "priceChange": -650,
-          "changePct": -1.32,
+          "price": 49700,
+          "priceChange": 350,
+          "changePct": 0.71,
           "open": 51000,
           "high": 51600,
-          "low": 48650,
-          "volume": 1323477,
-          "avgVolume20": 3692695,
-          "marketCap": 83712
+          "low": 48200,
+          "volume": 1783399,
+          "avgVolume20": 3715688,
+          "marketCap": 85431
         },
         "supply": {
           "code": "009830",
@@ -287,15 +331,15 @@
           "code": "138360",
           "name": "앤로보틱스",
           "market": "KOSPI",
-          "price": 3150,
-          "priceChange": 390,
-          "changePct": 14.13,
+          "price": 3380,
+          "priceChange": 620,
+          "changePct": 22.46,
           "open": 2900,
-          "high": 3500,
+          "high": 3550,
           "low": 2900,
-          "volume": 8920836,
-          "avgVolume20": 3111821,
-          "marketCap": 2425
+          "volume": 13906774,
+          "avgVolume20": 3361075,
+          "marketCap": 2602
         },
         "supply": {
           "code": "138360",
@@ -320,11 +364,59 @@
             "score": 20
           },
           {
-            "label": "거래량 평균 2.9배",
+            "label": "거래량 평균 4.1배",
             "score": 10
           },
           {
-            "label": "장중 상승 +14.1%",
+            "label": "장중 상승 +22.5%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "036540",
+          "name": "SFA반도체",
+          "market": "KOSPI",
+          "price": 9820,
+          "priceChange": 180,
+          "changePct": 1.87,
+          "open": 10190,
+          "high": 10450,
+          "low": 9760,
+          "volume": 13493286,
+          "avgVolume20": 5672528,
+          "marketCap": 16150
+        },
+        "supply": {
+          "code": "036540",
+          "instNetBuy": 407881,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 5361795,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": 4,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 45,
+        "reasons": [
+          {
+            "label": "기관 당일 순매수",
+            "score": 5
+          },
+          {
+            "label": "외국인 동반 순매수",
+            "score": 20
+          },
+          {
+            "label": "거래량 평균 2.4배",
+            "score": 10
+          },
+          {
+            "label": "장중 상승 +1.9%",
             "score": 10
           }
         ],
@@ -335,15 +427,15 @@
           "code": "006340",
           "name": "대원전선",
           "market": "KOSPI",
-          "price": 10490,
-          "priceChange": 1470,
-          "changePct": 16.3,
+          "price": 10280,
+          "priceChange": 1260,
+          "changePct": 13.97,
           "open": 9330,
           "high": 10660,
           "low": 9300,
-          "volume": 34688846,
-          "avgVolume20": 20706331,
-          "marketCap": 8226
+          "volume": 41928499,
+          "avgVolume20": 21068322,
+          "marketCap": 8061
         },
         "supply": {
           "code": "006340",
@@ -364,91 +456,7 @@
             "score": 25
           },
           {
-            "label": "장중 상승 +16.3%",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "001440",
-          "name": "대한전선",
-          "market": "KOSPI",
-          "price": 43750,
-          "priceChange": 900,
-          "changePct": 2.1,
-          "open": 44100,
-          "high": 44400,
-          "low": 42800,
-          "volume": 4069485,
-          "avgVolume20": 9102880,
-          "marketCap": 81571
-        },
-        "supply": {
-          "code": "001440",
-          "instNetBuy": 138377,
-          "instNetBuyAmt": 0,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 2415150,
-          "foreignNetBuyAmt": 0,
-          "foreignConsecutiveDays": 1,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "C",
-        "score": 35,
-        "reasons": [
-          {
-            "label": "기관 당일 순매수",
-            "score": 5
-          },
-          {
-            "label": "외국인 동반 순매수",
-            "score": 20
-          },
-          {
-            "label": "장중 상승 +2.1%",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "004710",
-          "name": "한솔테크닉스",
-          "market": "KOSPI",
-          "price": 8060,
-          "priceChange": 630,
-          "changePct": 8.48,
-          "open": 7570,
-          "high": 8440,
-          "low": 7520,
-          "volume": 1603858,
-          "avgVolume20": 1681925,
-          "marketCap": 2562
-        },
-        "supply": {
-          "code": "004710",
-          "instNetBuy": 20659,
-          "instNetBuyAmt": 0,
-          "instConsecutiveDays": 6,
-          "foreignNetBuy": -3038,
-          "foreignNetBuyAmt": 0,
-          "foreignConsecutiveDays": -1,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "C",
-        "score": 35,
-        "reasons": [
-          {
-            "label": "기관 연속 6일 순매수",
-            "score": 25
-          },
-          {
-            "label": "장중 상승 +8.5%",
+            "label": "장중 상승 +14.0%",
             "score": 10
           }
         ],
@@ -461,15 +469,15 @@
           "code": "001360",
           "name": "삼성제약",
           "market": "KOSPI",
-          "price": 2250,
-          "priceChange": 75,
-          "changePct": 3.45,
+          "price": 2230,
+          "priceChange": 55,
+          "changePct": 2.53,
           "open": 2180,
-          "high": 2260,
+          "high": 2280,
           "low": 2060,
-          "volume": 1714537,
-          "avgVolume20": 2070736,
-          "marketCap": 2119
+          "volume": 2414646,
+          "avgVolume20": 2105741,
+          "marketCap": 2100
         },
         "supply": {
           "code": "001360",
@@ -501,15 +509,15 @@
           "code": "034020",
           "name": "두산에너빌리티",
           "market": "KOSPI",
-          "price": 127700,
-          "priceChange": 600,
-          "changePct": 0.47,
+          "price": 128100,
+          "priceChange": 1000,
+          "changePct": 0.79,
           "open": 130300,
           "high": 130300,
           "low": 125600,
-          "volume": 1684201,
-          "avgVolume20": 3951078,
-          "marketCap": 817997
+          "volume": 2081060,
+          "avgVolume20": 3970921,
+          "marketCap": 820559
         },
         "supply": {
           "code": "034020",
@@ -541,15 +549,15 @@
           "code": "088350",
           "name": "한화생명",
           "market": "KOSPI",
-          "price": 4885,
-          "priceChange": -80,
-          "changePct": -1.61,
+          "price": 4950,
+          "priceChange": -15,
+          "changePct": -0.3,
           "open": 5000,
           "high": 5040,
           "low": 4880,
-          "volume": 1358250,
-          "avgVolume20": 3940808,
-          "marketCap": 42428
+          "volume": 1697640,
+          "avgVolume20": 3957778,
+          "marketCap": 42992
         },
         "supply": {
           "code": "088350",
@@ -578,18 +586,58 @@
       },
       {
         "stock": {
+          "code": "138360",
+          "name": "앤로보틱스",
+          "market": "KOSPI",
+          "price": 3380,
+          "priceChange": 620,
+          "changePct": 22.46,
+          "open": 2900,
+          "high": 3550,
+          "low": 2900,
+          "volume": 13906774,
+          "avgVolume20": 3361075,
+          "marketCap": 2602
+        },
+        "supply": {
+          "code": "138360",
+          "instNetBuy": 362,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 274334,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "C",
+        "score": 30,
+        "reasons": [
+          {
+            "label": "외국인 연속 2일 순매수",
+            "score": 10
+          },
+          {
+            "label": "기관 동반 순매수",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "036540",
           "name": "SFA반도체",
           "market": "KOSPI",
-          "price": 9920,
-          "priceChange": 280,
-          "changePct": 2.9,
+          "price": 9820,
+          "priceChange": 180,
+          "changePct": 1.87,
           "open": 10190,
           "high": 10450,
-          "low": 9820,
-          "volume": 11047954,
-          "avgVolume20": 5550262,
-          "marketCap": 16314
+          "low": 9760,
+          "volume": 13493286,
+          "avgVolume20": 5672528,
+          "marketCap": 16150
         },
         "supply": {
           "code": "036540",
@@ -621,15 +669,15 @@
           "code": "209640",
           "name": "와이제이링크",
           "market": "KOSPI",
-          "price": 9240,
-          "priceChange": 1720,
-          "changePct": 22.87,
+          "price": 9520,
+          "priceChange": 2000,
+          "changePct": 26.6,
           "open": 7860,
-          "high": 9450,
+          "high": 9720,
           "low": 7730,
-          "volume": 9617620,
-          "avgVolume20": 7380100,
-          "marketCap": 2628
+          "volume": 13169802,
+          "avgVolume20": 7557647,
+          "marketCap": 2708
         },
         "supply": {
           "code": "209640",
@@ -661,15 +709,15 @@
           "code": "098460",
           "name": "고영",
           "market": "KOSPI",
-          "price": 43900,
-          "priceChange": 1600,
-          "changePct": 3.78,
+          "price": 43400,
+          "priceChange": 1100,
+          "changePct": 2.6,
           "open": 43250,
           "high": 44800,
           "low": 41650,
-          "volume": 8962831,
-          "avgVolume20": 4003529,
-          "marketCap": 30139
+          "volume": 11023258,
+          "avgVolume20": 4106541,
+          "marketCap": 29796
         },
         "supply": {
           "code": "098460",
@@ -698,46 +746,6 @@
       },
       {
         "stock": {
-          "code": "138360",
-          "name": "앤로보틱스",
-          "market": "KOSPI",
-          "price": 3150,
-          "priceChange": 390,
-          "changePct": 14.13,
-          "open": 2900,
-          "high": 3500,
-          "low": 2900,
-          "volume": 8920836,
-          "avgVolume20": 3111821,
-          "marketCap": 2425
-        },
-        "supply": {
-          "code": "138360",
-          "instNetBuy": 362,
-          "instNetBuyAmt": 0,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 274334,
-          "foreignNetBuyAmt": 0,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "FOREIGN_BUY",
-        "grade": "C",
-        "score": 30,
-        "reasons": [
-          {
-            "label": "외국인 연속 2일 순매수",
-            "score": 10
-          },
-          {
-            "label": "기관 동반 순매수",
-            "score": 20
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
           "code": "046890",
           "name": "서울반도체",
           "market": "KOSPI",
@@ -747,8 +755,8 @@
           "open": 13340,
           "high": 14540,
           "low": 13070,
-          "volume": 8238635,
-          "avgVolume20": 1298990,
+          "volume": 9044285,
+          "avgVolume20": 1339272,
           "marketCap": 8478
         },
         "supply": {
@@ -777,15 +785,15 @@
           "code": "001250",
           "name": "GS글로벌",
           "market": "KOSPI",
-          "price": 5040,
-          "priceChange": 710,
-          "changePct": 16.4,
+          "price": 5180,
+          "priceChange": 850,
+          "changePct": 19.63,
           "open": 4475,
-          "high": 5110,
+          "high": 5260,
           "low": 4465,
-          "volume": 6818414,
-          "avgVolume20": 9207326,
-          "marketCap": 4160
+          "volume": 9489548,
+          "avgVolume20": 9340880,
+          "marketCap": 4275
         },
         "supply": {
           "code": "001250",
@@ -810,25 +818,25 @@
       },
       {
         "stock": {
-          "code": "078150",
-          "name": "HB테크놀러지",
+          "code": "090710",
+          "name": "휴림로봇",
           "market": "KOSPI",
-          "price": 3105,
-          "priceChange": 350,
-          "changePct": 12.7,
-          "open": 2810,
-          "high": 3140,
-          "low": 2800,
-          "volume": 7959484,
-          "avgVolume20": 4029872,
-          "marketCap": 2879
+          "price": 13340,
+          "priceChange": 90,
+          "changePct": 0.68,
+          "open": 13430,
+          "high": 13890,
+          "low": 12510,
+          "volume": 13001014,
+          "avgVolume20": 8116217,
+          "marketCap": 15936
         },
         "supply": {
-          "code": "078150",
-          "instNetBuy": 0,
+          "code": "090710",
+          "instNetBuy": -8949,
           "instNetBuyAmt": 0,
-          "instConsecutiveDays": 0,
-          "foreignNetBuy": 927251,
+          "instConsecutiveDays": -1,
+          "foreignNetBuy": 2248834,
           "foreignNetBuyAmt": 0,
           "foreignConsecutiveDays": 3,
           "foreignHoldPct": 0
@@ -848,6 +856,50 @@
     "volumeSurge": [
       {
         "stock": {
+          "code": "138360",
+          "name": "앤로보틱스",
+          "market": "KOSPI",
+          "price": 3380,
+          "priceChange": 620,
+          "changePct": 22.46,
+          "open": 2900,
+          "high": 3550,
+          "low": 2900,
+          "volume": 13906774,
+          "avgVolume20": 3361075,
+          "marketCap": 2602
+        },
+        "supply": {
+          "code": "138360",
+          "instNetBuy": 362,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 274334,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "B",
+        "score": 50,
+        "reasons": [
+          {
+            "label": "거래량 평균 4.1배",
+            "score": 20
+          },
+          {
+            "label": "기관+외국인 동반 매수",
+            "score": 20
+          },
+          {
+            "label": "강한 상승 +22.5%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "046890",
           "name": "서울반도체",
           "market": "KOSPI",
@@ -857,8 +909,8 @@
           "open": 13340,
           "high": 14540,
           "low": 13070,
-          "volume": 8238635,
-          "avgVolume20": 1298990,
+          "volume": 9044285,
+          "avgVolume20": 1339272,
           "marketCap": 8478
         },
         "supply": {
@@ -876,7 +928,7 @@
         "score": 50,
         "reasons": [
           {
-            "label": "거래량 평균 6배 폭발",
+            "label": "거래량 평균 7배 폭발",
             "score": 30
           },
           {
@@ -895,15 +947,15 @@
           "code": "452260",
           "name": "한화갤러리아",
           "market": "KOSPI",
-          "price": 3485,
-          "priceChange": 145,
-          "changePct": 4.34,
+          "price": 3470,
+          "priceChange": 130,
+          "changePct": 3.89,
           "open": 3585,
           "high": 3965,
-          "low": 3435,
-          "volume": 40324707,
-          "avgVolume20": 6452859,
-          "marketCap": 6756
+          "low": 3415,
+          "volume": 45165110,
+          "avgVolume20": 6694889,
+          "marketCap": 6727
         },
         "supply": {
           "code": "452260",
@@ -920,11 +972,11 @@
         "score": 40,
         "reasons": [
           {
-            "label": "거래량 평균 6배 폭발",
+            "label": "거래량 평균 7배 폭발",
             "score": 30
           },
           {
-            "label": "강한 상승 +4.3%",
+            "label": "강한 상승 +3.9%",
             "score": 10
           }
         ],
@@ -935,15 +987,15 @@
           "code": "002780",
           "name": "진흥기업",
           "market": "KOSPI",
-          "price": 1082,
-          "priceChange": 61,
-          "changePct": 5.97,
+          "price": 1066,
+          "priceChange": 45,
+          "changePct": 4.41,
           "open": 1083,
           "high": 1150,
-          "low": 1068,
-          "volume": 7455997,
-          "avgVolume20": 3153914,
-          "marketCap": 1574
+          "low": 1061,
+          "volume": 8355660,
+          "avgVolume20": 3198897,
+          "marketCap": 1551
         },
         "supply": {
           "code": "002780",
@@ -951,6 +1003,94 @@
           "instNetBuyAmt": 0,
           "instConsecutiveDays": 1,
           "foreignNetBuy": 221038,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": 1,
+          "foreignHoldPct": 0
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "C",
+        "score": 40,
+        "reasons": [
+          {
+            "label": "거래량 평균 2.6배",
+            "score": 10
+          },
+          {
+            "label": "기관+외국인 동반 매수",
+            "score": 20
+          },
+          {
+            "label": "강한 상승 +4.4%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "009900",
+          "name": "명신산업",
+          "market": "KOSPI",
+          "price": 13840,
+          "priceChange": 1840,
+          "changePct": 15.33,
+          "open": 12490,
+          "high": 13950,
+          "low": 12290,
+          "volume": 1984904,
+          "avgVolume20": 540353,
+          "marketCap": 7262
+        },
+        "supply": {
+          "code": "009900",
+          "instNetBuy": 37817,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": -85963,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": -2,
+          "foreignHoldPct": 0
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "C",
+        "score": 40,
+        "reasons": [
+          {
+            "label": "거래량 평균 3.7배",
+            "score": 20
+          },
+          {
+            "label": "기관/외국인 매수 가담",
+            "score": 10
+          },
+          {
+            "label": "강한 상승 +15.3%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "042700",
+          "name": "한미반도체",
+          "market": "KOSPI",
+          "price": 332500,
+          "priceChange": 37000,
+          "changePct": 12.52,
+          "open": 305000,
+          "high": 339500,
+          "low": 302000,
+          "volume": 1732528,
+          "avgVolume20": 725434,
+          "marketCap": 316913
+        },
+        "supply": {
+          "code": "042700",
+          "instNetBuy": 70121,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 88506,
           "foreignNetBuyAmt": 0,
           "foreignConsecutiveDays": 1,
           "foreignHoldPct": 0
@@ -968,7 +1108,7 @@
             "score": 20
           },
           {
-            "label": "강한 상승 +6.0%",
+            "label": "강한 상승 +12.5%",
             "score": 10
           }
         ],
@@ -976,44 +1116,40 @@
       },
       {
         "stock": {
-          "code": "000680",
-          "name": "LS네트웍스",
+          "code": "036540",
+          "name": "SFA반도체",
           "market": "KOSPI",
-          "price": 4190,
-          "priceChange": 330,
-          "changePct": 8.55,
-          "open": 3920,
-          "high": 4285,
-          "low": 3885,
-          "volume": 1340128,
-          "avgVolume20": 476507,
-          "marketCap": 3302
+          "price": 9820,
+          "priceChange": 180,
+          "changePct": 1.87,
+          "open": 10190,
+          "high": 10450,
+          "low": 9760,
+          "volume": 13493286,
+          "avgVolume20": 5672528,
+          "marketCap": 16150
         },
         "supply": {
-          "code": "000680",
-          "instNetBuy": 27112,
+          "code": "036540",
+          "instNetBuy": 407881,
           "instNetBuyAmt": 0,
           "instConsecutiveDays": 1,
-          "foreignNetBuy": 197345,
+          "foreignNetBuy": 5361795,
           "foreignNetBuyAmt": 0,
-          "foreignConsecutiveDays": 1,
+          "foreignConsecutiveDays": 4,
           "foreignHoldPct": 0
         },
         "category": "VOLUME_SURGE",
         "grade": "C",
-        "score": 40,
+        "score": 30,
         "reasons": [
           {
-            "label": "거래량 평균 2.8배",
+            "label": "거래량 평균 2.4배",
             "score": 10
           },
           {
             "label": "기관+외국인 동반 매수",
             "score": 20
-          },
-          {
-            "label": "강한 상승 +8.6%",
-            "score": 10
           }
         ],
         "passedFilter": true
@@ -1023,15 +1159,15 @@
           "code": "098460",
           "name": "고영",
           "market": "KOSPI",
-          "price": 43900,
-          "priceChange": 1600,
-          "changePct": 3.78,
+          "price": 43400,
+          "priceChange": 1100,
+          "changePct": 2.6,
           "open": 43250,
           "high": 44800,
           "low": 41650,
-          "volume": 8962831,
-          "avgVolume20": 4003529,
-          "marketCap": 30139
+          "volume": 11023258,
+          "avgVolume20": 4106541,
+          "marketCap": 29796
         },
         "supply": {
           "code": "098460",
@@ -1045,18 +1181,58 @@
         },
         "category": "VOLUME_SURGE",
         "grade": "C",
-        "score": 40,
+        "score": 30,
         "reasons": [
           {
-            "label": "거래량 평균 2.2배",
+            "label": "거래량 평균 2.7배",
             "score": 10
           },
           {
             "label": "기관+외국인 동반 매수",
             "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "078150",
+          "name": "HB테크놀러지",
+          "market": "KOSPI",
+          "price": 3050,
+          "priceChange": 295,
+          "changePct": 10.71,
+          "open": 2810,
+          "high": 3140,
+          "low": 2800,
+          "volume": 10282677,
+          "avgVolume20": 4145925,
+          "marketCap": 2828
+        },
+        "supply": {
+          "code": "078150",
+          "instNetBuy": 0,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 0,
+          "foreignNetBuy": 927251,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "C",
+        "score": 30,
+        "reasons": [
+          {
+            "label": "거래량 평균 2.5배",
+            "score": 10
           },
           {
-            "label": "강한 상승 +3.8%",
+            "label": "기관/외국인 매수 가담",
+            "score": 10
+          },
+          {
+            "label": "강한 상승 +10.7%",
             "score": 10
           }
         ],
@@ -1064,43 +1240,39 @@
       },
       {
         "stock": {
-          "code": "138360",
-          "name": "앤로보틱스",
+          "code": "001510",
+          "name": "SK증권",
           "market": "KOSPI",
-          "price": 3150,
-          "priceChange": 390,
-          "changePct": 14.13,
-          "open": 2900,
-          "high": 3500,
-          "low": 2900,
-          "volume": 8920836,
-          "avgVolume20": 3111821,
-          "marketCap": 2425
+          "price": 4320,
+          "priceChange": 590,
+          "changePct": 15.82,
+          "open": 4440,
+          "high": 4515,
+          "low": 4155,
+          "volume": 21813880,
+          "avgVolume20": 8790083,
+          "marketCap": 9992
         },
         "supply": {
-          "code": "138360",
-          "instNetBuy": 362,
+          "code": "001510",
+          "instNetBuy": 0,
           "instNetBuyAmt": 0,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 274334,
+          "instConsecutiveDays": 0,
+          "foreignNetBuy": -14891135,
           "foreignNetBuyAmt": 0,
-          "foreignConsecutiveDays": 2,
+          "foreignConsecutiveDays": 0,
           "foreignHoldPct": 0
         },
         "category": "VOLUME_SURGE",
         "grade": "C",
-        "score": 40,
+        "score": 20,
         "reasons": [
           {
-            "label": "거래량 평균 2.9배",
+            "label": "거래량 평균 2.5배",
             "score": 10
           },
           {
-            "label": "기관+외국인 동반 매수",
-            "score": 20
-          },
-          {
-            "label": "강한 상승 +14.1%",
+            "label": "강한 상승 +15.8%",
             "score": 10
           }
         ],
@@ -1113,15 +1285,15 @@
           "code": "098460",
           "name": "고영",
           "market": "KOSPI",
-          "price": 43900,
-          "priceChange": 1600,
-          "changePct": 3.78,
+          "price": 43400,
+          "priceChange": 1100,
+          "changePct": 2.6,
           "open": 43250,
           "high": 44800,
           "low": 41650,
-          "volume": 8962831,
-          "avgVolume20": 4003529,
-          "marketCap": 30139
+          "volume": 11023258,
+          "avgVolume20": 4106541,
+          "marketCap": 29796
         },
         "supply": {
           "code": "098460",
@@ -1135,14 +1307,14 @@
         },
         "category": "STRONG_DEMAND",
         "grade": "A",
-        "score": 90,
+        "score": 80,
         "reasons": [
           {
             "label": "기관+외국인 동반 순매수",
             "score": 30
           },
           {
-            "label": "거래량 2.2배",
+            "label": "거래량 2.7배",
             "score": 15
           },
           {
@@ -1152,10 +1324,6 @@
           {
             "label": "기관 연속 4일",
             "score": 15
-          },
-          {
-            "label": "+3.8% 강세",
-            "score": 10
           }
         ],
         "passedFilter": true
@@ -1165,15 +1333,15 @@
           "code": "001360",
           "name": "삼성제약",
           "market": "KOSPI",
-          "price": 2250,
-          "priceChange": 75,
-          "changePct": 3.45,
+          "price": 2230,
+          "priceChange": 55,
+          "changePct": 2.53,
           "open": 2180,
-          "high": 2260,
+          "high": 2280,
           "low": 2060,
-          "volume": 1714537,
-          "avgVolume20": 2070736,
-          "marketCap": 2119
+          "volume": 2414646,
+          "avgVolume20": 2105741,
+          "marketCap": 2100
         },
         "supply": {
           "code": "001360",
@@ -1186,8 +1354,8 @@
           "foreignHoldPct": 0
         },
         "category": "STRONG_DEMAND",
-        "grade": "A",
-        "score": 75,
+        "grade": "B",
+        "score": 65,
         "reasons": [
           {
             "label": "기관+외국인 동반 순매수",
@@ -1200,10 +1368,50 @@
           {
             "label": "기관 연속 3일",
             "score": 15
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "036540",
+          "name": "SFA반도체",
+          "market": "KOSPI",
+          "price": 9820,
+          "priceChange": 180,
+          "changePct": 1.87,
+          "open": 10190,
+          "high": 10450,
+          "low": 9760,
+          "volume": 13493286,
+          "avgVolume20": 5672528,
+          "marketCap": 16150
+        },
+        "supply": {
+          "code": "036540",
+          "instNetBuy": 407881,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 5361795,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": 4,
+          "foreignHoldPct": 0
+        },
+        "category": "STRONG_DEMAND",
+        "grade": "B",
+        "score": 65,
+        "reasons": [
+          {
+            "label": "기관+외국인 동반 순매수",
+            "score": 30
           },
           {
-            "label": "+3.5% 강세",
-            "score": 10
+            "label": "거래량 2.4배",
+            "score": 15
+          },
+          {
+            "label": "외국인 연속 4일",
+            "score": 20
           }
         ],
         "passedFilter": true
@@ -1213,15 +1421,15 @@
           "code": "002780",
           "name": "진흥기업",
           "market": "KOSPI",
-          "price": 1082,
-          "priceChange": 61,
-          "changePct": 5.97,
+          "price": 1066,
+          "priceChange": 45,
+          "changePct": 4.41,
           "open": 1083,
           "high": 1150,
-          "low": 1068,
-          "volume": 7455997,
-          "avgVolume20": 3153914,
-          "marketCap": 1574
+          "low": 1061,
+          "volume": 8355660,
+          "avgVolume20": 3198897,
+          "marketCap": 1551
         },
         "supply": {
           "code": "002780",
@@ -1242,55 +1450,11 @@
             "score": 30
           },
           {
-            "label": "거래량 2.4배",
+            "label": "거래량 2.6배",
             "score": 15
           },
           {
-            "label": "+6.0% 강세",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "000680",
-          "name": "LS네트웍스",
-          "market": "KOSPI",
-          "price": 4190,
-          "priceChange": 330,
-          "changePct": 8.55,
-          "open": 3920,
-          "high": 4285,
-          "low": 3885,
-          "volume": 1340128,
-          "avgVolume20": 476507,
-          "marketCap": 3302
-        },
-        "supply": {
-          "code": "000680",
-          "instNetBuy": 27112,
-          "instNetBuyAmt": 0,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 197345,
-          "foreignNetBuyAmt": 0,
-          "foreignConsecutiveDays": 1,
-          "foreignHoldPct": 0
-        },
-        "category": "STRONG_DEMAND",
-        "grade": "B",
-        "score": 55,
-        "reasons": [
-          {
-            "label": "기관+외국인 동반 순매수",
-            "score": 30
-          },
-          {
-            "label": "거래량 2.8배",
-            "score": 15
-          },
-          {
-            "label": "+8.6% 강세",
+            "label": "+4.4% 강세",
             "score": 10
           }
         ],
@@ -1301,15 +1465,15 @@
           "code": "034020",
           "name": "두산에너빌리티",
           "market": "KOSPI",
-          "price": 127700,
-          "priceChange": 600,
-          "changePct": 0.47,
+          "price": 128100,
+          "priceChange": 1000,
+          "changePct": 0.79,
           "open": 130300,
           "high": 130300,
           "low": 125600,
-          "volume": 1684201,
-          "avgVolume20": 3951078,
-          "marketCap": 817997
+          "volume": 2081060,
+          "avgVolume20": 3970921,
+          "marketCap": 820559
         },
         "supply": {
           "code": "034020",
@@ -1338,25 +1502,25 @@
       },
       {
         "stock": {
-          "code": "036540",
-          "name": "SFA반도체",
+          "code": "088350",
+          "name": "한화생명",
           "market": "KOSPI",
-          "price": 9920,
-          "priceChange": 280,
-          "changePct": 2.9,
-          "open": 10190,
-          "high": 10450,
-          "low": 9820,
-          "volume": 11047954,
-          "avgVolume20": 5550262,
-          "marketCap": 16314
+          "price": 4950,
+          "priceChange": -15,
+          "changePct": -0.3,
+          "open": 5000,
+          "high": 5040,
+          "low": 4880,
+          "volume": 1697640,
+          "avgVolume20": 3957778,
+          "marketCap": 42992
         },
         "supply": {
-          "code": "036540",
-          "instNetBuy": 407881,
+          "code": "088350",
+          "instNetBuy": 152062,
           "instNetBuyAmt": 0,
           "instConsecutiveDays": 1,
-          "foreignNetBuy": 5361795,
+          "foreignNetBuy": 1059215,
           "foreignNetBuyAmt": 0,
           "foreignConsecutiveDays": 4,
           "foreignHoldPct": 0
@@ -1377,7 +1541,56 @@
         "passedFilter": true
       }
     ],
-    "momentum": []
+    "momentum": [
+      {
+        "stock": {
+          "code": "138360",
+          "name": "앤로보틱스",
+          "market": "KOSPI",
+          "price": 3380,
+          "priceChange": 620,
+          "changePct": 22.46,
+          "open": 2900,
+          "high": 3550,
+          "low": 2900,
+          "volume": 13906774,
+          "avgVolume20": 3361075,
+          "marketCap": 2602
+        },
+        "supply": {
+          "code": "138360",
+          "instNetBuy": 0,
+          "instNetBuyAmt": 0,
+          "instConsecutiveDays": 0,
+          "foreignNetBuy": 0,
+          "foreignNetBuyAmt": 0,
+          "foreignConsecutiveDays": 0,
+          "foreignHoldPct": 0
+        },
+        "category": "MOMENTUM",
+        "grade": "B",
+        "score": 65,
+        "reasons": [
+          {
+            "label": "거래량 4.1배",
+            "score": 20
+          },
+          {
+            "label": "+22.5% 강한 상승",
+            "score": 25
+          },
+          {
+            "label": "고가권 마감",
+            "score": 10
+          },
+          {
+            "label": "시장 상승 동조",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      }
+    ]
   },
-  "updatedAt": "2026-04-27T00:35:40.013Z"
+  "updatedAt": "2026-04-27T01:05:39.836Z"
 }
