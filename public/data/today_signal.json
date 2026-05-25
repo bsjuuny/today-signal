@@ -6,7 +6,7 @@
     "kosdaqChange": 4.99,
     "kospiVolume": 0,
     "isIntraday": true,
-    "fetchedAt": "2026-05-25T00:05:03.648Z"
+    "fetchedAt": "2026-05-25T00:35:03.496Z"
   },
   "signals": {
     "instBuy": [
@@ -846,6 +846,50 @@
       },
       {
         "stock": {
+          "code": "001740",
+          "name": "SK네트웍스",
+          "market": "KOSPI",
+          "price": 8400,
+          "priceChange": 230,
+          "changePct": 2.82,
+          "open": 8300,
+          "high": 8630,
+          "low": 8080,
+          "volume": 9481131,
+          "avgVolume20": 11458598,
+          "marketCap": 16850
+        },
+        "supply": {
+          "code": "001740",
+          "instNetBuy": -83132,
+          "instNetBuyAmt": -691,
+          "instConsecutiveDays": -3,
+          "foreignNetBuy": 414897,
+          "foreignNetBuyAmt": 2896,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 45,
+        "reasons": [
+          {
+            "label": "외국인 연속 2일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 35억",
+            "score": 20
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "028670",
           "name": "팬오션",
           "market": "KOSPI",
@@ -879,50 +923,6 @@
           },
           {
             "label": "외국인 순매수 28억",
-            "score": 20
-          },
-          {
-            "label": "주가 상승 동반",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "0167A0",
-          "name": "SOL AI반도체TOP2플러스",
-          "market": "KOSPI",
-          "price": 19980,
-          "priceChange": 455,
-          "changePct": 2.33,
-          "open": 19635,
-          "high": 20050,
-          "low": 19335,
-          "volume": 24810344,
-          "avgVolume20": 21489349,
-          "marketCap": 30519
-        },
-        "supply": {
-          "code": "0167A0",
-          "instNetBuy": -3063920,
-          "instNetBuyAmt": -60580,
-          "instConsecutiveDays": -2,
-          "foreignNetBuy": 144659,
-          "foreignNetBuyAmt": 2825,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "FOREIGN_BUY",
-        "grade": "B",
-        "score": 45,
-        "reasons": [
-          {
-            "label": "외국인 연속 2일 순매수",
-            "score": 15
-          },
-          {
-            "label": "외국인 순매수 29억",
             "score": 20
           },
           {
@@ -1844,5 +1844,5 @@
       }
     ]
   },
-  "updatedAt": "2026-05-25T00:05:44.108Z"
+  "updatedAt": "2026-05-25T00:35:43.271Z"
 }
