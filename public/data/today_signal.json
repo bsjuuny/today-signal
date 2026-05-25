@@ -6,7 +6,7 @@
     "kosdaqChange": 4.99,
     "kospiVolume": 0,
     "isIntraday": true,
-    "fetchedAt": "2026-05-25T02:35:03.706Z"
+    "fetchedAt": "2026-05-25T03:05:04.536Z"
   },
   "signals": {
     "instBuy": [
@@ -244,6 +244,54 @@
       },
       {
         "stock": {
+          "code": "088350",
+          "name": "한화생명",
+          "market": "KOSPI",
+          "price": 5600,
+          "priceChange": 150,
+          "changePct": 2.75,
+          "open": 5520,
+          "high": 5730,
+          "low": 5470,
+          "volume": 7267493,
+          "avgVolume20": 11700438,
+          "marketCap": 48638
+        },
+        "supply": {
+          "code": "088350",
+          "instNetBuy": 165976,
+          "instNetBuyAmt": 928,
+          "instConsecutiveDays": 9,
+          "foreignNetBuy": 809512,
+          "foreignNetBuyAmt": 5619,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 55,
+        "reasons": [
+          {
+            "label": "기관 매수세 유입",
+            "score": 10
+          },
+          {
+            "label": "기관 연속 9일 매집",
+            "score": 15
+          },
+          {
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "장중 상승 +2.8%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "005880",
           "name": "대한해운",
           "market": "KOSPI",
@@ -413,50 +461,6 @@
           }
         ],
         "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "092220",
-          "name": "KEC",
-          "market": "KOSPI",
-          "price": 6790,
-          "priceChange": 960,
-          "changePct": 16.47,
-          "open": 5880,
-          "high": 7350,
-          "low": 5630,
-          "volume": 5415008,
-          "avgVolume20": 3781245,
-          "marketCap": 2726
-        },
-        "supply": {
-          "code": "092220",
-          "instNetBuy": 53580,
-          "instNetBuyAmt": 348,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 228418,
-          "foreignNetBuyAmt": 1437,
-          "foreignConsecutiveDays": 1,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "C",
-        "score": 40,
-        "reasons": [
-          {
-            "label": "기관 매수세 유입",
-            "score": 10
-          },
-          {
-            "label": "외국인 동반 매수 (쌍끌이)",
-            "score": 20
-          },
-          {
-            "label": "장중 상승 +16.5%",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
       }
     ],
     "foreignBuy": [
@@ -543,6 +547,54 @@
           },
           {
             "label": "외국인 순매수 366억",
+            "score": 20
+          },
+          {
+            "label": "기관 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "088350",
+          "name": "한화생명",
+          "market": "KOSPI",
+          "price": 5600,
+          "priceChange": 150,
+          "changePct": 2.75,
+          "open": 5520,
+          "high": 5730,
+          "low": 5470,
+          "volume": 7267493,
+          "avgVolume20": 11700438,
+          "marketCap": 48638
+        },
+        "supply": {
+          "code": "088350",
+          "instNetBuy": 165976,
+          "instNetBuyAmt": 928,
+          "instConsecutiveDays": 9,
+          "foreignNetBuy": 809512,
+          "foreignNetBuyAmt": 5619,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 65,
+        "reasons": [
+          {
+            "label": "외국인 연속 3일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 45억",
             "score": 20
           },
           {
@@ -871,50 +923,6 @@
           },
           {
             "label": "외국인 순매수 28억",
-            "score": 20
-          },
-          {
-            "label": "주가 상승 동반",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "0167A0",
-          "name": "SOL AI반도체TOP2플러스",
-          "market": "KOSPI",
-          "price": 19980,
-          "priceChange": 455,
-          "changePct": 2.33,
-          "open": 19635,
-          "high": 20050,
-          "low": 19335,
-          "volume": 24810344,
-          "avgVolume20": 21489349,
-          "marketCap": 30519
-        },
-        "supply": {
-          "code": "0167A0",
-          "instNetBuy": -3063920,
-          "instNetBuyAmt": -60580,
-          "instConsecutiveDays": -2,
-          "foreignNetBuy": 144659,
-          "foreignNetBuyAmt": 2825,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "FOREIGN_BUY",
-        "grade": "B",
-        "score": 45,
-        "reasons": [
-          {
-            "label": "외국인 연속 2일 순매수",
-            "score": 15
-          },
-          {
-            "label": "외국인 순매수 29억",
             "score": 20
           },
           {
@@ -1550,6 +1558,42 @@
       },
       {
         "stock": {
+          "code": "088350",
+          "name": "한화생명",
+          "market": "KOSPI",
+          "price": 5600,
+          "priceChange": 150,
+          "changePct": 2.75,
+          "open": 5520,
+          "high": 5730,
+          "low": 5470,
+          "volume": 7267493,
+          "avgVolume20": 11700438,
+          "marketCap": 48638
+        },
+        "supply": {
+          "code": "088350",
+          "instNetBuy": 165976,
+          "instNetBuyAmt": 928,
+          "instConsecutiveDays": 9,
+          "foreignNetBuy": 809512,
+          "foreignNetBuyAmt": 5619,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "STRONG_DEMAND",
+        "grade": "B",
+        "score": 40,
+        "reasons": [
+          {
+            "label": "강력 쌍끌이 (기관 9억, 외인 45억)",
+            "score": 40
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "005880",
           "name": "대한해운",
           "market": "KOSPI",
@@ -1800,5 +1844,5 @@
       }
     ]
   },
-  "updatedAt": "2026-05-25T02:35:42.802Z"
+  "updatedAt": "2026-05-25T03:05:44.948Z"
 }
