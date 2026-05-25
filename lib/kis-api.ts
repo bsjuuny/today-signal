@@ -298,16 +298,18 @@ export interface VolumeSurgeItem {
   volumeRatio: number;  // 전일 대비 거래량 비율
 }
 
-export async function getVolumeSurgeTop(limit = 30): Promise<VolumeSurgeItem[]> {
+export async function getVolumeSurgeTop(limit = 50, market: 'J' | 'Q' = 'J'): Promise<VolumeSurgeItem[]> {
   const h = await headers('FHPST01710000');
+  // 코스피: FID_INPUT_ISCD=0000(전체), 코스닥: FID_INPUT_ISCD=1000
+  const iscd = market === 'J' ? '0000' : '1000';
   const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/volume-rank`
-    + `?FID_COND_MRKT_DIV_CODE=J&FID_COND_SCR_DIV_CODE=20171&FID_INPUT_ISCD=0000`
+    + `?FID_COND_MRKT_DIV_CODE=J&FID_COND_SCR_DIV_CODE=20171&FID_INPUT_ISCD=${iscd}`
     + `&FID_DIV_CLS_CODE=0&FID_BLNG_CLS_CODE=0&FID_TRGT_CLS_CODE=111111111`
     + `&FID_TRGT_EXLS_CLS_CODE=000000&FID_INPUT_PRICE_1=&FID_INPUT_PRICE_2=`
     + `&FID_VOL_CNT=100000&FID_INPUT_DATE_1=`;
   const data = await fetchJson(url, h);
   if (data.rt_cd !== '0') {
-    console.warn(`  [거래량급등] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
+    console.warn(`  [거래량급등/${market}] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
     return [];
   }
   const rows: VolumeSurgeItem[] = ((data.output as Record<string, string>[]) ?? []).slice(0, limit).map((o, i) => ({
@@ -317,9 +319,47 @@ export async function getVolumeSurgeTop(limit = 30): Promise<VolumeSurgeItem[]> 
     price: parseInt(o.stck_prpr || '0'),
     changePct: parseFloat(o.prdy_ctrt || '0'),
     volume: parseInt(o.acml_vol || '0'),
-    volumeRatio: parseFloat(o.vol_inrt || '0'), // 전일 대비 %
+    volumeRatio: parseFloat(o.vol_inrt || '0'),
   }));
   return rows;
+}
+
+// ──────────────────────────────────────────────
+// 4-1. 등락률 상위 (당일 모멘텀 소스)
+// ──────────────────────────────────────────────
+export interface ChangePctItem {
+  rank: number;
+  code: string;
+  name: string;
+  price: number;
+  changePct: number;
+  volume: number;
+}
+
+export async function getChangePctTop(limit = 50, market: 'J' | 'Q' = 'J'): Promise<ChangePctItem[]> {
+  const h = await headers('FHPST01700000');
+  // 코스피: FID_INPUT_ISCD=0001, 코스닥: FID_INPUT_ISCD=1001
+  const iscd = market === 'J' ? '0001' : '1001';
+  const url = `${BASE_URL}/uapi/domestic-stock/v1/ranking/fluctuation`
+    + `?fid_cond_mrkt_div_code=J&fid_cond_scr_div_code=20170`
+    + `&fid_input_iscd=${iscd}&fid_rank_sort_cls_code=0&fid_input_cnt_1=0`
+    + `&fid_prc_cls_code=1&fid_input_price_1=1000&fid_input_price_2=`
+    + `&fid_vol_cnt=100000&fid_trgt_cls_code=0&fid_trgt_exls_cls_code=0`
+    + `&fid_div_cls_code=0&fid_rsfl_rate1=3&fid_rsfl_rate2=`;
+  const data = await fetchJson(url, h);
+  if (data.rt_cd !== '0') {
+    console.warn(`  [등락률상위/${market}] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
+    return [];
+  }
+  const rows: ChangePctItem[] = ((data.output as Record<string, string>[]) ?? []).slice(0, limit).map((o, i) => ({
+    rank: i + 1,
+    code: o.stck_shrn_iscd || o.mksc_shrn_iscd,
+    name: o.hts_kor_isnm,
+    price: parseInt(o.stck_prpr || '0'),
+    changePct: parseFloat(o.prdy_ctrt || '0'),
+    volume: parseInt(o.acml_vol || '0'),
+  }));
+  return rows.filter(r => r.code && r.price >= 1000);
 }
 
 // ──────────────────────────────────────────────
@@ -328,7 +368,9 @@ export async function getVolumeSurgeTop(limit = 30): Promise<VolumeSurgeItem[]> 
 export interface InvestorDaily {
   date: string;
   instNetBuy: number;
+  instNetBuyAmt: number;
   foreignNetBuy: number;
+  foreignNetBuyAmt: number;
 }
 
 export async function getInvestorHistory(code: string, days = 10): Promise<InvestorDaily[]> {
@@ -342,7 +384,9 @@ export async function getInvestorHistory(code: string, days = 10): Promise<Inves
   return confirmed.slice(0, days).map((o) => ({
     date: o.stck_bsop_date,
     instNetBuy: parseInt(o.orgn_ntby_qty || '0'),
+    instNetBuyAmt: parseInt(o.orgn_ntby_tr_pbmn || '0'),
     foreignNetBuy: parseInt(o.frgn_ntby_qty || '0'),
+    foreignNetBuyAmt: parseInt(o.frgn_ntby_tr_pbmn || '0'),
   }));
 }
 

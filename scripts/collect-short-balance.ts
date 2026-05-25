@@ -15,6 +15,7 @@ dotenv.config({ path: '.env.local' });
 
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 import { getShortBalanceHistory, sleep, getLastTradingDate } from '../lib/kis-api';
 
 const SIGNAL_PATH  = path.resolve(process.cwd(), 'public', 'data', 'today_signal.json');
@@ -100,6 +101,7 @@ async function main() {
 
   const today = getLastTradingDate();
   const results: ShortInfo[] = [];
+  const spikes: { code: string; name: string; pct: number }[] = [];
 
   for (const { code, name } of candidates) {
     try {
@@ -114,6 +116,17 @@ async function main() {
       const { consecDays, totalDeclinePct } = calcShortTrend(history);
       const latestRatio = history[0]?.ratio ?? 0;
       const latestQty   = history[0]?.qty ?? 0;
+
+      // 급증(Spike) 감지: 전일 대비 20% 이상 증가 시
+      if (history.length >= 2) {
+        const prevQty = history[1].qty;
+        if (prevQty > 0) {
+          const spikePct = (latestQty - prevQty) / prevQty * 100;
+          if (spikePct >= 20.0 && latestRatio >= 0.5) {
+            spikes.push({ code, name, pct: spikePct });
+          }
+        }
+      }
 
       if (consecDays < MIN_CONSEC_DAYS || totalDeclinePct < MIN_DECLINE_PCT || latestRatio < MIN_BALANCE_RATIO) {
         continue;
@@ -149,6 +162,25 @@ async function main() {
     console.log(`[short-balance] kis-trader 자동 동기화 완료: ${KIS_DATA_DEST}`);
   } catch (e) {
     console.warn('[short-balance] kis-trader 동기화 실패:', (e as Error).message);
+  }
+
+  // 텔레그램 발송 (급증 종목)
+  if (spikes.length > 0) {
+    spikes.sort((a, b) => b.pct - a.pct);
+    const spikeMsg = `⚠️ <b>[전체 관심종목] 공매도 급증 경고</b>\n\n` + 
+                     spikes.slice(0, 10).map(s => `▪️ <b>${s.name}</b>: +${s.pct.toFixed(1)}% 급증`).join('\n') +
+                     `\n\n조심하세요! 공매도 세력의 집중 타겟이 될 수 있습니다.`;
+    try {
+      const notifyScript = 'C:/github/antigravity-bot/scripts/notify.mjs';
+      execSync(`node "${notifyScript}" --prefix "🚨 [Short Balance]" --html --force`, {
+        input: spikeMsg,
+        encoding: 'utf-8',
+        windowsHide: true,
+      });
+      console.log(`[short-balance] 급증 알림 발송 완료 (${spikes.length}개 종목)`);
+    } catch (err) {
+      console.warn('[short-balance] 알림 발송 실패:', (err as Error).message);
+    }
   }
 
   console.log(`[short-balance] 완료: ${new Date().toLocaleString('ko-KR')}`);

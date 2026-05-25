@@ -13,11 +13,11 @@ import fs from 'fs';
 import path from 'path';
 import {
   getIndexQuote, getInstNetBuyTop, getForeignNetBuyTop,
-  getVolumeSurgeTop, getStockQuote, getInvestorHistory,
+  getVolumeSurgeTop, getChangePctTop, getStockQuote, getInvestorHistory,
   calcConsecutiveDays, getAvgVolume20, sleep, getLastTradingDate,
 } from '../lib/kis-api';
 import {
-  scoreInstBuy, scoreForeignBuy, scoreVolumeSurge, scoreStrongDemand,
+  scoreInstBuy, scoreForeignBuy, scoreVolumeSurge, scoreStrongDemand, scoreMomentum,
   isMarketSuppressed,
 } from '../lib/scoring';
 import { StockItem, SupplyDemand, MarketContext, TodaySignalData, StockSignal } from '../types/stock';
@@ -49,7 +49,7 @@ async function buildStockItem(code: string, name: string, price: number, changeP
   };
 }
 
-async function buildSupply(code: string, instNetBuy: number, foreignNetBuy: number): Promise<SupplyDemand> {
+async function buildSupply(code: string, instNetBuy: number, foreignNetBuy: number, instAmt: number, foreignAmt: number): Promise<SupplyDemand> {
   const history = await getInvestorHistory(code, 10);
   await sleep(150);
   const instConsec = calcConsecutiveDays(history, 'inst');
@@ -57,13 +57,15 @@ async function buildSupply(code: string, instNetBuy: number, foreignNetBuy: numb
   // history[0]이 가장 최근 거래일 실제 수치 — 리스트 API가 0을 반환할 때 fallback
   const actualInstNetBuy = instNetBuy !== 0 ? instNetBuy : (history[0]?.instNetBuy ?? 0);
   const actualForeignNetBuy = foreignNetBuy !== 0 ? foreignNetBuy : (history[0]?.foreignNetBuy ?? 0);
+  const actualInstAmt = instAmt !== 0 ? instAmt : (history[0]?.instNetBuyAmt ?? 0);
+  const actualForeignAmt = foreignAmt !== 0 ? foreignAmt : (history[0]?.foreignNetBuyAmt ?? 0);
   return {
     code,
     instNetBuy: actualInstNetBuy,
-    instNetBuyAmt: 0,
+    instNetBuyAmt: actualInstAmt,
     instConsecutiveDays: instConsec,
     foreignNetBuy: actualForeignNetBuy,
-    foreignNetBuyAmt: 0,
+    foreignNetBuyAmt: actualForeignAmt,
     foreignConsecutiveDays: foreignConsec,
     foreignHoldPct: 0,
   };
@@ -172,31 +174,48 @@ async function main() {
   }
 
   // ── 2. 기관/외국인/거래량 상위 조회 ──
-  console.log('  [수집] 기관 순매수 상위...');
-  const instList = await getInstNetBuyTop(30).catch(e => { console.error('  [수집] 기관 조회 실패:', e.message); return []; });
+  console.log('  [수집] 기관 순매수 상위 (코스피 50)...');
+  const instList = await getInstNetBuyTop(50).catch(e => { console.error('  [수집] 기관 조회 실패:', e.message); return []; });
   console.log(`    → ${instList.length}개 종목 수신`);
   await sleep(300);
 
-  console.log('  [수집] 외국인 순매수 상위...');
-  const foreignList = await getForeignNetBuyTop(30).catch(e => { console.error('  [수집] 외국인 조회 실패:', e.message); return []; });
+  console.log('  [수집] 외국인 순매수 상위 (코스피 50)...');
+  const foreignList = await getForeignNetBuyTop(50).catch(e => { console.error('  [수집] 외국인 조회 실패:', e.message); return []; });
   console.log(`    → ${foreignList.length}개 종목 수신`);
   await sleep(300);
 
-  console.log('  [수집] 거래량 급등 상위...');
-  const volList = await getVolumeSurgeTop(30).catch(e => { console.error('  [수집] 거래량 조회 실패:', e.message); return []; });
-  console.log(`    → ${volList.length}개 종목 수신`);
+  console.log('  [수집] 거래량 급등 상위 (코스피 50)...');
+  const volListKospi = await getVolumeSurgeTop(50, 'J').catch(e => { console.error('  [수집] 거래량(코스피) 조회 실패:', e.message); return []; });
+  console.log(`    → ${volListKospi.length}개 종목 수신`);
   await sleep(300);
+
+  console.log('  [수집] 거래량 급등 상위 (코스닥 50)...');
+  const volListKosdaq = await getVolumeSurgeTop(50, 'Q').catch(e => { console.error('  [수집] 거래량(코스닥) 조회 실패:', e.message); return []; });
+  console.log(`    → ${volListKosdaq.length}개 종목 수신`);
+  await sleep(300);
+
+  console.log('  [수집] 등락률 상위 (코스피 50, +3% 이상)...');
+  const changeListKospi = await getChangePctTop(50, 'J').catch(e => { console.error('  [수집] 등락률(코스피) 조회 실패:', e.message); return []; });
+  console.log(`    → ${changeListKospi.length}개 종목 수신`);
+  await sleep(300);
+
+  console.log('  [수집] 등락률 상위 (코스닥 50, +3% 이상)...');
+  const changeListKosdaq = await getChangePctTop(50, 'Q').catch(e => { console.error('  [수집] 등락률(코스닥) 조회 실패:', e.message); return []; });
+  console.log(`    → ${changeListKosdaq.length}개 종목 수신`);
+  await sleep(300);
+
+  const volList = [...volListKospi, ...volListKosdaq];
 
   // ── 3. 종목별 상세 데이터 + 스코어링 ──
   const processedCodes = new Set<string>();
 
-  async function processItem(code: string, name: string, price: number, changePct: number, volume: number, instBuy: number, foreignBuy: number) {
+  async function processItem(code: string, name: string, price: number, changePct: number, volume: number, instBuy: number, foreignBuy: number, instAmt: number, foreignAmt: number) {
     if (processedCodes.has(code)) return { stock: null, supply: null };
     processedCodes.add(code);
     try {
       const stock = await buildStockItem(code, name, price, changePct, volume);
-      await sleep(150);
-      const supply = await buildSupply(code, instBuy, foreignBuy);
+      await sleep(200);
+      const supply = await buildSupply(code, instBuy, foreignBuy, instAmt, foreignAmt);
       return { stock, supply };
     } catch (err) {
       console.error(`    오류 (${code}):`, err instanceof Error ? err.message : err);
@@ -205,30 +224,38 @@ async function main() {
   }
 
   // ── 3개 리스트 통합 → 종목별 instBuy/foreignBuy 머지 후 중복 제거 ──
-  const candidateMap = new Map<string, { code: string; name: string; price: number; changePct: number; volume: number; instBuy: number; foreignBuy: number }>();
+  const candidateMap = new Map<string, { code: string; name: string; price: number; changePct: number; volume: number; instBuy: number; foreignBuy: number; instAmt: number; foreignAmt: number }>();
   for (const i of instList) {
-    candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: i.netBuyQty, foreignBuy: 0 });
+    candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: i.netBuyQty, foreignBuy: 0, instAmt: i.netBuyAmt, foreignAmt: 0 });
   }
   for (const i of foreignList) {
     const existing = candidateMap.get(i.code);
-    if (existing) existing.foreignBuy = i.netBuyQty;
-    else candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: i.netBuyQty });
+    if (existing) { existing.foreignBuy = i.netBuyQty; existing.foreignAmt = i.netBuyAmt; }
+    else candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: i.netBuyQty, instAmt: 0, foreignAmt: i.netBuyAmt });
   }
   for (const i of volList) {
     if (!candidateMap.has(i.code)) {
-      candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: 0 });
+      candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: 0, instAmt: 0, foreignAmt: 0 });
+    }
+  }
+  // 등락률 상위 추가 (momentum 신호 전용 소스)
+  for (const i of [...changeListKospi, ...changeListKosdaq]) {
+    if (!candidateMap.has(i.code)) {
+      candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: 0, instAmt: 0, foreignAmt: 0 });
     }
   }
   const allCandidates = [...candidateMap.values()];
+  console.log(`\n  [후보] 총 ${allCandidates.length}개 종목 (중복 제거 후)`);
 
   const instSignals: StockSignal[] = [];
   const foreignSignals: StockSignal[] = [];
   const volSignals: StockSignal[] = [];
   const strongSignals: StockSignal[] = [];
+  const momentumSignals: StockSignal[] = [];
 
   console.log('\n  [스코어링] 전체 후보 처리...');
   for (const item of allCandidates) {
-    const { stock, supply } = await processItem(item.code, item.name, item.price, item.changePct, item.volume, item.instBuy, item.foreignBuy);
+    const { stock, supply } = await processItem(item.code, item.name, item.price, item.changePct, item.volume, item.instBuy, item.foreignBuy, item.instAmt, item.foreignAmt);
     if (!stock || !supply) continue;
 
     // 공매도 잔고 감소 보너스
@@ -275,6 +302,12 @@ async function main() {
       strongSignals.push(strong);
       console.log(`    [강한수급] ✓ ${stock.name} (${stock.code}) 점수: ${strong.score}`);
     }
+
+    const momentum = scoreMomentum(stock, market);
+    if (momentum) {
+      momentumSignals.push(momentum);
+      console.log(`    [모멘텀] ✓ ${stock.name} (${stock.code}) 점수: ${momentum.score}`);
+    }
   }
 
   // ── 4. 정렬 + TOP N 추출 ──
@@ -293,10 +326,11 @@ async function main() {
     date: today(),
     market,
     signals: {
-      instBuy: noNewInstData && prevData ? prevData.signals.instBuy : sort(instSignals).slice(0, 10),
-      foreignBuy: noNewForeignData && prevData ? prevData.signals.foreignBuy : sort(foreignSignals).slice(0, 10),
-      volumeSurge: sort(volSignals).slice(0, 10),
+      instBuy:      noNewInstData && prevData ? prevData.signals.instBuy : sort(instSignals).slice(0, 10),
+      foreignBuy:   noNewForeignData && prevData ? prevData.signals.foreignBuy : sort(foreignSignals).slice(0, 10),
+      volumeSurge:  sort(volSignals).slice(0, 10),
       strongDemand: sort(strongSignals).slice(0, 15),
+      momentum:     sort(momentumSignals).slice(0, 15),  // 단타 전용
     },
     updatedAt: new Date().toISOString(),
   };
@@ -304,9 +338,20 @@ async function main() {
   if (noNewInstData && prevData) console.log('  [기관] 데이터 없음 — 이전 신호 유지');
   if (noNewForeignData && prevData) console.log('  [외국인] 데이터 없음 — 이전 신호 유지');
 
-  // ── 5. 저장 및 kis-trader 자동 전파 ──
+  // ── 5. 저장 및 아카이빙 (검증용) 및 kis-trader 자동 전파 ──
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(result, null, 2));
+
+  // 히스토리 아카이빙 (성과 검증용)
+  try {
+    const HISTORY_DIR = path.join(process.cwd(), 'public', 'data', 'history');
+    fs.mkdirSync(HISTORY_DIR, { recursive: true });
+    const historyPath = path.join(HISTORY_DIR, `signal_${today()}.json`);
+    fs.writeFileSync(historyPath, JSON.stringify(result, null, 2));
+    console.log(`  [아카이브] 일별 신호 내역 백업 완료: ${historyPath}`);
+  } catch (e) {
+    console.warn('  [아카이브] 백업 실패:', (e as Error).message);
+  }
 
   try {
     const KIS_DATA_DEST = path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today_signal.json');
@@ -318,10 +363,11 @@ async function main() {
   }
 
   console.log(`\n[collect-data] 완료!`);
-  console.log(`  기관 순매수: ${result.signals.instBuy.length}개`);
-  console.log(`  외국인 매집: ${result.signals.foreignBuy.length}개`);
-  console.log(`  거래량 급등: ${result.signals.volumeSurge.length}개`);
-  console.log(`  강한 수급 후보: ${result.signals.strongDemand.length}개`);
+  console.log(`  기관 순매수 (스윙): ${result.signals.instBuy.length}개`);
+  console.log(`  외국인 매집 (스윙): ${result.signals.foreignBuy.length}개`);
+  console.log(`  거래량 급등 (단타): ${result.signals.volumeSurge.length}개`);
+  console.log(`  강한 수급 (단타+스윙): ${result.signals.strongDemand.length}개`);
+  console.log(`  당일 모멘텀 (단타): ${result.signals.momentum.length}개`);
 }
 
 main().catch(err => {

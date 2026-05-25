@@ -45,10 +45,11 @@ export type SignalGrade = 'A' | 'B' | 'C';  // A=강력, B=보통, C=관심
 
 /** 신호 카테고리 */
 export type SignalCategory =
-  | 'INST_BUY'       // 기관 순매수
-  | 'FOREIGN_BUY'    // 외국인 매집
-  | 'VOLUME_SURGE'   // 거래량 급등
-  | 'STRONG_DEMAND'; // 강한 수급 (복합)
+  | 'INST_BUY'       // 기관 순매수 — 스윙용
+  | 'FOREIGN_BUY'    // 외국인 매집 — 스윙용
+  | 'VOLUME_SURGE'   // 거래량 급등 — 단타용
+  | 'STRONG_DEMAND'  // 강한 수급 (복합) — 단타+스윙
+  | 'MOMENTUM';      // 당일 모멘텀 (거래량 폭발+상승) — 단타 전용
 
 /** 스코어 계산 이유 */
 export interface ScoreReason {
@@ -70,14 +71,15 @@ export interface StockSignal {
 
 /** 저장 데이터 구조 */
 export interface TodaySignalData {
-  status: 'completed' | 'generating' | 'failed'; // 🔔 상태 필드 추가 (시나리오 v3)
+  status: 'completed' | 'generating' | 'failed';
   date: string;             // YYYYMMDD
   market: MarketContext;
   signals: {
-    instBuy: StockSignal[];     // 기관 순매수 TOP 5
-    foreignBuy: StockSignal[];  // 외국인 매집 TOP 5
-    volumeSurge: StockSignal[]; // 거래량 급등 TOP 5
-    strongDemand: StockSignal[]; // 강한 수급 후보 TOP 10
+    instBuy: StockSignal[];      // 기관 순매수 — 스윙용
+    foreignBuy: StockSignal[];   // 외국인 매집 — 스윙용
+    volumeSurge: StockSignal[];  // 거래량 급등 — 단타용
+    strongDemand: StockSignal[]; // 강한 수급 복합 — 단타+스윙
+    momentum: StockSignal[];     // 당일 모멘텀 — 단타 전용
   };
   updatedAt: string;
 }
