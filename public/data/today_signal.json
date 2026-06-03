@@ -6,7 +6,7 @@
     "kosdaqChange": -2.29,
     "kospiVolume": 1,
     "isIntraday": true,
-    "fetchedAt": "2026-06-03T02:05:02.312Z"
+    "fetchedAt": "2026-06-03T02:35:02.265Z"
   },
   "signals": {
     "instBuy": [
@@ -193,50 +193,6 @@
           },
           {
             "label": "장중 상승 +3.5%",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "005930",
-          "name": "삼성전자",
-          "market": "KOSPI",
-          "price": 360500,
-          "priceChange": 11500,
-          "changePct": 3.3,
-          "open": 360500,
-          "high": 370000,
-          "low": 342000,
-          "volume": 44720282,
-          "avgVolume20": 35629426,
-          "marketCap": 21075834
-        },
-        "supply": {
-          "code": "005930",
-          "instNetBuy": 3088203,
-          "instNetBuyAmt": 1103593,
-          "instConsecutiveDays": 3,
-          "foreignNetBuy": -13613982,
-          "foreignNetBuyAmt": -3935057,
-          "foreignConsecutiveDays": -5,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "B",
-        "score": 55,
-        "reasons": [
-          {
-            "label": "기관 강력매수 11133억",
-            "score": 30
-          },
-          {
-            "label": "기관 연속 3일 매집",
-            "score": 15
-          },
-          {
-            "label": "장중 상승 +3.3%",
             "score": 10
           }
         ],
@@ -479,6 +435,46 @@
           },
           {
             "label": "외국인 순매수 162억",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "229200",
+          "name": "KODEX 코스닥150",
+          "market": "KOSPI",
+          "price": 17955,
+          "priceChange": -455,
+          "changePct": -2.47,
+          "open": 18350,
+          "high": 18650,
+          "low": 17760,
+          "volume": 54103322,
+          "avgVolume20": 30878243,
+          "marketCap": 48254
+        },
+        "supply": {
+          "code": "229200",
+          "instNetBuy": -3950173,
+          "instNetBuyAmt": -71685,
+          "instConsecutiveDays": -4,
+          "foreignNetBuy": 802010,
+          "foreignNetBuyAmt": 14853,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "C",
+        "score": 35,
+        "reasons": [
+          {
+            "label": "외국인 연속 2일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 144억",
             "score": 20
           }
         ],
@@ -1132,5 +1128,5 @@
       }
     ]
   },
-  "updatedAt": "2026-06-03T02:05:40.816Z"
+  "updatedAt": "2026-06-03T02:35:42.024Z"
 }
