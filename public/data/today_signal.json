@@ -6,51 +6,100 @@
     "kosdaqChange": -7.94,
     "kospiVolume": 1,
     "isIntraday": false,
-    "fetchedAt": "2026-06-23T06:35:02.394Z"
+    "fetchedAt": "2026-06-23T07:15:02.382Z"
   },
   "signals": {
-    "instBuy": [],
-    "foreignBuy": [
+    "instBuy": [
       {
         "stock": {
-          "code": "006220",
-          "name": "제주은행",
+          "code": "0197X0",
+          "name": "SOL SK하이닉스선물단일종목인버스2X",
           "market": "KOSPI",
-          "price": 10490,
-          "priceChange": 400,
-          "changePct": 3.96,
-          "open": 10150,
-          "high": 11850,
-          "low": 10100,
-          "volume": 4479054,
-          "avgVolume20": 3070190,
-          "marketCap": 3965
+          "price": 8645,
+          "priceChange": 1840,
+          "changePct": 27.04,
+          "open": 6860,
+          "high": 8760,
+          "low": 6765,
+          "volume": 241470835,
+          "avgVolume20": 70028686,
+          "marketCap": 1800
         },
         "supply": {
-          "code": "006220",
-          "instNetBuy": -9779,
-          "instNetBuyAmt": -100,
-          "instConsecutiveDays": -8,
-          "foreignNetBuy": 61202,
-          "foreignNetBuyAmt": 612,
-          "foreignConsecutiveDays": 2,
+          "code": "0197X0",
+          "instNetBuy": 2614351,
+          "instNetBuyAmt": 23698,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 436744,
+          "foreignNetBuyAmt": 2837,
+          "foreignConsecutiveDays": 1,
           "foreignHoldPct": 0
         },
-        "category": "FOREIGN_BUY",
-        "grade": "C",
-        "score": 20,
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 56,
         "reasons": [
           {
-            "label": "외국인 연속 2일 순매수",
-            "score": 15
+            "label": "기관 강력매수 226억",
+            "score": 30
           },
           {
-            "label": "주가 상승 동반",
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "거래량 평균 3.4배",
+            "score": 10
+          },
+          {
+            "label": "강한 종가 방어",
             "score": 10
           }
         ],
         "passedFilter": true
       },
+      {
+        "stock": {
+          "code": "006340",
+          "name": "대원전선",
+          "market": "KOSPI",
+          "price": 10700,
+          "priceChange": 340,
+          "changePct": 3.28,
+          "open": 10070,
+          "high": 12800,
+          "low": 10070,
+          "volume": 23921826,
+          "avgVolume20": 8408325,
+          "marketCap": 8390
+        },
+        "supply": {
+          "code": "006340",
+          "instNetBuy": 76116,
+          "instNetBuyAmt": 840,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": -254412,
+          "foreignNetBuyAmt": -3455,
+          "foreignConsecutiveDays": -1,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "C",
+        "score": 16,
+        "reasons": [
+          {
+            "label": "기관 매수세 유입",
+            "score": 10
+          },
+          {
+            "label": "거래량 평균 2.8배",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      }
+    ],
+    "foreignBuy": [
       {
         "stock": {
           "code": "092220",
@@ -62,18 +111,18 @@
           "open": 3585,
           "high": 4380,
           "low": 3360,
-          "volume": 3349046,
-          "avgVolume20": 1610990,
+          "volume": 3352187,
+          "avgVolume20": 1611147,
           "marketCap": 1614
         },
         "supply": {
           "code": "092220",
-          "instNetBuy": -3213,
-          "instNetBuyAmt": -12,
-          "instConsecutiveDays": -1,
-          "foreignNetBuy": 69751,
-          "foreignNetBuyAmt": 246,
-          "foreignConsecutiveDays": 3,
+          "instNetBuy": 7908,
+          "instNetBuyAmt": 32,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 204079,
+          "foreignNetBuyAmt": 763,
+          "foreignConsecutiveDays": 4,
           "foreignHoldPct": 0
         },
         "category": "FOREIGN_BUY",
@@ -81,7 +130,7 @@
         "score": 20,
         "reasons": [
           {
-            "label": "외국인 연속 3일 순매수",
+            "label": "외국인 연속 4일 순매수",
             "score": 15
           },
           {
@@ -95,6 +144,54 @@
     "volumeSurge": [
       {
         "stock": {
+          "code": "0197X0",
+          "name": "SOL SK하이닉스선물단일종목인버스2X",
+          "market": "KOSPI",
+          "price": 8645,
+          "priceChange": 1840,
+          "changePct": 27.04,
+          "open": 6860,
+          "high": 8760,
+          "low": 6765,
+          "volume": 241470835,
+          "avgVolume20": 70028686,
+          "marketCap": 1800
+        },
+        "supply": {
+          "code": "0197X0",
+          "instNetBuy": 2614351,
+          "instNetBuyAmt": 23698,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 436744,
+          "foreignNetBuyAmt": 2837,
+          "foreignConsecutiveDays": 1,
+          "foreignHoldPct": 0
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "B",
+        "score": 56,
+        "reasons": [
+          {
+            "label": "초대형 거래대금 20875억",
+            "score": 20
+          },
+          {
+            "label": "거래량 3.4배 유입",
+            "score": 10
+          },
+          {
+            "label": "메이저 쌍끌이 매수 가담",
+            "score": 30
+          },
+          {
+            "label": "+27.0% 급등",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "026940",
           "name": "부국철강",
           "market": "KOSPI",
@@ -104,23 +201,23 @@
           "open": 3115,
           "high": 3755,
           "low": 2890,
-          "volume": 24314934,
-          "avgVolume20": 2386970,
+          "volume": 24316529,
+          "avgVolume20": 2387049,
           "marketCap": 751
         },
         "supply": {
           "code": "026940",
-          "instNetBuy": 2185,
-          "instNetBuyAmt": 6,
-          "instConsecutiveDays": 3,
-          "foreignNetBuy": 199491,
-          "foreignNetBuyAmt": 548,
-          "foreignConsecutiveDays": 1,
+          "instNetBuy": -32707,
+          "instNetBuyAmt": -114,
+          "instConsecutiveDays": -1,
+          "foreignNetBuy": -176177,
+          "foreignNetBuyAmt": -625,
+          "foreignConsecutiveDays": -1,
           "foreignHoldPct": 0
         },
         "category": "VOLUME_SURGE",
         "grade": "C",
-        "score": 40,
+        "score": 32,
         "reasons": [
           {
             "label": "대규모 거래대금 913억",
@@ -129,10 +226,6 @@
           {
             "label": "거래량 10배 폭발",
             "score": 20
-          },
-          {
-            "label": "메이저 수급 확인",
-            "score": 10
           },
           {
             "label": "+29.9% 급등",
@@ -152,18 +245,18 @@
           "open": 2505,
           "high": 3040,
           "low": 2255,
-          "volume": 17763770,
-          "avgVolume20": 3428228,
+          "volume": 17764961,
+          "avgVolume20": 3428288,
           "marketCap": 840
         },
         "supply": {
           "code": "000890",
-          "instNetBuy": -30,
+          "instNetBuy": 0,
           "instNetBuyAmt": 0,
-          "instConsecutiveDays": -10,
-          "foreignNetBuy": -128460,
-          "foreignNetBuyAmt": -452,
-          "foreignConsecutiveDays": -1,
+          "instConsecutiveDays": 0,
+          "foreignNetBuy": 24335,
+          "foreignNetBuyAmt": 25,
+          "foreignConsecutiveDays": 1,
           "foreignHoldPct": 0
         },
         "category": "VOLUME_SURGE",
@@ -184,54 +277,10 @@
           }
         ],
         "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "0197X0",
-          "name": "SOL SK하이닉스선물단일종목인버스2X",
-          "market": "KOSPI",
-          "price": 8645,
-          "priceChange": 1840,
-          "changePct": 27.04,
-          "open": 6860,
-          "high": 8760,
-          "low": 6765,
-          "volume": 240753534,
-          "avgVolume20": 69990933,
-          "marketCap": 1800
-        },
-        "supply": {
-          "code": "0197X0",
-          "instNetBuy": -4528196,
-          "instNetBuyAmt": -32669,
-          "instConsecutiveDays": -6,
-          "foreignNetBuy": -18249,
-          "foreignNetBuyAmt": -859,
-          "foreignConsecutiveDays": -1,
-          "foreignHoldPct": 0
-        },
-        "category": "VOLUME_SURGE",
-        "grade": "C",
-        "score": 32,
-        "reasons": [
-          {
-            "label": "초대형 거래대금 20813억",
-            "score": 20
-          },
-          {
-            "label": "거래량 3.4배 유입",
-            "score": 10
-          },
-          {
-            "label": "+27.0% 급등",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
       }
     ],
     "strongDemand": [],
     "momentum": []
   },
-  "updatedAt": "2026-06-23T06:35:41.770Z"
+  "updatedAt": "2026-06-23T07:15:41.753Z"
 }
