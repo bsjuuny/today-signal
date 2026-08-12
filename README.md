@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Today Signal
 
-## Getting Started
+기관·외국인 수급과 거래량, 시장 흐름을 조합해 국내 주식의 일일 관찰 신호를 보여주는 대시보드입니다.
 
-First, run the development server:
+[서비스 바로가기](https://bsjuun2026.mycafe24.com/todaysignal/)
+
+## 주요 기능
+
+- 기관 순매수, 외국인 매집, 거래량 급등, 강한 수급 신호 분류
+- 종목별 점수·등급과 신호 산출 근거 표시
+- KOSPI·KOSDAQ 급락 시 신호를 억제하는 시장 안전장치
+- 목표 수익과 손절 기준을 계산하는 간단한 수익 계산기
+- 이전 거래일 신호의 성과 검증 및 이력 저장
+- 데이터 수집, 정적 빌드, Cafe24 배포 자동화
+
+## 기술 스택
+
+- Next.js 16 / React 19 / TypeScript
+- Tailwind CSS 4
+- 한국투자증권 Open API
+- GitHub Actions / Cafe24 FTP
+
+## 로컬 실행
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 `http://localhost:3000`을 엽니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 주요 명령어
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run data:update    # 최신 수급·시장 데이터 수집
+npm run short:balance  # 공매도 잔고 데이터 수집
+npm run data:verify    # 과거 신호 성과 검증
+npm run build          # 정적 사이트 빌드
+```
 
-## Learn More
+실데이터 수집에는 `KIS_APP_KEY`, `KIS_APP_SECRET` 등 별도의 환경 변수가 필요합니다.
 
-To learn more about Next.js, take a look at the following resources:
+## 안내
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+표시되는 신호는 기술적 조건을 기준으로 생성된 참고 정보이며 투자 권유가 아닙니다.
