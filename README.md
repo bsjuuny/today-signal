@@ -2,7 +2,7 @@
 
 기관·외국인 수급과 거래량, 시장 흐름을 조합해 국내 주식의 일일 관찰 신호를 보여주는 대시보드입니다.
 
-[서비스 바로가기](https://bsjuun2026.mycafe24.com/todaysignal/)
+[서비스 바로가기](https://bsjuuny2026.mycafe24.com/todaysignal/)
 
 ## 주요 기능
 
