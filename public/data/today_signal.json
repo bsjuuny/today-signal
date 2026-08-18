@@ -2,99 +2,14 @@
   "status": "completed",
   "date": "20260818",
   "market": {
-    "kospiChange": -0.45,
-    "kosdaqChange": -1.62,
+    "kospiChange": -0.92,
+    "kosdaqChange": -2.15,
     "kospiVolume": 0,
     "isIntraday": true,
-    "fetchedAt": "2026-08-18T03:05:02.705Z"
+    "fetchedAt": "2026-08-18T03:46:03.216Z"
   },
   "signals": {
-    "instBuy": [
-      {
-        "stock": {
-          "code": "069500",
-          "name": "KODEX 200",
-          "market": "KOSPI",
-          "price": 109895,
-          "priceChange": -165,
-          "changePct": -0.15,
-          "open": 113010,
-          "high": 114710,
-          "low": 108810,
-          "volume": 10142874,
-          "avgVolume20": 20254359,
-          "marketCap": 259517
-        },
-        "supply": {
-          "code": "069500",
-          "instNetBuy": 811396,
-          "instNetBuyAmt": 89265,
-          "instConsecutiveDays": 4,
-          "foreignNetBuy": -250704,
-          "foreignNetBuyAmt": -27528,
-          "foreignConsecutiveDays": -1,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "B",
-        "score": 45,
-        "reasons": [
-          {
-            "label": "기관 강력매수 892억",
-            "score": 30
-          },
-          {
-            "label": "기관 연속 4일 매집",
-            "score": 15
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "028670",
-          "name": "팬오션",
-          "market": "KOSPI",
-          "price": 5940,
-          "priceChange": 150,
-          "changePct": 2.59,
-          "open": 5720,
-          "high": 6130,
-          "low": 5720,
-          "volume": 3078178,
-          "avgVolume20": 3401291,
-          "marketCap": 31753
-        },
-        "supply": {
-          "code": "028670",
-          "instNetBuy": 52651,
-          "instNetBuyAmt": 303,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 556694,
-          "foreignNetBuyAmt": 3199,
-          "foreignConsecutiveDays": 3,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "C",
-        "score": 40,
-        "reasons": [
-          {
-            "label": "기관 매수세 유입",
-            "score": 10
-          },
-          {
-            "label": "외국인 동반 매수 (쌍끌이)",
-            "score": 20
-          },
-          {
-            "label": "장중 상승 +2.6%",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      }
-    ],
+    "instBuy": [],
     "foreignBuy": [
       {
         "stock": {
@@ -145,46 +60,94 @@
         "passedFilter": true
       }
     ],
-    "volumeSurge": [],
-    "strongDemand": [
+    "volumeSurge": [
       {
         "stock": {
-          "code": "028670",
-          "name": "팬오션",
+          "code": "025980",
+          "name": "아난티",
           "market": "KOSPI",
-          "price": 5940,
-          "priceChange": 150,
-          "changePct": 2.59,
-          "open": 5720,
-          "high": 6130,
-          "low": 5720,
-          "volume": 3078178,
-          "avgVolume20": 3401291,
-          "marketCap": 31753
+          "price": 4955,
+          "priceChange": 1005,
+          "changePct": 25.44,
+          "open": 4690,
+          "high": 5130,
+          "low": 4675,
+          "volume": 14789105,
+          "avgVolume20": 1274971,
+          "marketCap": 4821
         },
         "supply": {
-          "code": "028670",
-          "instNetBuy": 52651,
-          "instNetBuyAmt": 303,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 556694,
-          "foreignNetBuyAmt": 3199,
-          "foreignConsecutiveDays": 3,
+          "code": "025980",
+          "instNetBuy": -46184,
+          "instNetBuyAmt": -179,
+          "instConsecutiveDays": -1,
+          "foreignNetBuy": 24617,
+          "foreignNetBuyAmt": 103,
+          "foreignConsecutiveDays": 1,
           "foreignHoldPct": 0
         },
-        "category": "STRONG_DEMAND",
-        "grade": "B",
+        "category": "VOLUME_SURGE",
+        "grade": "C",
         "score": 40,
         "reasons": [
           {
-            "label": "강력 쌍끌이 (기관 3억, 외인 33억)",
-            "score": 40
+            "label": "대규모 거래대금 733억",
+            "score": 10
+          },
+          {
+            "label": "거래량 12배 폭발",
+            "score": 20
+          },
+          {
+            "label": "+25.4% 급등",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "006660",
+          "name": "삼성공조",
+          "market": "KOSPI",
+          "price": 15110,
+          "priceChange": 3480,
+          "changePct": 29.92,
+          "open": 11630,
+          "high": 15110,
+          "low": 11600,
+          "volume": 3174017,
+          "avgVolume20": 801851,
+          "marketCap": 1228
+        },
+        "supply": {
+          "code": "006660",
+          "instNetBuy": 144,
+          "instNetBuyAmt": 2,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": -31805,
+          "foreignNetBuyAmt": -372,
+          "foreignConsecutiveDays": -1,
+          "foreignHoldPct": 0
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "C",
+        "score": 20,
+        "reasons": [
+          {
+            "label": "거래량 4.0배 유입",
+            "score": 10
+          },
+          {
+            "label": "+29.9% 급등",
+            "score": 10
           }
         ],
         "passedFilter": true
       }
     ],
+    "strongDemand": [],
     "momentum": []
   },
-  "updatedAt": "2026-08-18T03:05:23.357Z"
+  "updatedAt": "2026-08-18T03:46:27.342Z"
 }
