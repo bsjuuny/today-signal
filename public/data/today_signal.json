@@ -2,11 +2,11 @@
   "status": "completed",
   "date": "20260825",
   "market": {
-    "kospiChange": 0.31,
-    "kosdaqChange": 1.23,
+    "kospiChange": 0.68,
+    "kosdaqChange": 1.7,
     "kospiVolume": 0,
-    "isIntraday": true,
-    "fetchedAt": "2026-08-25T06:05:02.163Z"
+    "isIntraday": false,
+    "fetchedAt": "2026-08-25T06:35:02.323Z"
   },
   "signals": {
     "instBuy": [
@@ -15,15 +15,15 @@
           "code": "028670",
           "name": "팬오션",
           "market": "KOSPI",
-          "price": 6350,
-          "priceChange": 30,
-          "changePct": 0.47,
+          "price": 6380,
+          "priceChange": 60,
+          "changePct": 0.95,
           "open": 6290,
           "high": 6530,
           "low": 6210,
-          "volume": 6038432,
-          "avgVolume20": 4530343,
-          "marketCap": 33945
+          "volume": 6430072,
+          "avgVolume20": 4549916,
+          "marketCap": 34106
         },
         "supply": {
           "code": "028670",
@@ -36,8 +36,8 @@
           "foreignHoldPct": 0
         },
         "category": "INST_BUY",
-        "grade": "B",
-        "score": 65,
+        "grade": "A",
+        "score": 75,
         "reasons": [
           {
             "label": "기관 강력매수 83억",
@@ -50,6 +50,10 @@
           {
             "label": "외국인 동반 매수 (쌍끌이)",
             "score": 20
+          },
+          {
+            "label": "강한 종가 방어",
+            "score": 10
           }
         ],
         "passedFilter": true
@@ -59,24 +63,72 @@
           "code": "003490",
           "name": "대한항공",
           "market": "KOSPI",
-          "price": 26200,
-          "priceChange": 200,
-          "changePct": 0.77,
+          "price": 26300,
+          "priceChange": 300,
+          "changePct": 1.15,
           "open": 26000,
           "high": 26350,
           "low": 25650,
-          "volume": 1933578,
-          "avgVolume20": 2379039,
-          "marketCap": 96474
+          "volume": 2053749,
+          "avgVolume20": 2385047,
+          "marketCap": 96842
         },
         "supply": {
           "code": "003490",
-          "instNetBuy": 567791,
-          "instNetBuyAmt": 14887,
-          "instConsecutiveDays": 3,
-          "foreignNetBuy": 87178,
-          "foreignNetBuyAmt": -5434,
-          "foreignConsecutiveDays": -5,
+          "instNetBuy": 448296,
+          "instNetBuyAmt": 11735,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 90810,
+          "foreignNetBuyAmt": 2975,
+          "foreignConsecutiveDays": 1,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "A",
+        "score": 75,
+        "reasons": [
+          {
+            "label": "기관 강력매수 118억",
+            "score": 30
+          },
+          {
+            "label": "기관 연속 4일 매집",
+            "score": 15
+          },
+          {
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "강한 종가 방어",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "088350",
+          "name": "한화생명",
+          "market": "KOSPI",
+          "price": 5370,
+          "priceChange": 130,
+          "changePct": 2.48,
+          "open": 5190,
+          "high": 5410,
+          "low": 5100,
+          "volume": 2738153,
+          "avgVolume20": 4339093,
+          "marketCap": 46640
+        },
+        "supply": {
+          "code": "088350",
+          "instNetBuy": 335390,
+          "instNetBuyAmt": 1784,
+          "instConsecutiveDays": 7,
+          "foreignNetBuy": 155721,
+          "foreignNetBuyAmt": 818,
+          "foreignConsecutiveDays": 1,
           "foreignHoldPct": 0
         },
         "category": "INST_BUY",
@@ -84,59 +136,19 @@
         "score": 65,
         "reasons": [
           {
-            "label": "기관 강력매수 149억",
-            "score": 30
+            "label": "기관 순매수 18억",
+            "score": 20
           },
           {
-            "label": "기관 연속 3일 매집",
+            "label": "기관 연속 7일 매집",
             "score": 15
           },
           {
             "label": "외국인 동반 매수 (쌍끌이)",
             "score": 20
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "006360",
-          "name": "GS건설",
-          "market": "KOSPI",
-          "price": 34850,
-          "priceChange": 950,
-          "changePct": 2.8,
-          "open": 33900,
-          "high": 35450,
-          "low": 32650,
-          "volume": 1796284,
-          "avgVolume20": 3231189,
-          "marketCap": 29825
-        },
-        "supply": {
-          "code": "006360",
-          "instNetBuy": 228755,
-          "instNetBuyAmt": 7769,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 72905,
-          "foreignNetBuyAmt": 2453,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "B",
-        "score": 60,
-        "reasons": [
-          {
-            "label": "기관 강력매수 80억",
-            "score": 30
           },
           {
-            "label": "외국인 동반 매수 (쌍끌이)",
-            "score": 20
-          },
-          {
-            "label": "장중 상승 +2.8%",
+            "label": "강한 종가 방어",
             "score": 10
           }
         ],
@@ -144,71 +156,27 @@
       },
       {
         "stock": {
-          "code": "229200",
-          "name": "KODEX 코스닥150",
+          "code": "003350",
+          "name": "한국화장품제조",
           "market": "KOSPI",
-          "price": 14222,
-          "priceChange": 147,
-          "changePct": 1.04,
-          "open": 13860,
-          "high": 14225,
-          "low": 13400,
-          "volume": 21742141,
-          "avgVolume20": 41608840,
-          "marketCap": 49514
+          "price": 14410,
+          "priceChange": 2690,
+          "changePct": 22.95,
+          "open": 11570,
+          "high": 14940,
+          "low": 11400,
+          "volume": 8889095,
+          "avgVolume20": 1734275,
+          "marketCap": 3265
         },
         "supply": {
-          "code": "229200",
-          "instNetBuy": 1600886,
-          "instNetBuyAmt": 22508,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 309942,
-          "foreignNetBuyAmt": 4374,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "B",
-        "score": 60,
-        "reasons": [
-          {
-            "label": "기관 강력매수 228억",
-            "score": 30
-          },
-          {
-            "label": "외국인 동반 매수 (쌍끌이)",
-            "score": 20
-          },
-          {
-            "label": "장중 상승 +1.0%",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "003530",
-          "name": "한화투자증권",
-          "market": "KOSPI",
-          "price": 5060,
-          "priceChange": 210,
-          "changePct": 4.33,
-          "open": 4915,
-          "high": 5160,
-          "low": 4790,
-          "volume": 5258770,
-          "avgVolume20": 1695761,
-          "marketCap": 10856
-        },
-        "supply": {
-          "code": "003530",
-          "instNetBuy": 226665,
-          "instNetBuyAmt": 1129,
-          "instConsecutiveDays": 9,
-          "foreignNetBuy": -689528,
-          "foreignNetBuyAmt": -3409,
-          "foreignConsecutiveDays": -2,
+          "code": "003350",
+          "instNetBuy": 253113,
+          "instNetBuyAmt": 3547,
+          "instConsecutiveDays": 8,
+          "foreignNetBuy": -216963,
+          "foreignNetBuyAmt": -2886,
+          "foreignConsecutiveDays": -7,
           "foreignHoldPct": 0
         },
         "category": "INST_BUY",
@@ -216,63 +184,15 @@
         "score": 55,
         "reasons": [
           {
-            "label": "기관 순매수 11억",
-            "score": 20
-          },
-          {
-            "label": "기관 연속 9일 매집",
-            "score": 15
-          },
-          {
-            "label": "거래량 평균 3.1배",
-            "score": 10
-          },
-          {
-            "label": "장중 상승 +4.3%",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "0167A0",
-          "name": "SOL AI반도체TOP2플러스",
-          "market": "KOSPI",
-          "price": 17170,
-          "priceChange": 220,
-          "changePct": 1.3,
-          "open": 16340,
-          "high": 17205,
-          "low": 16000,
-          "volume": 14887223,
-          "avgVolume20": 22438266,
-          "marketCap": 55571
-        },
-        "supply": {
-          "code": "0167A0",
-          "instNetBuy": 652568,
-          "instNetBuyAmt": 11410,
-          "instConsecutiveDays": 3,
-          "foreignNetBuy": -160610,
-          "foreignNetBuyAmt": -2877,
-          "foreignConsecutiveDays": -2,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "B",
-        "score": 55,
-        "reasons": [
-          {
-            "label": "기관 강력매수 112억",
+            "label": "기관 강력매수 36억",
             "score": 30
           },
           {
-            "label": "기관 연속 3일 매집",
+            "label": "기관 연속 8일 매집",
             "score": 15
           },
           {
-            "label": "장중 상승 +1.3%",
+            "label": "거래량 평균 5.1배",
             "score": 10
           }
         ],
@@ -283,15 +203,15 @@
           "code": "047040",
           "name": "대우건설",
           "market": "KOSPI",
-          "price": 17590,
-          "priceChange": 1830,
-          "changePct": 11.61,
+          "price": 17620,
+          "priceChange": 1860,
+          "changePct": 11.8,
           "open": 15900,
           "high": 17750,
           "low": 15100,
-          "volume": 7623305,
-          "avgVolume20": 5764677,
-          "marketCap": 72279
+          "volume": 7906191,
+          "avgVolume20": 5778818,
+          "marketCap": 72402
         },
         "supply": {
           "code": "047040",
@@ -308,7 +228,7 @@
         "score": 50,
         "reasons": [
           {
-            "label": "기관 순매수 12억",
+            "label": "기관 순매수 13억",
             "score": 20
           },
           {
@@ -316,7 +236,7 @@
             "score": 20
           },
           {
-            "label": "장중 상승 +11.6%",
+            "label": "강한 종가 방어",
             "score": 10
           }
         ],
@@ -327,15 +247,15 @@
           "code": "034020",
           "name": "두산에너빌리티",
           "market": "KOSPI",
-          "price": 81400,
-          "priceChange": 8400,
-          "changePct": 11.51,
+          "price": 80700,
+          "priceChange": 7700,
+          "changePct": 10.55,
           "open": 74700,
           "high": 81600,
           "low": 72600,
-          "volume": 5088243,
-          "avgVolume20": 2381397,
-          "marketCap": 521417
+          "volume": 5479575,
+          "avgVolume20": 2400963,
+          "marketCap": 516933
         },
         "supply": {
           "code": "034020",
@@ -356,11 +276,11 @@
             "score": 30
           },
           {
-            "label": "거래량 평균 2.1배",
+            "label": "거래량 평균 2.3배",
             "score": 10
           },
           {
-            "label": "장중 상승 +11.5%",
+            "label": "강한 종가 방어",
             "score": 10
           }
         ],
@@ -368,26 +288,114 @@
       },
       {
         "stock": {
-          "code": "011200",
-          "name": "HMM",
+          "code": "088980",
+          "name": "맥쿼리인프라",
           "market": "KOSPI",
-          "price": 22600,
-          "priceChange": -250,
-          "changePct": -1.09,
-          "open": 22700,
-          "high": 23000,
-          "low": 22300,
-          "volume": 1735930,
-          "avgVolume20": 1607834,
-          "marketCap": 213172
+          "price": 9960,
+          "priceChange": 180,
+          "changePct": 1.84,
+          "open": 9730,
+          "high": 10020,
+          "low": 9730,
+          "volume": 2234615,
+          "avgVolume20": 1739664,
+          "marketCap": 47701
         },
         "supply": {
-          "code": "011200",
-          "instNetBuy": 451644,
-          "instNetBuyAmt": 10279,
+          "code": "088980",
+          "instNetBuy": 174855,
+          "instNetBuyAmt": 1746,
           "instConsecutiveDays": 2,
-          "foreignNetBuy": 932726,
-          "foreignNetBuyAmt": 21117,
+          "foreignNetBuy": 758941,
+          "foreignNetBuyAmt": 7519,
+          "foreignConsecutiveDays": 5,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 50,
+        "reasons": [
+          {
+            "label": "기관 순매수 17억",
+            "score": 20
+          },
+          {
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "강한 종가 방어",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "000720",
+          "name": "현대건설",
+          "market": "KOSPI",
+          "price": 121300,
+          "priceChange": 15700,
+          "changePct": 14.87,
+          "open": 108800,
+          "high": 122600,
+          "low": 106200,
+          "volume": 2051192,
+          "avgVolume20": 648607,
+          "marketCap": 135075
+        },
+        "supply": {
+          "code": "000720",
+          "instNetBuy": 548280,
+          "instNetBuyAmt": 64336,
+          "instConsecutiveDays": 2,
+          "foreignNetBuy": -139455,
+          "foreignNetBuyAmt": -16037,
+          "foreignConsecutiveDays": -2,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 50,
+        "reasons": [
+          {
+            "label": "기관 강력매수 665억",
+            "score": 30
+          },
+          {
+            "label": "거래량 평균 3.2배",
+            "score": 10
+          },
+          {
+            "label": "강한 종가 방어",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "010140",
+          "name": "삼성중공업",
+          "market": "KOSPI",
+          "price": 20450,
+          "priceChange": 350,
+          "changePct": 1.74,
+          "open": 19980,
+          "high": 20450,
+          "low": 19600,
+          "volume": 1866737,
+          "avgVolume20": 3177972,
+          "marketCap": 179960
+        },
+        "supply": {
+          "code": "010140",
+          "instNetBuy": 82869,
+          "instNetBuyAmt": 1705,
+          "instConsecutiveDays": 2,
+          "foreignNetBuy": 349490,
+          "foreignNetBuyAmt": 7080,
           "foreignConsecutiveDays": 1,
           "foreignHoldPct": 0
         },
@@ -396,39 +404,43 @@
         "score": 50,
         "reasons": [
           {
-            "label": "기관 강력매수 102억",
-            "score": 30
+            "label": "기관 순매수 17억",
+            "score": 20
           },
           {
             "label": "외국인 동반 매수 (쌍끌이)",
             "score": 20
+          },
+          {
+            "label": "강한 종가 방어",
+            "score": 10
           }
         ],
         "passedFilter": true
       },
       {
         "stock": {
-          "code": "003350",
-          "name": "한국화장품제조",
+          "code": "003530",
+          "name": "한화투자증권",
           "market": "KOSPI",
-          "price": 14330,
-          "priceChange": 2610,
-          "changePct": 22.27,
-          "open": 11570,
-          "high": 14940,
-          "low": 11400,
-          "volume": 8641594,
-          "avgVolume20": 1721900,
-          "marketCap": 3247
+          "price": 5030,
+          "priceChange": 180,
+          "changePct": 3.71,
+          "open": 4915,
+          "high": 5160,
+          "low": 4790,
+          "volume": 5423172,
+          "avgVolume20": 1703981,
+          "marketCap": 10792
         },
         "supply": {
-          "code": "003350",
-          "instNetBuy": 43230,
-          "instNetBuyAmt": 497,
-          "instConsecutiveDays": 7,
-          "foreignNetBuy": -32813,
-          "foreignNetBuyAmt": -385,
-          "foreignConsecutiveDays": -6,
+          "code": "003530",
+          "instNetBuy": 94687,
+          "instNetBuyAmt": 480,
+          "instConsecutiveDays": 10,
+          "foreignNetBuy": -571350,
+          "foreignNetBuyAmt": -2844,
+          "foreignConsecutiveDays": -3,
           "foreignHoldPct": 0
         },
         "category": "INST_BUY",
@@ -440,15 +452,15 @@
             "score": 10
           },
           {
-            "label": "기관 연속 7일 매집",
+            "label": "기관 연속 10일 매집",
             "score": 15
           },
           {
-            "label": "거래량 평균 5.0배",
+            "label": "거래량 평균 3.2배",
             "score": 10
           },
           {
-            "label": "장중 상승 +22.3%",
+            "label": "강한 종가 방어",
             "score": 10
           }
         ],
@@ -458,18 +470,66 @@
     "foreignBuy": [
       {
         "stock": {
+          "code": "088980",
+          "name": "맥쿼리인프라",
+          "market": "KOSPI",
+          "price": 9960,
+          "priceChange": 180,
+          "changePct": 1.84,
+          "open": 9730,
+          "high": 10020,
+          "low": 9730,
+          "volume": 2234615,
+          "avgVolume20": 1739664,
+          "marketCap": 47701
+        },
+        "supply": {
+          "code": "088980",
+          "instNetBuy": 174855,
+          "instNetBuyAmt": 1746,
+          "instConsecutiveDays": 2,
+          "foreignNetBuy": 758941,
+          "foreignNetBuyAmt": 7519,
+          "foreignConsecutiveDays": 5,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "A",
+        "score": 80,
+        "reasons": [
+          {
+            "label": "외국인 연속 5일 매집",
+            "score": 30
+          },
+          {
+            "label": "외국인 순매수 76억",
+            "score": 20
+          },
+          {
+            "label": "기관 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "028670",
           "name": "팬오션",
           "market": "KOSPI",
-          "price": 6350,
-          "priceChange": 30,
-          "changePct": 0.47,
+          "price": 6380,
+          "priceChange": 60,
+          "changePct": 0.95,
           "open": 6290,
           "high": 6530,
           "low": 6210,
-          "volume": 6038432,
-          "avgVolume20": 4530343,
-          "marketCap": 33945
+          "volume": 6430072,
+          "avgVolume20": 4549916,
+          "marketCap": 34106
         },
         "supply": {
           "code": "028670",
@@ -506,139 +566,39 @@
       },
       {
         "stock": {
-          "code": "088980",
-          "name": "맥쿼리인프라",
+          "code": "020120",
+          "name": "키다리스튜디오",
           "market": "KOSPI",
-          "price": 9960,
-          "priceChange": 180,
-          "changePct": 1.84,
-          "open": 9730,
-          "high": 10020,
-          "low": 9730,
-          "volume": 2143175,
-          "avgVolume20": 1735092,
-          "marketCap": 47701
+          "price": 5550,
+          "priceChange": 450,
+          "changePct": 8.82,
+          "open": 5300,
+          "high": 5700,
+          "low": 5040,
+          "volume": 3547424,
+          "avgVolume20": 587283,
+          "marketCap": 2057
         },
         "supply": {
-          "code": "088980",
-          "instNetBuy": 54262,
-          "instNetBuyAmt": 527,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 738629,
-          "foreignNetBuyAmt": 7174,
-          "foreignConsecutiveDays": 4,
+          "code": "020120",
+          "instNetBuy": -320569,
+          "instNetBuyAmt": -1702,
+          "instConsecutiveDays": -2,
+          "foreignNetBuy": 447124,
+          "foreignNetBuyAmt": 2389,
+          "foreignConsecutiveDays": 5,
           "foreignHoldPct": 0
         },
         "category": "FOREIGN_BUY",
         "grade": "B",
-        "score": 65,
+        "score": 60,
         "reasons": [
           {
-            "label": "외국인 연속 4일 순매수",
-            "score": 15
-          },
-          {
-            "label": "외국인 순매수 74억",
-            "score": 20
-          },
-          {
-            "label": "기관 동반 매수 (쌍끌이)",
-            "score": 20
-          },
-          {
-            "label": "주가 상승 동반",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "006360",
-          "name": "GS건설",
-          "market": "KOSPI",
-          "price": 34850,
-          "priceChange": 950,
-          "changePct": 2.8,
-          "open": 33900,
-          "high": 35450,
-          "low": 32650,
-          "volume": 1796284,
-          "avgVolume20": 3231189,
-          "marketCap": 29825
-        },
-        "supply": {
-          "code": "006360",
-          "instNetBuy": 228755,
-          "instNetBuyAmt": 7769,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 72905,
-          "foreignNetBuyAmt": 2453,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "FOREIGN_BUY",
-        "grade": "B",
-        "score": 65,
-        "reasons": [
-          {
-            "label": "외국인 연속 2일 순매수",
-            "score": 15
+            "label": "외국인 연속 5일 매집",
+            "score": 30
           },
           {
             "label": "외국인 순매수 25억",
-            "score": 20
-          },
-          {
-            "label": "기관 동반 매수 (쌍끌이)",
-            "score": 20
-          },
-          {
-            "label": "주가 상승 동반",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "229200",
-          "name": "KODEX 코스닥150",
-          "market": "KOSPI",
-          "price": 14222,
-          "priceChange": 147,
-          "changePct": 1.04,
-          "open": 13860,
-          "high": 14225,
-          "low": 13400,
-          "volume": 21742141,
-          "avgVolume20": 41608840,
-          "marketCap": 49514
-        },
-        "supply": {
-          "code": "229200",
-          "instNetBuy": 1600886,
-          "instNetBuyAmt": 22508,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 309942,
-          "foreignNetBuyAmt": 4374,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "FOREIGN_BUY",
-        "grade": "B",
-        "score": 65,
-        "reasons": [
-          {
-            "label": "외국인 연속 2일 순매수",
-            "score": 15
-          },
-          {
-            "label": "외국인 순매수 44억",
-            "score": 20
-          },
-          {
-            "label": "기관 동반 매수 (쌍끌이)",
             "score": 20
           },
           {
@@ -653,23 +613,23 @@
           "code": "133690",
           "name": "TIGER 미국나스닥100",
           "market": "KOSPI",
-          "price": 178700,
-          "priceChange": 815,
-          "changePct": 0.46,
+          "price": 179030,
+          "priceChange": 1145,
+          "changePct": 0.64,
           "open": 177265,
-          "high": 178790,
+          "high": 179030,
           "low": 176720,
-          "volume": 14410742,
-          "avgVolume20": 2804031,
-          "marketCap": 112938
+          "volume": 15292329,
+          "avgVolume20": 2848111,
+          "marketCap": 113147
         },
         "supply": {
           "code": "133690",
-          "instNetBuy": -190987,
-          "instNetBuyAmt": -34170,
+          "instNetBuy": -626794,
+          "instNetBuyAmt": -111381,
           "instConsecutiveDays": -10,
-          "foreignNetBuy": 116241,
-          "foreignNetBuyAmt": 20808,
+          "foreignNetBuy": 562564,
+          "foreignNetBuyAmt": 99950,
           "foreignConsecutiveDays": 10,
           "foreignHoldPct": 0
         },
@@ -682,7 +642,7 @@
             "score": 30
           },
           {
-            "label": "외국인 순매수 208억",
+            "label": "외국인 순매수 1007억",
             "score": 20
           },
           {
@@ -697,15 +657,15 @@
           "code": "047040",
           "name": "대우건설",
           "market": "KOSPI",
-          "price": 17590,
-          "priceChange": 1830,
-          "changePct": 11.61,
+          "price": 17620,
+          "priceChange": 1860,
+          "changePct": 11.8,
           "open": 15900,
           "high": 17750,
           "low": 15100,
-          "volume": 7623305,
-          "avgVolume20": 5764677,
-          "marketCap": 72279
+          "volume": 7906191,
+          "avgVolume20": 5778818,
+          "marketCap": 72402
         },
         "supply": {
           "code": "047040",
@@ -738,27 +698,27 @@
       },
       {
         "stock": {
-          "code": "020120",
-          "name": "키다리스튜디오",
+          "code": "003280",
+          "name": "흥아해운",
           "market": "KOSPI",
-          "price": 5460,
-          "priceChange": 360,
-          "changePct": 7.06,
-          "open": 5300,
-          "high": 5700,
-          "low": 5040,
-          "volume": 3414223,
-          "avgVolume20": 580623,
-          "marketCap": 2024
+          "price": 1799,
+          "priceChange": 11,
+          "changePct": 0.62,
+          "open": 1762,
+          "high": 1812,
+          "low": 1736,
+          "volume": 2886778,
+          "avgVolume20": 8020096,
+          "marketCap": 4325
         },
         "supply": {
-          "code": "020120",
-          "instNetBuy": -135203,
-          "instNetBuyAmt": -691,
-          "instConsecutiveDays": -1,
-          "foreignNetBuy": 398806,
-          "foreignNetBuyAmt": 1853,
-          "foreignConsecutiveDays": 4,
+          "code": "003280",
+          "instNetBuy": 3444,
+          "instNetBuyAmt": 6,
+          "instConsecutiveDays": 3,
+          "foreignNetBuy": 815564,
+          "foreignNetBuyAmt": 1460,
+          "foreignConsecutiveDays": 2,
           "foreignHoldPct": 0
         },
         "category": "FOREIGN_BUY",
@@ -766,11 +726,55 @@
         "score": 45,
         "reasons": [
           {
-            "label": "외국인 연속 4일 순매수",
+            "label": "외국인 연속 2일 순매수",
             "score": 15
           },
           {
-            "label": "외국인 순매수 22억",
+            "label": "외국인 순매수 15억",
+            "score": 20
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "006340",
+          "name": "대원전선",
+          "market": "KOSPI",
+          "price": 13330,
+          "priceChange": 450,
+          "changePct": 3.49,
+          "open": 12610,
+          "high": 13450,
+          "low": 12270,
+          "volume": 2552382,
+          "avgVolume20": 11657483,
+          "marketCap": 10453
+        },
+        "supply": {
+          "code": "006340",
+          "instNetBuy": -1649,
+          "instNetBuyAmt": -25,
+          "instConsecutiveDays": -3,
+          "foreignNetBuy": 140387,
+          "foreignNetBuyAmt": 1803,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 45,
+        "reasons": [
+          {
+            "label": "외국인 연속 2일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 19억",
             "score": 20
           },
           {
@@ -791,61 +795,17 @@
           "open": 2095,
           "high": 2170,
           "low": 2050,
-          "volume": 2027616,
-          "avgVolume20": 2434215,
+          "volume": 2158983,
+          "avgVolume20": 2440783,
           "marketCap": 6939
         },
         "supply": {
           "code": "005880",
-          "instNetBuy": -53833,
-          "instNetBuyAmt": -112,
-          "instConsecutiveDays": -1,
-          "foreignNetBuy": 543558,
-          "foreignNetBuyAmt": 1142,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "FOREIGN_BUY",
-        "grade": "B",
-        "score": 45,
-        "reasons": [
-          {
-            "label": "외국인 연속 2일 순매수",
-            "score": 15
-          },
-          {
-            "label": "외국인 순매수 12억",
-            "score": 20
-          },
-          {
-            "label": "주가 상승 동반",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "093370",
-          "name": "후성",
-          "market": "KOSPI",
-          "price": 12240,
-          "priceChange": 20,
-          "changePct": 0.16,
-          "open": 11800,
-          "high": 12330,
-          "low": 11400,
-          "volume": 1784609,
-          "avgVolume20": 4133151,
-          "marketCap": 13128
-        },
-        "supply": {
-          "code": "093370",
-          "instNetBuy": 30047,
-          "instNetBuyAmt": 387,
+          "instNetBuy": 270685,
+          "instNetBuyAmt": 580,
           "instConsecutiveDays": 1,
-          "foreignNetBuy": 65655,
-          "foreignNetBuyAmt": 841,
+          "foreignNetBuy": 292590,
+          "foreignNetBuyAmt": 624,
           "foreignConsecutiveDays": 3,
           "foreignHoldPct": 0
         },
@@ -867,46 +827,6 @@
           }
         ],
         "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "0193T0",
-          "name": "KODEX SK하이닉스단일종목레버리지",
-          "market": "KOSPI",
-          "price": 9895,
-          "priceChange": -20,
-          "changePct": -0.2,
-          "open": 9045,
-          "high": 9970,
-          "low": 8520,
-          "volume": 35330737,
-          "avgVolume20": 106695081,
-          "marketCap": 22932
-        },
-        "supply": {
-          "code": "0193T0",
-          "instNetBuy": -707426,
-          "instNetBuyAmt": -6530,
-          "instConsecutiveDays": -1,
-          "foreignNetBuy": 1171528,
-          "foreignNetBuyAmt": 11971,
-          "foreignConsecutiveDays": 3,
-          "foreignHoldPct": 0
-        },
-        "category": "FOREIGN_BUY",
-        "grade": "C",
-        "score": 35,
-        "reasons": [
-          {
-            "label": "외국인 연속 3일 순매수",
-            "score": 15
-          },
-          {
-            "label": "외국인 순매수 116억",
-            "score": 20
-          }
-        ],
-        "passedFilter": true
       }
     ],
     "volumeSurge": [
@@ -915,24 +835,24 @@
           "code": "003350",
           "name": "한국화장품제조",
           "market": "KOSPI",
-          "price": 14330,
-          "priceChange": 2610,
-          "changePct": 22.27,
+          "price": 14410,
+          "priceChange": 2690,
+          "changePct": 22.95,
           "open": 11570,
           "high": 14940,
           "low": 11400,
-          "volume": 8641594,
-          "avgVolume20": 1721900,
-          "marketCap": 3247
+          "volume": 8889095,
+          "avgVolume20": 1734275,
+          "marketCap": 3265
         },
         "supply": {
           "code": "003350",
-          "instNetBuy": 43230,
-          "instNetBuyAmt": 497,
-          "instConsecutiveDays": 7,
-          "foreignNetBuy": -32813,
-          "foreignNetBuyAmt": -385,
-          "foreignConsecutiveDays": -6,
+          "instNetBuy": 253113,
+          "instNetBuyAmt": 3547,
+          "instConsecutiveDays": 8,
+          "foreignNetBuy": -216963,
+          "foreignNetBuyAmt": -2886,
+          "foreignConsecutiveDays": -7,
           "foreignHoldPct": 0
         },
         "category": "VOLUME_SURGE",
@@ -940,7 +860,7 @@
         "score": 60,
         "reasons": [
           {
-            "label": "초대형 거래대금 1238억",
+            "label": "초대형 거래대금 1281억",
             "score": 20
           },
           {
@@ -952,7 +872,55 @@
             "score": 10
           },
           {
-            "label": "+22.3% 급등",
+            "label": "+22.9% 급등",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "041190",
+          "name": "우리기술투자",
+          "market": "KOSPI",
+          "price": 6800,
+          "priceChange": 930,
+          "changePct": 15.84,
+          "open": 6060,
+          "high": 7200,
+          "low": 6050,
+          "volume": 40436163,
+          "avgVolume20": 4249017,
+          "marketCap": 5712
+        },
+        "supply": {
+          "code": "041190",
+          "instNetBuy": 37958,
+          "instNetBuyAmt": 260,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 813946,
+          "foreignNetBuyAmt": 5441,
+          "foreignConsecutiveDays": 1,
+          "foreignHoldPct": 0
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "B",
+        "score": 60,
+        "reasons": [
+          {
+            "label": "초대형 거래대금 2750억",
+            "score": 20
+          },
+          {
+            "label": "거래량 10배 폭발",
+            "score": 20
+          },
+          {
+            "label": "메이저 수급 확인",
+            "score": 10
+          },
+          {
+            "label": "+15.8% 급등",
             "score": 10
           }
         ],
@@ -963,15 +931,15 @@
           "code": "034020",
           "name": "두산에너빌리티",
           "market": "KOSPI",
-          "price": 81400,
-          "priceChange": 8400,
-          "changePct": 11.51,
+          "price": 80700,
+          "priceChange": 7700,
+          "changePct": 10.55,
           "open": 74700,
           "high": 81600,
           "low": 72600,
-          "volume": 5088243,
-          "avgVolume20": 2381397,
-          "marketCap": 521417
+          "volume": 5479575,
+          "avgVolume20": 2400963,
+          "marketCap": 516933
         },
         "supply": {
           "code": "034020",
@@ -988,11 +956,11 @@
         "score": 50,
         "reasons": [
           {
-            "label": "초대형 거래대금 4142억",
+            "label": "초대형 거래대금 4422억",
             "score": 20
           },
           {
-            "label": "거래량 2.1배 유입",
+            "label": "거래량 2.3배 유입",
             "score": 10
           },
           {
@@ -1000,7 +968,7 @@
             "score": 10
           },
           {
-            "label": "+11.5% 급등",
+            "label": "+10.6% 급등",
             "score": 10
           }
         ],
@@ -1011,24 +979,24 @@
           "code": "000720",
           "name": "현대건설",
           "market": "KOSPI",
-          "price": 121100,
-          "priceChange": 15500,
-          "changePct": 14.68,
+          "price": 121300,
+          "priceChange": 15700,
+          "changePct": 14.87,
           "open": 108800,
           "high": 122600,
           "low": 106200,
-          "volume": 1983617,
-          "avgVolume20": 645228,
-          "marketCap": 134852
+          "volume": 2051192,
+          "avgVolume20": 648607,
+          "marketCap": 135075
         },
         "supply": {
           "code": "000720",
-          "instNetBuy": 12403,
-          "instNetBuyAmt": 1300,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": -2108,
-          "foreignNetBuyAmt": -219,
-          "foreignConsecutiveDays": -1,
+          "instNetBuy": 548280,
+          "instNetBuyAmt": 64336,
+          "instConsecutiveDays": 2,
+          "foreignNetBuy": -139455,
+          "foreignNetBuyAmt": -16037,
+          "foreignConsecutiveDays": -2,
           "foreignHoldPct": 0
         },
         "category": "VOLUME_SURGE",
@@ -1036,11 +1004,11 @@
         "score": 50,
         "reasons": [
           {
-            "label": "초대형 거래대금 2402억",
+            "label": "초대형 거래대금 2488억",
             "score": 20
           },
           {
-            "label": "거래량 3.1배 유입",
+            "label": "거래량 3.2배 유입",
             "score": 10
           },
           {
@@ -1048,7 +1016,7 @@
             "score": 10
           },
           {
-            "label": "+14.7% 급등",
+            "label": "+14.9% 급등",
             "score": 10
           }
         ],
@@ -1056,27 +1024,27 @@
       },
       {
         "stock": {
-          "code": "041190",
-          "name": "우리기술투자",
+          "code": "379810",
+          "name": "KODEX 미국나스닥100",
           "market": "KOSPI",
-          "price": 6850,
-          "priceChange": 980,
-          "changePct": 16.7,
-          "open": 6060,
-          "high": 7200,
-          "low": 6050,
-          "volume": 39599300,
-          "avgVolume20": 4207179,
-          "marketCap": 5754
+          "price": 26765,
+          "priceChange": 170,
+          "changePct": 0.64,
+          "open": 26500,
+          "high": 26765,
+          "low": 26415,
+          "volume": 96946719,
+          "avgVolume20": 15316907,
+          "marketCap": 92406
         },
         "supply": {
-          "code": "041190",
-          "instNetBuy": 10481,
-          "instNetBuyAmt": 65,
-          "instConsecutiveDays": 3,
-          "foreignNetBuy": -823315,
-          "foreignNetBuyAmt": -5185,
-          "foreignConsecutiveDays": -1,
+          "code": "379810",
+          "instNetBuy": -1057096,
+          "instNetBuyAmt": -28080,
+          "instConsecutiveDays": -10,
+          "foreignNetBuy": 438626,
+          "foreignNetBuyAmt": 11628,
+          "foreignConsecutiveDays": 1,
           "foreignHoldPct": 0
         },
         "category": "VOLUME_SURGE",
@@ -1084,15 +1052,59 @@
         "score": 50,
         "reasons": [
           {
-            "label": "초대형 거래대금 2713억",
+            "label": "초대형 거래대금 25948억",
             "score": 20
           },
           {
-            "label": "거래량 9배 폭발",
+            "label": "거래량 6배 폭발",
             "score": 20
           },
           {
-            "label": "+16.7% 급등",
+            "label": "메이저 수급 확인",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "133690",
+          "name": "TIGER 미국나스닥100",
+          "market": "KOSPI",
+          "price": 179030,
+          "priceChange": 1145,
+          "changePct": 0.64,
+          "open": 177265,
+          "high": 179030,
+          "low": 176720,
+          "volume": 15292329,
+          "avgVolume20": 2848111,
+          "marketCap": 113147
+        },
+        "supply": {
+          "code": "133690",
+          "instNetBuy": -626794,
+          "instNetBuyAmt": -111381,
+          "instConsecutiveDays": -10,
+          "foreignNetBuy": 562564,
+          "foreignNetBuyAmt": 99950,
+          "foreignConsecutiveDays": 10,
+          "foreignHoldPct": 0
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "B",
+        "score": 50,
+        "reasons": [
+          {
+            "label": "초대형 거래대금 27378억",
+            "score": 20
+          },
+          {
+            "label": "거래량 5배 폭발",
+            "score": 20
+          },
+          {
+            "label": "메이저 수급 확인",
             "score": 10
           }
         ],
@@ -1109,18 +1121,18 @@
           "open": 2350,
           "high": 2960,
           "low": 2310,
-          "volume": 13750291,
-          "avgVolume20": 1965586,
+          "volume": 13784336,
+          "avgVolume20": 1967288,
           "marketCap": 4101
         },
         "supply": {
           "code": "215600",
-          "instNetBuy": -17,
-          "instNetBuyAmt": 0,
-          "instConsecutiveDays": -2,
-          "foreignNetBuy": -4518,
-          "foreignNetBuyAmt": -11,
-          "foreignConsecutiveDays": -2,
+          "instNetBuy": 168,
+          "instNetBuyAmt": -32,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": -4934,
+          "foreignNetBuyAmt": -24,
+          "foreignConsecutiveDays": -3,
           "foreignHoldPct": 0
         },
         "category": "VOLUME_SURGE",
@@ -1137,78 +1149,6 @@
           }
         ],
         "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "299660",
-          "name": "셀리드",
-          "market": "KOSPI",
-          "price": 2370,
-          "priceChange": 85,
-          "changePct": 3.72,
-          "open": 2465,
-          "high": 2795,
-          "low": 2290,
-          "volume": 13281838,
-          "avgVolume20": 3203015,
-          "marketCap": 699
-        },
-        "supply": {
-          "code": "299660",
-          "instNetBuy": 9084,
-          "instNetBuyAmt": 22,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 52444,
-          "foreignNetBuyAmt": 118,
-          "foreignConsecutiveDays": 1,
-          "foreignHoldPct": 0
-        },
-        "category": "VOLUME_SURGE",
-        "grade": "C",
-        "score": 10,
-        "reasons": [
-          {
-            "label": "거래량 4.1배 유입",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "047770",
-          "name": "코데즈컴바인",
-          "market": "KOSPI",
-          "price": 3235,
-          "priceChange": 140,
-          "changePct": 4.52,
-          "open": 3150,
-          "high": 3560,
-          "low": 3150,
-          "volume": 10519220,
-          "avgVolume20": 2344649,
-          "marketCap": 1224
-        },
-        "supply": {
-          "code": "047770",
-          "instNetBuy": 0,
-          "instNetBuyAmt": 0,
-          "instConsecutiveDays": 0,
-          "foreignNetBuy": 33708,
-          "foreignNetBuyAmt": 105,
-          "foreignConsecutiveDays": 1,
-          "foreignHoldPct": 0
-        },
-        "category": "VOLUME_SURGE",
-        "grade": "C",
-        "score": 10,
-        "reasons": [
-          {
-            "label": "거래량 4.5배 유입",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
       }
     ],
     "strongDemand": [
@@ -1217,15 +1157,15 @@
           "code": "047040",
           "name": "대우건설",
           "market": "KOSPI",
-          "price": 17590,
-          "priceChange": 1830,
-          "changePct": 11.61,
+          "price": 17620,
+          "priceChange": 1860,
+          "changePct": 11.8,
           "open": 15900,
           "high": 17750,
           "low": 15100,
-          "volume": 7623305,
-          "avgVolume20": 5764677,
-          "marketCap": 72279
+          "volume": 7906191,
+          "avgVolume20": 5778818,
+          "marketCap": 72402
         },
         "supply": {
           "code": "047040",
@@ -1242,11 +1182,11 @@
         "score": 55,
         "reasons": [
           {
-            "label": "강력 쌍끌이 (기관 12억, 외인 10억)",
+            "label": "강력 쌍끌이 (기관 13억, 외인 10억)",
             "score": 40
           },
           {
-            "label": "풍부한 거래대금 1341억",
+            "label": "풍부한 거래대금 1393억",
             "score": 15
           }
         ],
@@ -1257,24 +1197,24 @@
           "code": "003490",
           "name": "대한항공",
           "market": "KOSPI",
-          "price": 26200,
-          "priceChange": 200,
-          "changePct": 0.77,
+          "price": 26300,
+          "priceChange": 300,
+          "changePct": 1.15,
           "open": 26000,
           "high": 26350,
           "low": 25650,
-          "volume": 1933578,
-          "avgVolume20": 2379039,
-          "marketCap": 96474
+          "volume": 2053749,
+          "avgVolume20": 2385047,
+          "marketCap": 96842
         },
         "supply": {
           "code": "003490",
-          "instNetBuy": 567791,
-          "instNetBuyAmt": 14887,
-          "instConsecutiveDays": 3,
-          "foreignNetBuy": 87178,
-          "foreignNetBuyAmt": -5434,
-          "foreignConsecutiveDays": -5,
+          "instNetBuy": 448296,
+          "instNetBuyAmt": 11735,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 90810,
+          "foreignNetBuyAmt": 2975,
+          "foreignConsecutiveDays": 1,
           "foreignHoldPct": 0
         },
         "category": "STRONG_DEMAND",
@@ -1282,11 +1222,11 @@
         "score": 55,
         "reasons": [
           {
-            "label": "강력 쌍끌이 (기관 149억, 외인 23억)",
+            "label": "강력 쌍끌이 (기관 118억, 외인 24억)",
             "score": 40
           },
           {
-            "label": "풍부한 거래대금 507억",
+            "label": "풍부한 거래대금 540억",
             "score": 15
           }
         ],
@@ -1294,79 +1234,43 @@
       },
       {
         "stock": {
-          "code": "006360",
-          "name": "GS건설",
+          "code": "003350",
+          "name": "한국화장품제조",
           "market": "KOSPI",
-          "price": 34850,
-          "priceChange": 950,
-          "changePct": 2.8,
-          "open": 33900,
-          "high": 35450,
-          "low": 32650,
-          "volume": 1796284,
-          "avgVolume20": 3231189,
-          "marketCap": 29825
+          "price": 14410,
+          "priceChange": 2690,
+          "changePct": 22.95,
+          "open": 11570,
+          "high": 14940,
+          "low": 11400,
+          "volume": 8889095,
+          "avgVolume20": 1734275,
+          "marketCap": 3265
         },
         "supply": {
-          "code": "006360",
-          "instNetBuy": 228755,
-          "instNetBuyAmt": 7769,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 72905,
-          "foreignNetBuyAmt": 2453,
-          "foreignConsecutiveDays": 2,
+          "code": "003350",
+          "instNetBuy": 253113,
+          "instNetBuyAmt": 3547,
+          "instConsecutiveDays": 8,
+          "foreignNetBuy": -216963,
+          "foreignNetBuyAmt": -2886,
+          "foreignConsecutiveDays": -7,
           "foreignHoldPct": 0
         },
         "category": "STRONG_DEMAND",
         "grade": "B",
-        "score": 55,
+        "score": 50,
         "reasons": [
           {
-            "label": "강력 쌍끌이 (기관 80억, 외인 25억)",
-            "score": 40
+            "label": "기관 주도 매수 36억",
+            "score": 20
           },
           {
-            "label": "풍부한 거래대금 626억",
+            "label": "거래량 5.1배",
             "score": 15
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "229200",
-          "name": "KODEX 코스닥150",
-          "market": "KOSPI",
-          "price": 14222,
-          "priceChange": 147,
-          "changePct": 1.04,
-          "open": 13860,
-          "high": 14225,
-          "low": 13400,
-          "volume": 21742141,
-          "avgVolume20": 41608840,
-          "marketCap": 49514
-        },
-        "supply": {
-          "code": "229200",
-          "instNetBuy": 1600886,
-          "instNetBuyAmt": 22508,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 309942,
-          "foreignNetBuyAmt": 4374,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "STRONG_DEMAND",
-        "grade": "B",
-        "score": 55,
-        "reasons": [
-          {
-            "label": "강력 쌍끌이 (기관 228억, 외인 44억)",
-            "score": 40
           },
           {
-            "label": "풍부한 거래대금 3092억",
+            "label": "풍부한 거래대금 1281억",
             "score": 15
           }
         ],
@@ -1377,24 +1281,24 @@
           "code": "000720",
           "name": "현대건설",
           "market": "KOSPI",
-          "price": 121100,
-          "priceChange": 15500,
-          "changePct": 14.68,
+          "price": 121300,
+          "priceChange": 15700,
+          "changePct": 14.87,
           "open": 108800,
           "high": 122600,
           "low": 106200,
-          "volume": 1983617,
-          "avgVolume20": 645228,
-          "marketCap": 134852
+          "volume": 2051192,
+          "avgVolume20": 648607,
+          "marketCap": 135075
         },
         "supply": {
           "code": "000720",
-          "instNetBuy": 12403,
-          "instNetBuyAmt": 1300,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": -2108,
-          "foreignNetBuyAmt": -219,
-          "foreignConsecutiveDays": -1,
+          "instNetBuy": 548280,
+          "instNetBuyAmt": 64336,
+          "instConsecutiveDays": 2,
+          "foreignNetBuy": -139455,
+          "foreignNetBuyAmt": -16037,
+          "foreignConsecutiveDays": -2,
           "foreignHoldPct": 0
         },
         "category": "STRONG_DEMAND",
@@ -1402,196 +1306,16 @@
         "score": 50,
         "reasons": [
           {
-            "label": "기관 주도 매수 15억",
+            "label": "기관 주도 매수 665억",
             "score": 20
           },
           {
-            "label": "거래량 3.1배",
+            "label": "거래량 3.2배",
             "score": 15
           },
           {
-            "label": "풍부한 거래대금 2402억",
+            "label": "풍부한 거래대금 2488억",
             "score": 15
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "028670",
-          "name": "팬오션",
-          "market": "KOSPI",
-          "price": 6350,
-          "priceChange": 30,
-          "changePct": 0.47,
-          "open": 6290,
-          "high": 6530,
-          "low": 6210,
-          "volume": 6038432,
-          "avgVolume20": 4530343,
-          "marketCap": 33945
-        },
-        "supply": {
-          "code": "028670",
-          "instNetBuy": 1305090,
-          "instNetBuyAmt": 8193,
-          "instConsecutiveDays": 6,
-          "foreignNetBuy": 161395,
-          "foreignNetBuyAmt": 1008,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "STRONG_DEMAND",
-        "grade": "B",
-        "score": 40,
-        "reasons": [
-          {
-            "label": "강력 쌍끌이 (기관 83억, 외인 10억)",
-            "score": 40
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "088980",
-          "name": "맥쿼리인프라",
-          "market": "KOSPI",
-          "price": 9960,
-          "priceChange": 180,
-          "changePct": 1.84,
-          "open": 9730,
-          "high": 10020,
-          "low": 9730,
-          "volume": 2143175,
-          "avgVolume20": 1735092,
-          "marketCap": 47701
-        },
-        "supply": {
-          "code": "088980",
-          "instNetBuy": 54262,
-          "instNetBuyAmt": 527,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 738629,
-          "foreignNetBuyAmt": 7174,
-          "foreignConsecutiveDays": 4,
-          "foreignHoldPct": 0
-        },
-        "category": "STRONG_DEMAND",
-        "grade": "B",
-        "score": 40,
-        "reasons": [
-          {
-            "label": "강력 쌍끌이 (기관 5억, 외인 74억)",
-            "score": 40
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "018880",
-          "name": "한온시스템",
-          "market": "KOSPI",
-          "price": 3500,
-          "priceChange": -25,
-          "changePct": -0.71,
-          "open": 3515,
-          "high": 3515,
-          "low": 3355,
-          "volume": 2105567,
-          "avgVolume20": 4875891,
-          "marketCap": 35919
-        },
-        "supply": {
-          "code": "018880",
-          "instNetBuy": 88245,
-          "instNetBuyAmt": 308,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 187794,
-          "foreignNetBuyAmt": 656,
-          "foreignConsecutiveDays": 1,
-          "foreignHoldPct": 0
-        },
-        "category": "STRONG_DEMAND",
-        "grade": "B",
-        "score": 40,
-        "reasons": [
-          {
-            "label": "강력 쌍끌이 (기관 3억, 외인 7억)",
-            "score": 40
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "093370",
-          "name": "후성",
-          "market": "KOSPI",
-          "price": 12240,
-          "priceChange": 20,
-          "changePct": 0.16,
-          "open": 11800,
-          "high": 12330,
-          "low": 11400,
-          "volume": 1784609,
-          "avgVolume20": 4133151,
-          "marketCap": 13128
-        },
-        "supply": {
-          "code": "093370",
-          "instNetBuy": 30047,
-          "instNetBuyAmt": 387,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 65655,
-          "foreignNetBuyAmt": 841,
-          "foreignConsecutiveDays": 3,
-          "foreignHoldPct": 0
-        },
-        "category": "STRONG_DEMAND",
-        "grade": "B",
-        "score": 40,
-        "reasons": [
-          {
-            "label": "강력 쌍끌이 (기관 4억, 외인 8억)",
-            "score": 40
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "011200",
-          "name": "HMM",
-          "market": "KOSPI",
-          "price": 22600,
-          "priceChange": -250,
-          "changePct": -1.09,
-          "open": 22700,
-          "high": 23000,
-          "low": 22300,
-          "volume": 1735930,
-          "avgVolume20": 1607834,
-          "marketCap": 213172
-        },
-        "supply": {
-          "code": "011200",
-          "instNetBuy": 451644,
-          "instNetBuyAmt": 10279,
-          "instConsecutiveDays": 2,
-          "foreignNetBuy": 932726,
-          "foreignNetBuyAmt": 21117,
-          "foreignConsecutiveDays": 1,
-          "foreignHoldPct": 0
-        },
-        "category": "STRONG_DEMAND",
-        "grade": "B",
-        "score": 40,
-        "reasons": [
-          {
-            "label": "강력 쌍끌이 (기관 102억, 외인 211억)",
-            "score": 40
           }
         ],
         "passedFilter": true
@@ -1603,15 +1327,15 @@
           "code": "003350",
           "name": "한국화장품제조",
           "market": "KOSPI",
-          "price": 14330,
-          "priceChange": 2610,
-          "changePct": 22.27,
+          "price": 14410,
+          "priceChange": 2690,
+          "changePct": 22.95,
           "open": 11570,
           "high": 14940,
           "low": 11400,
-          "volume": 8641594,
-          "avgVolume20": 1721900,
-          "marketCap": 3247
+          "volume": 8889095,
+          "avgVolume20": 1734275,
+          "marketCap": 3265
         },
         "supply": {
           "code": "003350",
@@ -1628,15 +1352,15 @@
         "score": 60,
         "reasons": [
           {
-            "label": "초대형 거래대금 1238억",
+            "label": "초대형 거래대금 1281억",
             "score": 25
           },
           {
-            "label": "거래량 5.0배",
+            "label": "거래량 5.1배",
             "score": 15
           },
           {
-            "label": "+22.3% 강세파동",
+            "label": "+22.9% 강세파동",
             "score": 20
           }
         ],
@@ -1644,5 +1368,5 @@
       }
     ]
   },
-  "updatedAt": "2026-08-25T06:08:18.548Z"
+  "updatedAt": "2026-08-25T06:38:18.384Z"
 }
