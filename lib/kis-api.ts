@@ -9,42 +9,61 @@
  * 참고: KIS 토큰은 1분에 1회만 발급 가능 → 파일 캐시로 프로세스 재시작에도 유지
  */
 
-import fs from 'fs';
-import path from 'path';
-
 const BASE_URL = 'https://openapi.koreainvestment.com:9443';
-const TOKEN_CACHE_PATH = path.join('c:/github', '.kis_token_cache.json');
 
 interface TokenCache {
   value: string;
   expiresAt: number;
 }
 
+interface SharedCacheModule {
+  loadSharedToken(args: { environment: string; appKey: string | undefined }): { accessToken: string; expiresAt: number } | null;
+  invalidateSharedToken(args: { environment: string; appKey: string | undefined }): void;
+  withSharedTokenLock<T>(
+    args: { environment: string; appKey: string | undefined },
+    fn: (ctx: { cached: { accessToken: string; expiresAt: number } | null; save: (token: string, expiresInSeconds: number) => void }) => Promise<T>,
+  ): Promise<T>;
+}
+
+let _sharedCache: SharedCacheModule | null = null;
+// CJS로 컴파일하는 도구(ts-node 등)는 `import()`조차 컴파일 시점에 require()로
+// 다운레벨링해서 .mjs를 못 읽는다(ERR_REQUIRE_ESM) — TS 정적 분석이 보지 못하게
+// new Function으로 감싸 진짜 런타임 동적 import를 강제한다 (forex-signal/lib/kis-api.ts와
+// 동일 패턴).
+const _dynamicImport = new Function('specifier', 'return import(specifier)') as (specifier: string) => Promise<unknown>;
+async function sharedCache(): Promise<SharedCacheModule> {
+  if (!_sharedCache) {
+    const { pathToFileURL } = await import('url');
+    _sharedCache = (await _dynamicImport(pathToFileURL('C:/github/scheduler/lib/kis-token-cache.mjs').href)) as SharedCacheModule;
+  }
+  return _sharedCache;
+}
+
 let _token: TokenCache | null = null;
 let _tokenPromise: Promise<string> | null = null;
 
-function loadTokenCache(): TokenCache | null {
+/**
+ * kis-quant-lab(실거래 엔진) 등 같은 KIS 앱키를 쓰는 다른 프로세스와 공유하는 캐시.
+ * KIS는 같은 앱키로 새 토큰을 발급하면 기존 유효 토큰을 즉시 무효화하므로, 독립적으로
+ * 재발급하면 서로의 토큰을 깨뜨린다 - 그래서 파일 하나가 아니라 이 공유 캐시를 거친다.
+ */
+async function loadTokenCache(): Promise<TokenCache | null> {
   try {
-    if (!fs.existsSync(TOKEN_CACHE_PATH)) return null;
-    const cache = JSON.parse(fs.readFileSync(TOKEN_CACHE_PATH, 'utf-8')) as TokenCache;
-    if (Date.now() < cache.expiresAt) return cache;
-  } catch {}
-  return null;
+    const { loadSharedToken } = await sharedCache();
+    const cached = loadSharedToken({ environment: 'live', appKey: process.env.KIS_APP_KEY });
+    return cached ? { value: cached.accessToken, expiresAt: cached.expiresAt } : null;
+  } catch {
+    return null;
+  }
 }
 
-function saveTokenCache(cache: TokenCache) {
-  try {
-    fs.writeFileSync(TOKEN_CACHE_PATH, JSON.stringify(cache));
-  } catch {}
-}
-
-/** OAuth 토큰 발급 (메모리 + 파일 캐시, 1분 제한 및 동시 요청 대응) */
+/** OAuth 토큰 발급 (메모리 + 공유 캐시, 1분 제한 및 동시 요청 대응) */
 async function getToken(): Promise<string> {
   // 1) 메모리 캐시
   if (_token && Date.now() < _token.expiresAt) return _token.value;
-  // 2) 파일 캐시
-  const cached = loadTokenCache();
-  if (cached) { _token = cached; return _token.value; }
+  // 2) 공유 캐시 (다른 프로세스가 이미 발급해뒀을 수 있음)
+  const cached = await loadTokenCache();
+  if (cached) { _token = cached; return cached.value; }
 
   // 3) 중복 요청 방지 (Singleton Promise)
   if (_tokenPromise) return _tokenPromise;
@@ -60,35 +79,57 @@ async function getToken(): Promise<string> {
   return _tokenPromise;
 }
 
-async function _issueToken(retry = true): Promise<string> {
-  const res = await fetch(`${BASE_URL}/oauth2/tokenP`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      grant_type: 'client_credentials',
-      appkey: process.env.KIS_APP_KEY,
-      appsecret: process.env.KIS_APP_SECRET,
-    }),
-  });
+async function _issueTokenHttp(): Promise<{ access_token: string; expires_in: number }> {
+  let lastError: Error | null = null;
+  for (const retry of [true, false]) {
+    const res = await fetch(`${BASE_URL}/oauth2/tokenP`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        grant_type: 'client_credentials',
+        appkey: process.env.KIS_APP_KEY,
+        appsecret: process.env.KIS_APP_SECRET,
+      }),
+    });
 
-  const body = await res.text().catch(() => '');
-  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    if (res.ok) return JSON.parse(body);
+
     // 1분 제한 오류(EGW00133)인 경우 1회 대기 후 재시도
     if (retry && body.includes('EGW00133')) {
       console.warn(`[KIS] 토큰 발급 제한(1분) 감지됨. 65초 대기 후 재시도합니다...`);
       await new Promise(r => setTimeout(r, 65000));
-      return await _issueToken(false);
+      continue;
     }
-    throw new Error(`KIS 토큰 발급 실패: HTTP ${res.status}\n  ${body.slice(0, 300)}`);
+    lastError = new Error(`KIS 토큰 발급 실패: HTTP ${res.status}\n  ${body.slice(0, 300)}`);
+    break;
   }
+  throw lastError;
+}
 
-  const data = JSON.parse(body);
-  _token = {
-    value: data.access_token,
-    expiresAt: Date.now() + (data.expires_in - 60) * 1000,
-  };
-  saveTokenCache(_token);
-  return _token.value;
+/**
+ * 캐시 재확인 → 없으면 발급 → 저장을 공유 락 하나로 원자적으로 수행 (동시 재발급으로
+ * 서로의 토큰을 무효화하는 경쟁 방지). 락 안에서도 다른 프로세스가 방금 발급해뒀을 수
+ * 있으므로 cached를 다시 확인한다.
+ */
+async function _issueToken(): Promise<string> {
+  const { withSharedTokenLock } = await sharedCache();
+  return withSharedTokenLock(
+    { environment: 'live', appKey: process.env.KIS_APP_KEY },
+    async ({ cached, save }) => {
+      if (cached) {
+        _token = { value: cached.accessToken, expiresAt: cached.expiresAt };
+        return cached.accessToken;
+      }
+      const data = await _issueTokenHttp();
+      save(data.access_token, data.expires_in);
+      _token = {
+        value: data.access_token,
+        expiresAt: Date.now() + (data.expires_in - 60) * 1000,
+      };
+      return _token.value;
+    },
+  );
 }
 
 /** KIS API 공통 헤더 */
@@ -108,6 +149,28 @@ async function headers(trId: string, extra: Record<string, string> = {}) {
 /** 레이트 리밋 대기 */
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
+// 같은 프로세스의 KIS 요청을 직렬화한다. 별도 자동매매 프로세스도 같은 앱 키를
+// 사용하며 실제 계정에서 1초 미만 연속 호출이 EGW00201을 반환하므로 여유를 둔다.
+const KIS_MIN_REQUEST_INTERVAL_MS = 1100;
+const KIS_RATE_LIMIT_RETRY_DELAYS_MS = [1500, 3000, 6000, 10000];
+let _lastRequestStartedAt = 0;
+let _requestChain: Promise<unknown> = Promise.resolve();
+
+function rateLimitedFetch(url: string, h: Record<string, string>): Promise<Response> {
+  const request = _requestChain.then(async () => {
+    const elapsed = Date.now() - _lastRequestStartedAt;
+    if (elapsed < KIS_MIN_REQUEST_INTERVAL_MS) {
+      await sleep(KIS_MIN_REQUEST_INTERVAL_MS - elapsed);
+    }
+    _lastRequestStartedAt = Date.now();
+    return fetch(url, { headers: h });
+  });
+
+  // 실패한 요청 때문에 뒤의 요청 큐가 함께 중단되지 않도록 체인을 복구한다.
+  _requestChain = request.then(() => undefined, () => undefined);
+  return request;
+}
+
 /** 가장 최근 거래일(평일) 날짜 반환 — YYYYMMDD */
 export function getLastTradingDate(): string {
   const d = new Date();
@@ -123,18 +186,34 @@ export function getLastTradingDate(): string {
 }
 
 /** fetch + JSON 파싱 (오류 시 상세 메시지 포함) */
-async function fetchJson(url: string, h: Record<string, string>, retry = true): Promise<Record<string, unknown>> {
-  const res = await fetch(url, { headers: h });
+async function fetchJson(
+  url: string,
+  h: Record<string, string>,
+  tokenRetry = true,
+  rateLimitAttempt = 0,
+): Promise<Record<string, unknown>> {
+  const res = await rateLimitedFetch(url, h);
   const text = await res.text();
+
+  // 초당 거래건수 제한은 HTTP 500으로 주로 오지만, 응답 상태와 무관하게
+  // 오류코드로 판별한다. 대기 시간을 늘리며 최대 4회 재시도한다.
+  if (text.includes('EGW00201') && rateLimitAttempt < KIS_RATE_LIMIT_RETRY_DELAYS_MS.length) {
+    const baseDelay = KIS_RATE_LIMIT_RETRY_DELAYS_MS[rateLimitAttempt];
+    const delay = baseDelay + Math.floor(Math.random() * 250);
+    console.warn(`[KIS] 초당 호출 제한 감지 — ${delay}ms 대기 후 재시도 (${rateLimitAttempt + 1}/${KIS_RATE_LIMIT_RETRY_DELAYS_MS.length})`);
+    await sleep(delay);
+    return fetchJson(url, h, tokenRetry, rateLimitAttempt + 1);
+  }
+
   if (!res.ok) {
     // 토큰 만료(EGW00123) → 캐시 무효화 후 1회 재시도
-    if (retry && text.includes('EGW00123')) {
+    if (tokenRetry && text.includes('EGW00123')) {
       console.warn('[KIS] 토큰 만료 감지 — 재발급 후 재시도');
       _token = null;
-      try { fs.unlinkSync(TOKEN_CACHE_PATH); } catch {}
+      try { (await sharedCache()).invalidateSharedToken({ environment: 'live', appKey: process.env.KIS_APP_KEY }); } catch {}
       const trId = h['tr_id'] ?? '';
       const newHeaders = await headers(trId);
-      return fetchJson(url, newHeaders, false);
+      return fetchJson(url, newHeaders, false, rateLimitAttempt);
     }
     throw new Error(`KIS API 오류 ${res.status}: ${text.slice(0, 200)}`);
   }
