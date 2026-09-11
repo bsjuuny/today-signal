@@ -101,7 +101,7 @@ async function verifyCategory(name: string, signals: StockSignal[]) {
       log(`    → 당일 종가: 종가 <b>${closeProfit > 0 ? '+' : ''}${closeProfit.toFixed(2)}%</b> (${quote.price.toLocaleString()}원)`);
       
     } catch (e) {
-      log(`    ❌ ${sig.stock.name} 데이터 조회 실패`);
+      log(`    ❌ ${sig.stock.name} 데이터 조회 실패: ${(e as Error).message}`);
     }
   }
   

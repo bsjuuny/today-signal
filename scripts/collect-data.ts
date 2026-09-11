@@ -153,11 +153,8 @@ async function main() {
 
   // ── 1. 시장 지수 ──
   console.log('  [시장] 코스피/코스닥 지수 조회...');
-  const [kospi, kosdaq] = await Promise.all([
-    getIndexQuote('0001'),
-    getIndexQuote('1001'),
-  ]);
-  await sleep(200);
+  const kospi = await getIndexQuote('0001');
+  const kosdaq = await getIndexQuote('1001');
 
   const market: MarketContext = {
     kospiChange: kospi.changePct,
