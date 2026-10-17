@@ -32,9 +32,16 @@ export interface SupplyDemand {
 
 /** 시장 컨텍스트 */
 export interface MarketContext {
-  kospiChange: number;    // 코스피 등락률 (%)
-  kosdaqChange: number;   // 코스닥 등락률 (%)
-  kospiVolume: number;    // 코스피 거래대금 (억원, acml_tr_pbmn 기준)
+  kospiChange: number | null;    // 코스피 등락률 (%)
+  kosdaqChange: number | null;   // 코스닥 등락률 (%)
+  kospiVolume: number | null;    // 코스피 거래대금 (억원, 원본 단위 확인 후 변환)
+  quality?: {
+    status: 'valid' | 'unavailable';
+    issues: string[];
+    source: string;
+    tradingValueUnit: 'KRW' | 'MILLION_KRW' | 'UNKNOWN';
+    raw?: Record<string, Record<string, unknown>>;
+  };
   vix?: number;           // VIX (선택)
   isIntraday: boolean;    // 장중 여부 (09:00~15:30 KST)
   fetchedAt: string;

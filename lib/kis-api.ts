@@ -227,32 +227,15 @@ async function fetchJson(
 // ──────────────────────────────────────────────
 // 1. 업종별 등락률 (코스피/코스닥 지수)
 // ──────────────────────────────────────────────
-export interface IndexQuote {
-  name: string;
-  currentPrice: number;
-  change: number;
-  changePct: number;
-  volume: number;
-  tradingValue: number; // 거래대금 (원)
-}
+import { parseIndexQuote, type IndexQuote } from './market-data';
+export type { IndexQuote } from './market-data';
 
 export async function getIndexQuote(code: '0001' | '1001'): Promise<IndexQuote> {
   // 0001=코스피, 1001=코스닥
   const h = await headers('FHPUP02100000');
   const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-index-price?FID_COND_MRKT_DIV_CODE=U&FID_INPUT_ISCD=${code}`;
   const data = await fetchJson(url, h);
-  const o = data.output as Record<string, string>;
-  if (!o.acml_tr_pbmn) {
-    console.warn(`  [KIS] acml_tr_pbmn 필드 누락 (code=${code}). output keys: ${Object.keys(o).join(', ')}`);
-  }
-  return {
-    name: o.hts_kor_isnm,
-    currentPrice: parseFloat(o.bstp_nmix_prpr || '0'),
-    change: parseFloat(o.bstp_nmix_prdy_vrss || '0'),
-    changePct: parseFloat(o.bstp_nmix_prdy_ctrt || '0'),
-    volume: parseInt(o.acml_vol || '0'),
-    tradingValue: parseInt(o.acml_tr_pbmn || '0'), // 누적거래대금 (원)
-  };
+  return parseIndexQuote(data, code);
 }
 
 // ──────────────────────────────────────────────

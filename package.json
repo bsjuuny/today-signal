@@ -9,7 +9,9 @@
     "lint": "eslint",
     "data:update": "tsx scripts/collect-data.ts",
     "short:balance": "tsx scripts/collect-short-balance.ts",
-    "data:verify": "tsx scripts/verify-signals.ts"
+    "data:verify": "tsx scripts/verify-signals.ts",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "data:audit": "node --import tsx scripts/audit-market-data.ts"
   },
   "dependencies": {
     "dotenv": "^17.3.1",
