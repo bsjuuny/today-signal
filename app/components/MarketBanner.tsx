@@ -1,3 +1,4 @@
+import { isMarketUsable } from '@/lib/market-data';
 import { MarketContext } from '@/types/stock';
 
 interface Props {
@@ -5,17 +6,20 @@ interface Props {
   date: string;
 }
 
-function pct(v: number) {
+function pct(v: number | null) {
+  if (v === null || !Number.isFinite(v)) return '확인 불가';
   return `${v > 0 ? '+' : ''}${v.toFixed(2)}%`;
 }
 
-function indexColor(v: number) {
+function indexColor(v: number | null) {
+  if (v === null) return 'text-zinc-400';
   if (v > 0) return 'text-rose-400';
   if (v < 0) return 'text-blue-400';
   return 'text-zinc-400';
 }
 
-function indexBg(v: number) {
+function indexBg(v: number | null) {
+  if (v === null) return 'bg-zinc-800/50';
   if (v > 0) return 'bg-rose-500/10';
   if (v < 0) return 'bg-blue-500/10';
   return 'bg-zinc-800/50';
@@ -24,7 +28,7 @@ function indexBg(v: number) {
 export default function MarketBanner({ market, date }: Props) {
   const dateStr = `${date.slice(0, 4)}.${date.slice(4, 6)}.${date.slice(6, 8)}`;
 
-  const isSuppressed = market.kospiChange <= -1.5 || market.kosdaqChange <= -2.0;
+  const isSuppressed = (market.kospiChange ?? 0) <= -1.5 || (market.kosdaqChange ?? 0) <= -2.0;
 
   return (
     <div className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4 flex flex-col gap-3">
@@ -42,7 +46,7 @@ export default function MarketBanner({ market, date }: Props) {
           )}
         </div>
         <span className="text-xs text-zinc-600 tabular-nums">
-          거래대금 <span className="text-zinc-500 font-semibold">{market.kospiVolume.toLocaleString()}억</span>
+          거래대금 <span className="text-zinc-500 font-semibold">{market.quality?.status === 'valid' && market.kospiVolume !== null ? `${market.kospiVolume.toLocaleString()}억` : '확인 불가'}</span>
         </span>
       </div>
 
@@ -51,17 +55,18 @@ export default function MarketBanner({ market, date }: Props) {
         <div className={`rounded-xl p-3 ${indexBg(market.kospiChange)}`}>
           <div className="text-xs text-zinc-500 font-medium mb-1">코스피</div>
           <div className={`text-xl font-black tabular-nums leading-none ${indexColor(market.kospiChange)}`}>
-            {pct(market.kospiChange)}
+            {pct(market.quality ? market.kospiChange : null)}
           </div>
         </div>
         <div className={`rounded-xl p-3 ${indexBg(market.kosdaqChange)}`}>
           <div className="text-xs text-zinc-500 font-medium mb-1">코스닥</div>
           <div className={`text-xl font-black tabular-nums leading-none ${indexColor(market.kosdaqChange)}`}>
-            {pct(market.kosdaqChange)}
+            {pct(market.quality ? market.kosdaqChange : null)}
           </div>
         </div>
       </div>
 
+      {!isMarketUsable(market) && <p className="text-xs text-amber-400">시장 데이터 확인 불가 — 투자 신호 제공 중단</p>}
       {isSuppressed && (
         <div className="rounded-xl bg-red-950/50 border border-red-800/40 px-3 py-2.5">
           <p className="text-xs text-red-400 font-bold text-center">

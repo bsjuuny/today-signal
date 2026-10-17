@@ -1,5 +1,6 @@
 'use client';
 
+import { isMarketUsable } from '@/lib/market-data';
 import { useState } from 'react';
 import { TodaySignalData } from '@/types/stock';
 import TabBar, { TabKey } from './TabBar';
@@ -21,7 +22,9 @@ const EMPTY_MSG: Record<TabKey, string> = {
 export default function SignalView({ data }: Props) {
   const [tab, setTab] = useState<TabKey>('strongDemand');
 
-  const { signals, market, date } = data;
+  const { market, date } = data;
+  const signals = isMarketUsable(market) && data.status === 'completed' ? data.signals
+    : { instBuy: [], foreignBuy: [], volumeSurge: [], strongDemand: [], momentum: [] };
   const counts: Record<TabKey, number> = {
     strongDemand: signals.strongDemand.length,
     instBuy: signals.instBuy.length,

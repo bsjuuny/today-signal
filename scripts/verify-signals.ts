@@ -1,3 +1,4 @@
+import { isMarketUsable } from '../lib/market-data';
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 
@@ -124,6 +125,10 @@ async function main() {
   log(`📍 <b>검증 시점:</b> ${getLastTradingDate()} (당일 고가/종가 기준)`);
   
   const data: TodaySignalData = JSON.parse(fs.readFileSync(prevFile.path, 'utf-8'));
+  if (!isMarketUsable(data.market) || data.status !== 'completed') {
+    console.warn('시장 데이터 미검증 — 성과 평가 제외:', prevFile.date);
+    return;
+  }
   
   await verifyCategory('쌍끌이 & 강한수급', data.signals.strongDemand);
   await verifyCategory('단타 모멘텀', data.signals.momentum);

@@ -1,3 +1,5 @@
+import { saveUnavailableMarket } from '../lib/signal-storage';
+import { buildMarketContext, isMarketUsable, parseIndexQuote } from '../lib/market-data';
 /**
  * 투자 신호 데이터 수집 스크립트
  * GitHub Actions에서 장 마감 후 실행 (16:00 KST)
@@ -153,21 +155,23 @@ async function main() {
 
   // ── 1. 시장 지수 ──
   console.log('  [시장] 코스피/코스닥 지수 조회...');
-  const kospi = await getIndexQuote('0001');
-  const kosdaq = await getIndexQuote('1001');
+  const kospi = await getIndexQuote('0001').catch(error => { console.error('[시장/KOSPI] 조회 실패:', error.message); return parseIndexQuote({}, '0001'); });
+  const kosdaq = await getIndexQuote('1001').catch(error => { console.error('[시장/KOSDAQ] 조회 실패:', error.message); return parseIndexQuote({}, '1001'); });
 
-  const market: MarketContext = {
-    kospiChange: kospi.changePct,
-    kosdaqChange: kosdaq.changePct,
-    kospiVolume: Math.round(kospi.tradingValue / 100000000), // 거래대금(원) → 억원
-    isIntraday,
-    fetchedAt: new Date().toISOString(),
-  };
+  const market: MarketContext = buildMarketContext(kospi, kosdaq, isIntraday);
 
-  console.log(`  [시장] 코스피 ${kospi.changePct > 0 ? '+' : ''}${kospi.changePct}% / 코스닥 ${kosdaq.changePct > 0 ? '+' : ''}${kosdaq.changePct}%`);
+  console.log(`  [시장] 코스피 ${(kospi.changePct ?? 0) > 0 ? '+' : ''}${kospi.changePct}% / 코스닥 ${(kosdaq.changePct ?? 0) > 0 ? '+' : ''}${kosdaq.changePct}%`);
 
   if (isMarketSuppressed(market)) {
-    console.warn('  [시장] 시장 하락 — 신호 수집 억제됨');
+    console.warn('  [시장] 시장 하락 또는 데이터 미검증 — 신호 수집 억제됨');
+  }
+
+  if (!isMarketUsable(market)) {
+    // Clear actionable signals in both consumer files; never retain yesterday's
+    // recommendations as a successful result after market validation fails.
+    saveUnavailableMarket(market, today(), OUTPUT_PATH,
+      path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today_signal.json'));
+    throw new Error(`시장 데이터 검증 실패: ${market.quality?.issues.join(', ')}`);
   }
 
   // ── 2. 기관/외국인/거래량 상위 조회 ──

@@ -1,3 +1,4 @@
+import { isMarketUsable } from './market-data';
 /**
  * 투자 신호 스코어링 엔진
  * 필수 조건(Hard filter) → 가점(Score) → 등급 결정
@@ -7,16 +8,18 @@ import { StockItem, SupplyDemand, MarketContext, StockSignal, SignalGrade, Score
 
 /** 시장 전체 신호 억제 여부 */
 export function isMarketSuppressed(market: MarketContext): boolean {
-  if (market.kospiChange <= -1.5) return true;
-  if (market.kosdaqChange <= -2.0) return true;
+  if (!isMarketUsable(market)) return true;
+  if (market.kospiChange! <= -1.5) return true;
+  if (market.kosdaqChange! <= -2.0) return true;
   if (market.vix && market.vix >= 30) return true;
   return false;
 }
 
 /** 시장 약세 시 점수 보정 배율 */
 export function marketMultiplier(market: MarketContext): number {
+  if (!isMarketUsable(market)) return 0;
   if (market.vix && market.vix >= 25) return 0.7;
-  if (market.kospiChange <= -1.0) return 0.8;
+  if (market.kospiChange! <= -1.0) return 0.8;
   return 1.0;
 }
 
@@ -71,6 +74,7 @@ export function scoreInstBuy(
   market: MarketContext
 ): StockSignal | null {
   // ── 필수 조건 (Hard Filters) ──
+  if (!isMarketUsable(market)) return null;
   if (!isValidStock(stock)) return null;
   if (isStrongYinCandle(stock)) return null; // 음봉 투매 배제
   
@@ -137,6 +141,7 @@ export function scoreForeignBuy(
   market: MarketContext
 ): StockSignal | null {
   // ── 필수 조건 ──
+  if (!isMarketUsable(market)) return null;
   if (!isValidStock(stock)) return null;
   if (isStrongYinCandle(stock)) return null;
   if (supply.foreignConsecutiveDays < 2) return null;
@@ -187,6 +192,7 @@ export function scoreVolumeSurge(
   market: MarketContext
 ): StockSignal | null {
   // ── 필수 조건 ──
+  if (!isMarketUsable(market)) return null;
   if (!isValidStock(stock)) return null;
   
   const tradingValue100M = getTradingValue100M(stock);
@@ -248,6 +254,7 @@ export function scoreStrongDemand(
   supply: SupplyDemand,
   market: MarketContext
 ): StockSignal | null {
+  if (!isMarketUsable(market)) return null;
   if (!isValidStock(stock)) return null;
   if (stock.changePct > 25) return null; // 상한가 직전 제외 (기존 9%에서 대폭 완화하여 주도주 포함)
   if (isStrongYinCandle(stock)) return null;
@@ -305,6 +312,7 @@ export function scoreMomentum(
   stock: StockItem,
   market: MarketContext
 ): StockSignal | null {
+  if (!isMarketUsable(market)) return null;
   if (!isValidStock(stock)) return null;
   if (stock.changePct > 25) return null;  
   if (stock.marketCap > 5000) return null; // 대형주 제외 (변동성 부족)
