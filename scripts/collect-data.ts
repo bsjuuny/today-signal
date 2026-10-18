@@ -169,9 +169,18 @@ async function main() {
   if (!isMarketUsable(market)) {
     // Clear actionable signals in both consumer files; never retain yesterday's
     // recommendations as a successful result after market validation fails.
+    // kis-trader reads data/today/ (written by the scheduler shuttle), so that
+    // is the file that must be cleared.
     saveUnavailableMarket(market, today(), OUTPUT_PATH,
-      path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today_signal.json'));
-    throw new Error(`시장 데이터 검증 실패: ${market.quality?.issues.join(', ')}`);
+      path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today', 'today_signal.json'));
+    const issues = market.quality?.issues ?? [];
+    // Pre-open runs are expected to fail validation (no session activity yet);
+    // record the unavailable state but do not report it as an error.
+    if (issues.includes('session:current_index_unavailable')) {
+      console.log(`  [시장] 장 시작 전 — 현재지수 미확정, 신호 생성 건너뜀 (${issues.join(', ')})`);
+      return;
+    }
+    throw new Error(`시장 데이터 검증 실패: ${issues.join(', ')}`);
   }
 
   // ── 2. 기관/외국인/거래량 상위 조회 ──

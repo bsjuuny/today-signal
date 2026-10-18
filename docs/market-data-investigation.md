@@ -33,6 +33,13 @@
 3. 장중/장후 수집 결과에서 quality.status=valid, raw, 환산값을 검증한 뒤 배포한다. 장전 운영이 필요하면 날짜가 명시된 일별지수 API와 거래일 달력으로 별도 구현해야 한다.
 4. KIS-Trader/외부 scheduler는 이 저장소에 없다. 빈 배열 전달로 기존 배열 소비자를 보호하지만, 외부 소비자의 status/null 처리와 파일 전파 실패 시 동작은 그 저장소에서 추가 확인해야 한다.
 
+## 운영 재개 (2026-10-19)
+
+- 운영자 확인으로 `KIS_INDEX_TRADING_VALUE_UNIT=MILLION_KRW`를 scheduler `run-today-signal.mjs`에서 설정. 근거: 공식 예시 코스닥 857.60에 acml_tr_pbmn=11507962는 백만원이면 11.5조원, 원이면 1,150만원.
+- 08:25 장전 실행은 현재지수가 검증 불가라 새로 수집하지 않는다. scheduler(`lib/preopen-signal.mjs`)가 직전 거래일 장마감 기록(`history/signal_<직전 거래일>.json`)이 completed·quality valid·15:30 이후 수집일 때만 오늘 날짜로 kis-trader에 재전달한다(`source.type=previous-close`). 아니면 빈 신호로 비운다. 간밤 미국장은 market-checker `mode.json`(오늘 날짜일 때)을 `overnight`에 참고용으로만 붙인다. 매매 모드는 kis-trader가 같은 파일로 결정하므로 신호를 다시 거르지 않는다.
+- collect-data를 장전에 직접 실행하면 실패 JSON만 기록하고 정상 종료한다.
+- 실패 JSON의 트레이더 경로를 `kis-trader/data/today/today_signal.json`(실제 소비 파일)으로 수정. 이전 `data/today_signal.json`은 아무도 읽지 않아 금요일 신호가 `data/today/`에 남아 있었다.
+
 ## 재현 및 검증
 
 - `npm test`: 공식 응답 fixture, 엄격 파싱, 0/누락 구분, 단위 계약별 환산, 장전 응답, 불일치 등락률, 모든 점수 진입점, UI, 10월 14–16일 회귀, 실패 JSON 저장/트레이더 이전 신호 제거.
