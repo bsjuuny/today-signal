@@ -37,7 +37,7 @@ function getPreviousSignalFile(): { path: string; date: string } | null {
   };
 }
 
-let reportLines: string[] = [];
+const reportLines: string[] = [];
 
 function log(msg: string) {
   console.log(msg);
