@@ -1,3 +1,4 @@
+import { parseInstrumentInfo, isClassifiedStock, filterStockSignals } from '../lib/instrument';
 import { saveUnavailableMarket } from '../lib/signal-storage';
 import { buildMarketContext, isMarketUsable, parseIndexQuote } from '../lib/market-data';
 /**
@@ -15,7 +16,7 @@ import fs from 'fs';
 import path from 'path';
 import {
   getIndexQuote, getInstNetBuyTop, getForeignNetBuyTop,
-  getVolumeSurgeTop, getChangePctTop, getStockQuote, getInvestorHistory,
+  getVolumeSurgeTop, getChangePctTop, getStockQuote, getInvestorHistory, getInstrumentInfo,
   calcConsecutiveDays, getAvgVolume20, sleep, getLastTradingDate,
 } from '../lib/kis-api';
 import {
@@ -31,14 +32,21 @@ function today(): string {
   return getLastTradingDate();
 }
 
-async function buildStockItem(code: string, name: string, price: number, changePct: number, volume: number): Promise<StockItem> {
+async function buildStockItem(code: string, name: string, price: number, changePct: number, volume: number): Promise<StockItem | null> {
+  const classification = parseInstrumentInfo(code, await getInstrumentInfo(code), today());
+  if (classification.instrumentType === 'UNKNOWN') {
+    throw new Error(`종목 분류 확인 실패: ${code}`);
+  }
+  // ETF/ETN은 기업 주식 신호를 생성하지 않으며 불필요한 시세/수급 조회도 생략한다.
+  if (classification.instrumentType !== 'STOCK') return null;
+  if (classification.market === 'UNKNOWN') throw new Error(`상장시장 확인 실패: ${code}`);
   const quote = await getStockQuote(code);
   await sleep(150);
   const avgVol = await getAvgVolume20(code);
   return {
     code,
     name: name || quote.name,
-    market: 'KOSPI', // KIS API 응답에 따라 조정 가능
+    ...classification,
     price: quote.price || price,
     priceChange: quote.priceChange,
     changePct: quote.changePct || changePct,
@@ -218,16 +226,19 @@ async function main() {
 
   // ── 3. 종목별 상세 데이터 + 스코어링 ──
   const processedCodes = new Set<string>();
+  let itemFailures = 0;
 
   async function processItem(code: string, name: string, price: number, changePct: number, volume: number, instBuy: number, foreignBuy: number, instAmt: number, foreignAmt: number) {
     if (processedCodes.has(code)) return { stock: null, supply: null };
     processedCodes.add(code);
     try {
       const stock = await buildStockItem(code, name, price, changePct, volume);
+      if (!stock || !isClassifiedStock(stock, today())) return { stock: null, supply: null };
       await sleep(200);
       const supply = await buildSupply(code, instBuy, foreignBuy, instAmt, foreignAmt);
       return { stock, supply };
     } catch (err) {
+      itemFailures++;
       console.error(`    오류 (${code}):`, err instanceof Error ? err.message : err);
       return { stock: null, supply: null };
     }
@@ -320,6 +331,16 @@ async function main() {
     }
   }
 
+  // A failed metadata/detail lookup is not a successful empty recommendation run.
+  // Do not archive an incomplete result or allow a previous actionable file to survive.
+  if (itemFailures > 0) {
+    saveUnavailableMarket(market, today(), OUTPUT_PATH,
+      path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today', 'today_signal.json'));
+    saveUnavailableMarket(market, today(), OUTPUT_PATH,
+      path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today_signal.json'));
+    throw new Error(`종목 상세/분류 조회 실패 ${itemFailures}건 — 신호 발행 중단`);
+  }
+
   // ── 4. 정렬 + TOP N 추출 ──
   const sort = (arr: typeof instSignals) => arr.sort((a, b) => b.score - a.score);
 
@@ -336,8 +357,8 @@ async function main() {
     date: today(),
     market,
     signals: {
-      instBuy:      noNewInstData && prevData ? prevData.signals.instBuy : sort(instSignals).slice(0, 10),
-      foreignBuy:   noNewForeignData && prevData ? prevData.signals.foreignBuy : sort(foreignSignals).slice(0, 10),
+      instBuy:      noNewInstData && prevData ? filterStockSignals(prevData.signals.instBuy, today()) : sort(instSignals).slice(0, 10),
+      foreignBuy:   noNewForeignData && prevData ? filterStockSignals(prevData.signals.foreignBuy, today()) : sort(foreignSignals).slice(0, 10),
       volumeSurge:  sort(volSignals).slice(0, 10),
       strongDemand: sort(strongSignals).slice(0, 15),
       momentum:     sort(momentumSignals).slice(0, 15),  // 단타 전용
