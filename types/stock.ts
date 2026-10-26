@@ -1,12 +1,13 @@
+import type { InstrumentClassification } from '../lib/instrument';
+
 /**
  * 주식 투자 신호 서비스 — 공통 타입 정의
  */
 
 /** 종목 기본 정보 */
-export interface StockItem {
-  code: string;         // 종목코드 (6자리)
+export interface StockItem extends InstrumentClassification {
+  code: string;         // KIS 상품번호 (ETN은 Q 접두사 포함)
   name: string;         // 종목명
-  market: 'KOSPI' | 'KOSDAQ';
   price: number;        // 현재가(종가)
   priceChange: number;  // 전일 대비 등락 (원)
   changePct: number;    // 전일 대비 등락률 (%)

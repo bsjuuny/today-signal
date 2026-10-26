@@ -1,3 +1,4 @@
+import { INSTRUMENT_LABEL } from '@/lib/instrument';
 import { useState } from 'react';
 import { StockSignal, SignalGrade } from '@/types/stock';
 import ProfitCalculator from './ProfitCalculator';
@@ -41,7 +42,7 @@ export default function SignalCard({ signal, rank }: Props) {
             <span className="text-xs font-black text-zinc-700 tabular-nums shrink-0 w-5 text-right">#{rank}</span>
             <div className="min-w-0">
               <div className="font-black text-base text-white leading-tight break-keep">{signal.stock.name}</div>
-              <div className="text-xs text-zinc-600 font-mono mt-0.5">{signal.stock.code} · {signal.stock.market}</div>
+              <div className="text-xs text-zinc-600 font-mono mt-0.5">{signal.stock.code} · {signal.stock.market} · {INSTRUMENT_LABEL[signal.stock.instrumentType ?? 'UNKNOWN']}</div>
             </div>
           </div>
           <div className="flex flex-col items-end gap-1.5 shrink-0">

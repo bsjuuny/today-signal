@@ -529,3 +529,9 @@ export async function getShortBalanceHistory(code: string, days = 7): Promise<Sh
 }
 
 export { sleep };
+
+/** 공식 종목 기본정보: 상품유형 300에는 주식·ETF·ETN·ELW가 모두 포함된다. */
+export async function getInstrumentInfo(code: string) {
+  const h = await headers('CTPF1002R');
+  return fetchJson(`${BASE_URL}/uapi/domestic-stock/v1/quotations/search-stock-info?PRDT_TYPE_CD=300&PDNO=${encodeURIComponent(code)}`, h);
+}

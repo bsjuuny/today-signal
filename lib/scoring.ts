@@ -1,3 +1,4 @@
+import { isClassifiedStock } from './instrument';
 import { isMarketUsable } from './market-data';
 /**
  * 투자 신호 스코어링 엔진
@@ -49,6 +50,7 @@ function getNetBuyAmt100M(netBuyShares: number, price: number): number {
 
 /** 1. 소외주/잡주 기본 필터 */
 function isValidStock(stock: StockItem): boolean {
+  if (!isClassifiedStock(stock)) return false;
   if (stock.price <= 0) return false;
   if (stock.marketCap < 500) return false; // 500억 미만 제외 (세력 장난 방지)
   if (stock.price < 1000) return false;    // 1,000원 미만 동전주 제외
