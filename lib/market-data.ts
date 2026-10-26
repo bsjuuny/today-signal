@@ -38,10 +38,13 @@ export function parseIndexQuote(data: Record<string, unknown>, code: string): In
   const tradingValue = read('acml_tr_pbmn', 0);
   if (changePct !== null && change !== null) {
     const sign = String(o.prdy_vrss_sign ?? '');
-    if ((changePct === 0 && change !== 0) || (changePct !== 0 && change === 0)
-      || (changePct > 0 && !['1', '2'].includes(sign))
-      || (changePct < 0 && !['4', '5'].includes(sign))
-      || (changePct === 0 && sign !== '3')
+    // The sign follows the point change: a tiny move (e.g. +0.04pt on 5550)
+    // rounds the rate to 0.00 while change and sign stay non-flat. A zero
+    // rate with a non-zero change is then judged by the rate tolerance below.
+    if ((changePct !== 0 && change === 0)
+      || (change > 0 && !['1', '2'].includes(sign))
+      || (change < 0 && !['4', '5'].includes(sign))
+      || (change === 0 && sign !== '3')
       || (changePct * change < 0)) {
       issues.push('inconsistent:change'); changePct = null;
     } else if (currentPrice !== null && currentPrice - change > 0

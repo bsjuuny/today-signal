@@ -47,6 +47,13 @@ test('genuine flat index accepted with activity, reset/no-activity and pre-open 
   process.env.KIS_INDEX_TRADING_VALUE_UNIT = 'MILLION_KRW';
   const flat = {...official, output: {...official.output, bstp_nmix_prdy_vrss: '0', bstp_nmix_prdy_ctrt: '0', prdy_vrss_sign: '3'}};
   assert.equal(isMarketUsable(market(flat)), true);
+  // 2026-10-26 09:35: +0.04pt on 5550.34 is reported with a rounded 0.00% rate.
+  const tiny = {...official, output: {...official.output, bstp_nmix_prpr: '5550.34', bstp_nmix_prdy_vrss: '0.04', bstp_nmix_prdy_ctrt: '0.00', prdy_vrss_sign: '2'}};
+  assert.deepEqual(market(tiny).quality!.issues, []);
+  assert.equal(market(tiny).kospiChange, 0);
+  for (const patch of [{prdy_vrss_sign: '3'}, {prdy_vrss_sign: '5'}, {bstp_nmix_prdy_vrss: '5.00'}]) {
+    assert.equal(isMarketUsable(market({...tiny, output: {...tiny.output, ...patch}})), false);
+  }
   const zero = market({...flat, output: {...flat.output, acml_vol: '0', acml_tr_pbmn: '0'}});
   assert.equal(zero.kospiVolume, 0); // explicit zero retained, but not usable
   assert.equal(isMarketUsable(zero), false);
