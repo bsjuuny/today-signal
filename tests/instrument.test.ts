@@ -91,3 +91,18 @@ test('legacy archives are preserved and not reused or displayed as verified curr
   assert.equal(filterStockSignals([verified], '20261027').length, 0);
   assert.equal(filterStockSignals([verified], '20261026').length, 1);
 });
+
+test('live CTPF1002R pdno is zero-padded to 12 chars (checked 2026-10-27)', () => {
+  const live = (code: string, pdno: string, group: string, market: 'KOSPI' | 'KOSDAQ') => parseInstrumentInfo(code, {
+    rt_cd: '0', output: { pdno, prdt_type_cd: '300', scty_grp_id_cd: group,
+      scts_mket_lstg_dt: market === 'KOSPI' ? '19750611' : '', scts_mket_lstg_abol_dt: '',
+      kosdaq_mket_lstg_dt: market === 'KOSDAQ' ? '20160920' : '', kosdaq_mket_lstg_abol_dt: '' },
+  }, '20261027');
+  assert.deepEqual([live('005930', '00000A005930', 'ST', 'KOSPI').instrumentType, live('005930', '00000A005930', 'ST', 'KOSPI').market], ['STOCK', 'KOSPI']);
+  assert.equal(live('241690', '00000A241690', 'ST', 'KOSDAQ').market, 'KOSDAQ');
+  assert.equal(live('0035S0', '00000A0035S0', 'ST', 'KOSDAQ').instrumentType, 'STOCK');
+  assert.equal(live('Q530107', '00000Q530107', 'EN', 'KOSPI').instrumentType, 'ETN');
+  assert.equal(live('069500', '00000A069500', 'EF', 'KOSPI').instrumentType, 'ETF');
+  // A different code with the same suffix must not match.
+  assert.equal(live('005930', '00001A005930', 'ST', 'KOSPI').instrumentType, 'UNKNOWN');
+});

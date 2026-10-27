@@ -13,13 +13,20 @@ export interface InstrumentClassification {
   };
 }
 
+/** Live CTPF1002R pads pdno to 12 chars: 005930 → 00000A005930, Q530107 → 00000Q530107 (checked 2026-10-27). */
+function matchesPdno(pdno: unknown, code: string): boolean {
+  if (typeof pdno !== 'string') return false;
+  const p = pdno.trim();
+  return p === code || p === code.padStart(12, '0') || p === `A${code}`.padStart(12, '0');
+}
+
 /** KIS stock basic info. Neither the ticker nor the product name is a classifier. */
 export function parseInstrumentInfo(code: string, response: Record<string, unknown>, date: string): InstrumentClassification {
   const unknown: InstrumentClassification = { market: 'UNKNOWN', instrumentType: 'UNKNOWN' };
   const o = response.output;
   if (response.rt_cd !== '0' || !o || typeof o !== 'object' || Array.isArray(o)) return unknown;
   const row = o as Record<string, unknown>;
-  if (row.pdno !== code || row.prdt_type_cd !== '300') return unknown;
+  if (!matchesPdno(row.pdno, code) || row.prdt_type_cd !== '300') return unknown;
   const group = typeof row.scty_grp_id_cd === 'string' ? row.scty_grp_id_cd.trim() : '';
   const instrumentType: InstrumentType = group === 'ST' ? 'STOCK' : group === 'EF' ? 'ETF' : group === 'EN' ? 'ETN' : 'UNKNOWN';
   const active = (listed: unknown, delisted: unknown) =>
