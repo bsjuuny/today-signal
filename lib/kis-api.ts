@@ -171,6 +171,28 @@ function rateLimitedFetch(url: string, h: Record<string, string>): Promise<Respo
   return request;
 }
 
+const KIS_NETWORK_RETRY_DELAYS_MS = [1000, 3000];
+
+/**
+ * 연결 끊김 등 응답 자체를 못 받은 경우(undici "fetch failed")만 재시도한다. 모두 조회(GET)라 재시도해도 안전하다.
+ * 종목 하나라도 조회에 실패하면 신호 발행 전체가 막히므로 일시적 네트워크 오류 한 번에 무너지지 않게 한다.
+ */
+export async function withNetworkRetry<T>(
+  doFetch: () => Promise<T>,
+  delays: number[] = KIS_NETWORK_RETRY_DELAYS_MS,
+): Promise<T> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await doFetch();
+    } catch (err) {
+      if (!(err instanceof TypeError) || attempt >= delays.length) throw err;
+      const cause = (err as { cause?: { code?: string } }).cause?.code;
+      console.warn(`[KIS] 네트워크 오류(${err.message}${cause ? `: ${cause}` : ''}) — ${delays[attempt]}ms 뒤 재시도 (${attempt + 1}/${delays.length})`);
+      await sleep(delays[attempt]);
+    }
+  }
+}
+
 /** 가장 최근 거래일(평일) 날짜 반환 — YYYYMMDD */
 export function getLastTradingDate(): string {
   const d = new Date();
@@ -192,8 +214,10 @@ async function fetchJson(
   tokenRetry = true,
   rateLimitAttempt = 0,
 ): Promise<Record<string, unknown>> {
-  const res = await rateLimitedFetch(url, h);
-  const text = await res.text();
+  const { res, text } = await withNetworkRetry(async () => {
+    const res = await rateLimitedFetch(url, h);
+    return { res, text: await res.text() };
+  });
 
   // 초당 거래건수 제한은 HTTP 500으로 주로 오지만, 응답 상태와 무관하게
   // 오류코드로 판별한다. 대기 시간을 늘리며 최대 4회 재시도한다.
