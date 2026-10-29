@@ -37,7 +37,7 @@ async function buildStockItem(code: string, name: string, price: number, changeP
   if (classification.instrumentType === 'UNKNOWN') {
     throw new Error(`종목 분류 확인 실패: ${code}`);
   }
-  // ETF/ETN은 기업 주식 신호를 생성하지 않으며 불필요한 시세/수급 조회도 생략한다.
+  // ETF/ETN/기타 증권(인프라펀드·리츠 등)은 기업 주식 신호를 생성하지 않으며 불필요한 시세/수급 조회도 생략한다.
   if (classification.instrumentType !== 'STOCK') return null;
   if (classification.market === 'UNKNOWN') throw new Error(`상장시장 확인 실패: ${code}`);
   const quote = await getStockQuote(code);

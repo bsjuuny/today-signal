@@ -106,3 +106,17 @@ test('live CTPF1002R pdno is zero-padded to 12 chars (checked 2026-10-27)', () =
   // A different code with the same suffix must not match.
   assert.equal(live('005930', '00001A005930', 'ST', 'KOSPI').instrumentType, 'UNKNOWN');
 });
+
+test('non-stock KRX groups (infra fund IF, REIT RT) are skipped, unlisted groups still fail closed', () => {
+  // Live 088980 맥쿼리인프라 response on 2026-10-29: scty_grp_id_cd IF.
+  const row = (group: string) => parseInstrumentInfo('088980', {
+    rt_cd: '0', output: { pdno: '00000A088980', prdt_type_cd: '300', scty_grp_id_cd: group,
+      scts_mket_lstg_dt: '20060315', scts_mket_lstg_abol_dt: '', kosdaq_mket_lstg_dt: '', kosdaq_mket_lstg_abol_dt: '' },
+  }, '20261029');
+  assert.equal(row('IF').instrumentType, 'OTHER');
+  assert.equal(row('RT').instrumentType, 'OTHER');
+  assert.equal(row('ZZ').instrumentType, 'UNKNOWN');
+  assert.equal(row('').instrumentType, 'UNKNOWN');
+  const stock = { code: '088980', name: '맥쿼리인프라', price: 1, changePct: 0, volume: 1, ...row('IF') } as StockItem;
+  assert.equal(filterStockSignals([{ stock } as never], '20261029').length, 0);
+});
