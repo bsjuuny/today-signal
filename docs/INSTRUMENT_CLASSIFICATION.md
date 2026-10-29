@@ -6,7 +6,7 @@
 
 KIS `CTPF1002R /quotations/search-stock-info`를 후보당 한 번 조회한다. `PRDT_TYPE_CD=300`은 주식 전용 구분이 아니라 주식·ETF·ETN·ELW 조회 범위다. `pdno`가 요청 상품번호와 일치해야 한다. Q 접두사, 숫자 형식, 이름은 분류 근거로 사용하지 않는다.
 
-- `scty_grp_id_cd`: ST=기업 주식, EF=ETF, EN=ETN. 주식이 아닌 KRX 증권그룹(IF 인프라펀드, RT 리츠, MF, SC, DR, EW, SW, SR, BC, FE, FS)은 OTHER로 분류해 ETF·ETN처럼 건너뛴다(2026-10-29 088980 맥쿼리인프라=IF). 그 밖의 미지원 코드는 UNKNOWN으로 처리한다.
+- `scty_grp_id_cd`: ST=기업 주식, EF=ETF, EN=ETN. 그 밖의 그룹 코드(IF 인프라펀드, RT 리츠 등)는 주식이 아니므로 OTHER로 분류해 ETF·ETN처럼 건너뛰고 로그에 그룹 코드를 남긴다(2026-10-29 088980 맥쿼리인프라=IF로 발행이 막힌 뒤 변경). 그룹 코드가 비었거나 응답 오류·`pdno` 불일치면 UNKNOWN으로 발행을 중단한다.
 - 실제 응답의 `pdno`는 12자리로 채워진다(`00000A005930`, `00000Q530107`, 2026-10-27 실조회).
 - 시장은 공식 `scts_mket_lstg_dt`/`scts_mket_lstg_abol_dt`, `kosdaq_mket_lstg_dt`/`kosdaq_mket_lstg_abol_dt`로 기준일에 유효한 상장시장을 판별한다. 한 시장만 유효해야 한다. 두 시장 모두 유효하거나 확인되지 않으면 UNKNOWN이다. 기초지수가 코스닥150이라는 사실을 상장시장으로 사용하지 않는다.
 - 신규 `instrumentType`, `classification` 필드는 기존 종목/신호 필드에 추가된다. classification에는 출처·버전·검증 기준일·증권그룹을 기록한다.

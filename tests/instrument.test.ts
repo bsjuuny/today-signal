@@ -58,7 +58,9 @@ test('unknown metadata fails closed; numeric or Q ticker and ETF names cannot es
     for (const response of [{}, {rt_cd:'1'}, {rt_cd:'0', output:[]}, {rt_cd:'0', output:{pdno:'wrong', prdt_type_cd:'300', scty_grp_id_cd:'ST'}}]) {
       assert.deepEqual(parseInstrumentInfo(code, response, '20261026'), {market:'UNKNOWN', instrumentType:'UNKNOWN'});
     }
-    assert.equal(info(code, '??').instrumentType, 'UNKNOWN');
+    // An unrecognized group in a valid response is not ST, so it is skipped rather than blocking the run.
+    assert.equal(info(code, '??').instrumentType, 'OTHER');
+    assert.equal(info(code, '').instrumentType, 'UNKNOWN');
     assert.equal(info(code, 'EN').instrumentType, 'ETN');
     assert.equal(info(code, 'ST').instrumentType, 'STOCK');
   }
@@ -107,7 +109,7 @@ test('live CTPF1002R pdno is zero-padded to 12 chars (checked 2026-10-27)', () =
   assert.equal(live('005930', '00001A005930', 'ST', 'KOSPI').instrumentType, 'UNKNOWN');
 });
 
-test('non-stock KRX groups (infra fund IF, REIT RT) are skipped, unlisted groups still fail closed', () => {
+test('any non-ST group in a valid response is skipped as OTHER; empty group still fails closed', () => {
   // Live 088980 맥쿼리인프라 response on 2026-10-29: scty_grp_id_cd IF.
   const row = (group: string) => parseInstrumentInfo('088980', {
     rt_cd: '0', output: { pdno: '00000A088980', prdt_type_cd: '300', scty_grp_id_cd: group,
@@ -115,7 +117,7 @@ test('non-stock KRX groups (infra fund IF, REIT RT) are skipped, unlisted groups
   }, '20261029');
   assert.equal(row('IF').instrumentType, 'OTHER');
   assert.equal(row('RT').instrumentType, 'OTHER');
-  assert.equal(row('ZZ').instrumentType, 'UNKNOWN');
+  assert.equal(row('ZZ').instrumentType, 'OTHER');
   assert.equal(row('').instrumentType, 'UNKNOWN');
   const stock = { code: '088980', name: '맥쿼리인프라', price: 1, changePct: 0, volume: 1, ...row('IF') } as StockItem;
   assert.equal(filterStockSignals([{ stock } as never], '20261029').length, 0);
