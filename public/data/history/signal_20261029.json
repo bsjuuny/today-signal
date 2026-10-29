@@ -1,0 +1,1077 @@
+{
+  "status": "completed",
+  "date": "20261029",
+  "market": {
+    "kospiChange": 0.08,
+    "kosdaqChange": -0.51,
+    "kospiVolume": 14442.25,
+    "isIntraday": true,
+    "fetchedAt": "2026-10-29T00:05:06.811Z",
+    "quality": {
+      "status": "valid",
+      "issues": [],
+      "source": "KIS:FHPUP02100000",
+      "tradingValueUnit": "MILLION_KRW",
+      "raw": {
+        "kospi": {
+          "bstp_nmix_prpr": "6017.37",
+          "bstp_nmix_prdy_vrss": "4.93",
+          "bstp_nmix_prdy_ctrt": "0.08",
+          "prdy_vrss_sign": "2",
+          "acml_vol": "10540",
+          "acml_tr_pbmn": "1444225"
+        },
+        "kosdaq": {
+          "bstp_nmix_prpr": "767.38",
+          "bstp_nmix_prdy_vrss": "-3.90",
+          "bstp_nmix_prdy_ctrt": "-0.51",
+          "prdy_vrss_sign": "5",
+          "acml_vol": "36784",
+          "acml_tr_pbmn": "434689"
+        }
+      }
+    }
+  },
+  "signals": {
+    "instBuy": [
+      {
+        "stock": {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 1532000,
+          "priceChange": 45000,
+          "changePct": 3.03,
+          "open": 1511000,
+          "high": 1535000,
+          "low": 1501000,
+          "volume": 332199,
+          "avgVolume20": 3376367,
+          "marketCap": 11191143
+        },
+        "supply": {
+          "code": "000660",
+          "instNetBuy": 149385,
+          "instNetBuyAmt": 223081,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 4512,
+          "foreignNetBuyAmt": 372417,
+          "foreignConsecutiveDays": 1,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "A",
+        "score": 75,
+        "reasons": [
+          {
+            "label": "기관 강력매수 2289억",
+            "score": 30
+          },
+          {
+            "label": "기관 연속 4일 매집",
+            "score": 15
+          },
+          {
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "장중 상승 +3.0%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "005930",
+          "name": "삼성전자",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 242500,
+          "priceChange": 500,
+          "changePct": 0.21,
+          "open": 241000,
+          "high": 243000,
+          "low": 239000,
+          "volume": 1068648,
+          "avgVolume20": 16732222,
+          "marketCap": 14177226
+        },
+        "supply": {
+          "code": "005930",
+          "instNetBuy": 1620180,
+          "instNetBuyAmt": 383417,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 1522344,
+          "foreignNetBuyAmt": 361572,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 65,
+        "reasons": [
+          {
+            "label": "기관 강력매수 3929억",
+            "score": 30
+          },
+          {
+            "label": "기관 연속 4일 매집",
+            "score": 15
+          },
+          {
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "328130",
+          "name": "루닛",
+          "market": "KOSDAQ",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 15290,
+          "priceChange": 900,
+          "changePct": 6.25,
+          "open": 15450,
+          "high": 16290,
+          "low": 15220,
+          "volume": 1158255,
+          "avgVolume20": 1411419,
+          "marketCap": 11385
+        },
+        "supply": {
+          "code": "328130",
+          "instNetBuy": 84146,
+          "instNetBuyAmt": 1208,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 50648,
+          "foreignNetBuyAmt": 765,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 65,
+        "reasons": [
+          {
+            "label": "기관 순매수 13억",
+            "score": 20
+          },
+          {
+            "label": "기관 연속 4일 매집",
+            "score": 15
+          },
+          {
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "장중 상승 +6.3%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "006400",
+          "name": "삼성SDI",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 536000,
+          "priceChange": 2000,
+          "changePct": 0.37,
+          "open": 546000,
+          "high": 563000,
+          "low": 535000,
+          "volume": 201387,
+          "avgVolume20": 553292,
+          "marketCap": 431938
+        },
+        "supply": {
+          "code": "006400",
+          "instNetBuy": 120364,
+          "instNetBuyAmt": 63927,
+          "instConsecutiveDays": 3,
+          "foreignNetBuy": -69418,
+          "foreignNetBuyAmt": -36484,
+          "foreignConsecutiveDays": -1,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "B",
+        "score": 45,
+        "reasons": [
+          {
+            "label": "기관 강력매수 645억",
+            "score": 30
+          },
+          {
+            "label": "기관 연속 3일 매집",
+            "score": 15
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "010170",
+          "name": "대한광통신",
+          "market": "KOSDAQ",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 15230,
+          "priceChange": 250,
+          "changePct": 1.67,
+          "open": 15120,
+          "high": 15240,
+          "low": 14650,
+          "volume": 955529,
+          "avgVolume20": 7419286,
+          "marketCap": 23680
+        },
+        "supply": {
+          "code": "010170",
+          "instNetBuy": 58016,
+          "instNetBuyAmt": 870,
+          "instConsecutiveDays": 2,
+          "foreignNetBuy": 692031,
+          "foreignNetBuyAmt": 10192,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "C",
+        "score": 40,
+        "reasons": [
+          {
+            "label": "기관 매수세 유입",
+            "score": 10
+          },
+          {
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "장중 상승 +1.7%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "003160",
+          "name": "디아이",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 45200,
+          "priceChange": 1900,
+          "changePct": 4.39,
+          "open": 43300,
+          "high": 45350,
+          "low": 43050,
+          "volume": 210951,
+          "avgVolume20": 899657,
+          "marketCap": 12792
+        },
+        "supply": {
+          "code": "003160",
+          "instNetBuy": 11041,
+          "instNetBuyAmt": 476,
+          "instConsecutiveDays": 6,
+          "foreignNetBuy": -339,
+          "foreignNetBuyAmt": -9,
+          "foreignConsecutiveDays": -1,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "C",
+        "score": 35,
+        "reasons": [
+          {
+            "label": "기관 매수세 유입",
+            "score": 10
+          },
+          {
+            "label": "기관 연속 6일 매집",
+            "score": 15
+          },
+          {
+            "label": "장중 상승 +4.4%",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "018880",
+          "name": "한온시스템",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 3660,
+          "priceChange": -50,
+          "changePct": -1.35,
+          "open": 3710,
+          "high": 3710,
+          "low": 3625,
+          "volume": 182389,
+          "avgVolume20": 8624608,
+          "marketCap": 37561
+        },
+        "supply": {
+          "code": "018880",
+          "instNetBuy": 136997,
+          "instNetBuyAmt": 526,
+          "instConsecutiveDays": 10,
+          "foreignNetBuy": -472024,
+          "foreignNetBuyAmt": -1777,
+          "foreignConsecutiveDays": -1,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "C",
+        "score": 25,
+        "reasons": [
+          {
+            "label": "기관 매수세 유입",
+            "score": 10
+          },
+          {
+            "label": "기관 연속 10일 매집",
+            "score": 15
+          }
+        ],
+        "passedFilter": true
+      }
+    ],
+    "foreignBuy": [
+      {
+        "stock": {
+          "code": "005930",
+          "name": "삼성전자",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 242500,
+          "priceChange": 500,
+          "changePct": 0.21,
+          "open": 241000,
+          "high": 243000,
+          "low": 239000,
+          "volume": 1068648,
+          "avgVolume20": 16732222,
+          "marketCap": 14177226
+        },
+        "supply": {
+          "code": "005930",
+          "instNetBuy": 1620180,
+          "instNetBuyAmt": 383417,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 1522344,
+          "foreignNetBuyAmt": 361572,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 65,
+        "reasons": [
+          {
+            "label": "외국인 연속 2일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 3692억",
+            "score": 20
+          },
+          {
+            "label": "기관 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "010170",
+          "name": "대한광통신",
+          "market": "KOSDAQ",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 15230,
+          "priceChange": 250,
+          "changePct": 1.67,
+          "open": 15120,
+          "high": 15240,
+          "low": 14650,
+          "volume": 955529,
+          "avgVolume20": 7419286,
+          "marketCap": 23680
+        },
+        "supply": {
+          "code": "010170",
+          "instNetBuy": 58016,
+          "instNetBuyAmt": 870,
+          "instConsecutiveDays": 2,
+          "foreignNetBuy": 692031,
+          "foreignNetBuyAmt": 10192,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 65,
+        "reasons": [
+          {
+            "label": "외국인 연속 2일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 105억",
+            "score": 20
+          },
+          {
+            "label": "기관 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "028050",
+          "name": "삼성E&A",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 63500,
+          "priceChange": -700,
+          "changePct": -1.09,
+          "open": 64200,
+          "high": 65500,
+          "low": 63300,
+          "volume": 373400,
+          "avgVolume20": 3029862,
+          "marketCap": 124460
+        },
+        "supply": {
+          "code": "028050",
+          "instNetBuy": -181661,
+          "instNetBuyAmt": -11690,
+          "instConsecutiveDays": -4,
+          "foreignNetBuy": 1058926,
+          "foreignNetBuyAmt": 67704,
+          "foreignConsecutiveDays": 6,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 50,
+        "reasons": [
+          {
+            "label": "외국인 연속 6일 매집",
+            "score": 30
+          },
+          {
+            "label": "외국인 순매수 672억",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "010140",
+          "name": "삼성중공업",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 16050,
+          "priceChange": -460,
+          "changePct": -2.79,
+          "open": 16380,
+          "high": 16440,
+          "low": 15940,
+          "volume": 260296,
+          "avgVolume20": 3128789,
+          "marketCap": 141240
+        },
+        "supply": {
+          "code": "010140",
+          "instNetBuy": -271533,
+          "instNetBuyAmt": -4470,
+          "instConsecutiveDays": -1,
+          "foreignNetBuy": 202988,
+          "foreignNetBuyAmt": 3365,
+          "foreignConsecutiveDays": 7,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 50,
+        "reasons": [
+          {
+            "label": "외국인 연속 7일 매집",
+            "score": 30
+          },
+          {
+            "label": "외국인 순매수 33억",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "005935",
+          "name": "삼성전자우",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 190800,
+          "priceChange": 700,
+          "changePct": 0.37,
+          "open": 189400,
+          "high": 190900,
+          "low": 186800,
+          "volume": 274583,
+          "avgVolume20": 3381705,
+          "marketCap": 1530924
+        },
+        "supply": {
+          "code": "005935",
+          "instNetBuy": -158494,
+          "instNetBuyAmt": -29834,
+          "instConsecutiveDays": -3,
+          "foreignNetBuy": 776622,
+          "foreignNetBuyAmt": 143046,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 45,
+        "reasons": [
+          {
+            "label": "외국인 연속 3일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 1482억",
+            "score": 20
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "328130",
+          "name": "루닛",
+          "market": "KOSDAQ",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 15290,
+          "priceChange": 900,
+          "changePct": 6.25,
+          "open": 15450,
+          "high": 16290,
+          "low": 15220,
+          "volume": 1158255,
+          "avgVolume20": 1411419,
+          "marketCap": 11385
+        },
+        "supply": {
+          "code": "328130",
+          "instNetBuy": 84146,
+          "instNetBuyAmt": 1208,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 50648,
+          "foreignNetBuyAmt": 765,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "B",
+        "score": 45,
+        "reasons": [
+          {
+            "label": "외국인 연속 3일 순매수",
+            "score": 15
+          },
+          {
+            "label": "기관 동반 매수 (쌍끌이)",
+            "score": 20
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "034020",
+          "name": "두산에너빌리티",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 59700,
+          "priceChange": -1700,
+          "changePct": -2.77,
+          "open": 60600,
+          "high": 60800,
+          "low": 59200,
+          "volume": 138317,
+          "avgVolume20": 2147072,
+          "marketCap": 382415
+        },
+        "supply": {
+          "code": "034020",
+          "instNetBuy": -5676,
+          "instNetBuyAmt": -348,
+          "instConsecutiveDays": -9,
+          "foreignNetBuy": 108425,
+          "foreignNetBuyAmt": 6703,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "C",
+        "score": 35,
+        "reasons": [
+          {
+            "label": "외국인 연속 3일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 65억",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "028670",
+          "name": "팬오션",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 5680,
+          "priceChange": -40,
+          "changePct": -0.7,
+          "open": 5720,
+          "high": 5750,
+          "low": 5650,
+          "volume": 147461,
+          "avgVolume20": 5383522,
+          "marketCap": 30364
+        },
+        "supply": {
+          "code": "028670",
+          "instNetBuy": -4393811,
+          "instNetBuyAmt": -25114,
+          "instConsecutiveDays": -2,
+          "foreignNetBuy": 3660721,
+          "foreignNetBuyAmt": 20934,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "C",
+        "score": 35,
+        "reasons": [
+          {
+            "label": "외국인 연속 2일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 208억",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "034220",
+          "name": "LG디스플레이",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 7540,
+          "priceChange": -80,
+          "changePct": -1.05,
+          "open": 7530,
+          "high": 7680,
+          "low": 7500,
+          "volume": 96252,
+          "avgVolume20": 2575973,
+          "marketCap": 37700
+        },
+        "supply": {
+          "code": "034220",
+          "instNetBuy": 26311,
+          "instNetBuyAmt": 199,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 227500,
+          "foreignNetBuyAmt": 1726,
+          "foreignConsecutiveDays": 4,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "C",
+        "score": 35,
+        "reasons": [
+          {
+            "label": "외국인 연속 4일 순매수",
+            "score": 15
+          },
+          {
+            "label": "외국인 순매수 17억",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "443670",
+          "name": "에스피소프트",
+          "market": "KOSDAQ",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 4975,
+          "priceChange": 135,
+          "changePct": 2.79,
+          "open": 4845,
+          "high": 5120,
+          "low": 4740,
+          "volume": 1234846,
+          "avgVolume20": 773949,
+          "marketCap": 1195
+        },
+        "supply": {
+          "code": "443670",
+          "instNetBuy": -24175,
+          "instNetBuyAmt": -100,
+          "instConsecutiveDays": -3,
+          "foreignNetBuy": 36262,
+          "foreignNetBuyAmt": 152,
+          "foreignConsecutiveDays": 4,
+          "foreignHoldPct": 0
+        },
+        "category": "FOREIGN_BUY",
+        "grade": "C",
+        "score": 25,
+        "reasons": [
+          {
+            "label": "외국인 연속 4일 순매수",
+            "score": 15
+          },
+          {
+            "label": "주가 상승 동반",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      }
+    ],
+    "volumeSurge": [],
+    "strongDemand": [
+      {
+        "stock": {
+          "code": "005930",
+          "name": "삼성전자",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 242500,
+          "priceChange": 500,
+          "changePct": 0.21,
+          "open": 241000,
+          "high": 243000,
+          "low": 239000,
+          "volume": 1068648,
+          "avgVolume20": 16732222,
+          "marketCap": 14177226
+        },
+        "supply": {
+          "code": "005930",
+          "instNetBuy": 1620180,
+          "instNetBuyAmt": 383417,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 1522344,
+          "foreignNetBuyAmt": 361572,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "STRONG_DEMAND",
+        "grade": "B",
+        "score": 55,
+        "reasons": [
+          {
+            "label": "강력 쌍끌이 (기관 3929억, 외인 3692억)",
+            "score": 40
+          },
+          {
+            "label": "풍부한 거래대금 2591억",
+            "score": 15
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 1532000,
+          "priceChange": 45000,
+          "changePct": 3.03,
+          "open": 1511000,
+          "high": 1535000,
+          "low": 1501000,
+          "volume": 332199,
+          "avgVolume20": 3376367,
+          "marketCap": 11191143
+        },
+        "supply": {
+          "code": "000660",
+          "instNetBuy": 149385,
+          "instNetBuyAmt": 223081,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 4512,
+          "foreignNetBuyAmt": 372417,
+          "foreignConsecutiveDays": 1,
+          "foreignHoldPct": 0
+        },
+        "category": "STRONG_DEMAND",
+        "grade": "B",
+        "score": 55,
+        "reasons": [
+          {
+            "label": "강력 쌍끌이 (기관 2289억, 외인 69억)",
+            "score": 40
+          },
+          {
+            "label": "풍부한 거래대금 5089억",
+            "score": 15
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "328130",
+          "name": "루닛",
+          "market": "KOSDAQ",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 15290,
+          "priceChange": 900,
+          "changePct": 6.25,
+          "open": 15450,
+          "high": 16290,
+          "low": 15220,
+          "volume": 1158255,
+          "avgVolume20": 1411419,
+          "marketCap": 11385
+        },
+        "supply": {
+          "code": "328130",
+          "instNetBuy": 84146,
+          "instNetBuyAmt": 1208,
+          "instConsecutiveDays": 4,
+          "foreignNetBuy": 50648,
+          "foreignNetBuyAmt": 765,
+          "foreignConsecutiveDays": 3,
+          "foreignHoldPct": 0
+        },
+        "category": "STRONG_DEMAND",
+        "grade": "B",
+        "score": 40,
+        "reasons": [
+          {
+            "label": "강력 쌍끌이 (기관 13억, 외인 8억)",
+            "score": 40
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
+          "code": "010170",
+          "name": "대한광통신",
+          "market": "KOSDAQ",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261029",
+            "securityGroup": "ST"
+          },
+          "price": 15230,
+          "priceChange": 250,
+          "changePct": 1.67,
+          "open": 15120,
+          "high": 15240,
+          "low": 14650,
+          "volume": 955529,
+          "avgVolume20": 7419286,
+          "marketCap": 23680
+        },
+        "supply": {
+          "code": "010170",
+          "instNetBuy": 58016,
+          "instNetBuyAmt": 870,
+          "instConsecutiveDays": 2,
+          "foreignNetBuy": 692031,
+          "foreignNetBuyAmt": 10192,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "STRONG_DEMAND",
+        "grade": "B",
+        "score": 40,
+        "reasons": [
+          {
+            "label": "강력 쌍끌이 (기관 9억, 외인 105억)",
+            "score": 40
+          }
+        ],
+        "passedFilter": true
+      }
+    ],
+    "momentum": []
+  },
+  "updatedAt": "2026-10-29T00:08:41.984Z"
+}
