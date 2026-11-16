@@ -2,11 +2,11 @@
   "status": "completed",
   "date": "20261116",
   "market": {
-    "kospiChange": -3.06,
-    "kosdaqChange": -3.61,
-    "kospiVolume": 103438.23,
+    "kospiChange": -3.54,
+    "kosdaqChange": -4.25,
+    "kospiVolume": 112320.93,
     "isIntraday": true,
-    "fetchedAt": "2026-11-16T04:35:03.971Z",
+    "fetchedAt": "2026-11-16T05:05:04.246Z",
     "quality": {
       "status": "valid",
       "issues": [],
@@ -14,77 +14,26 @@
       "tradingValueUnit": "MILLION_KRW",
       "raw": {
         "kospi": {
-          "bstp_nmix_prpr": "5128.46",
-          "bstp_nmix_prdy_vrss": "-162.07",
-          "bstp_nmix_prdy_ctrt": "-3.06",
+          "bstp_nmix_prpr": "5103.13",
+          "bstp_nmix_prdy_vrss": "-187.40",
+          "bstp_nmix_prdy_ctrt": "-3.54",
           "prdy_vrss_sign": "5",
-          "acml_vol": "146451",
-          "acml_tr_pbmn": "10343823"
+          "acml_vol": "157626",
+          "acml_tr_pbmn": "11232093"
         },
         "kosdaq": {
-          "bstp_nmix_prpr": "674.41",
-          "bstp_nmix_prdy_vrss": "-25.25",
-          "bstp_nmix_prdy_ctrt": "-3.61",
+          "bstp_nmix_prpr": "669.92",
+          "bstp_nmix_prdy_vrss": "-29.74",
+          "bstp_nmix_prdy_ctrt": "-4.25",
           "prdy_vrss_sign": "5",
-          "acml_vol": "314963",
-          "acml_tr_pbmn": "3528826"
+          "acml_vol": "340189",
+          "acml_tr_pbmn": "3775271"
         }
       }
     }
   },
   "signals": {
     "instBuy": [
-      {
-        "stock": {
-          "code": "316140",
-          "name": "우리금융지주",
-          "market": "KOSPI",
-          "instrumentType": "STOCK",
-          "classification": {
-            "source": "KIS:CTPF1002R",
-            "version": 1,
-            "checkedOn": "20261116",
-            "securityGroup": "ST"
-          },
-          "price": 32850,
-          "priceChange": 350,
-          "changePct": 1.08,
-          "open": 32300,
-          "high": 33000,
-          "low": 32000,
-          "volume": 1100802,
-          "avgVolume20": 1838447,
-          "marketCap": 242034
-        },
-        "supply": {
-          "code": "316140",
-          "instNetBuy": 321752,
-          "instNetBuyAmt": 10471,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 56131,
-          "foreignNetBuyAmt": 1801,
-          "foreignConsecutiveDays": 2,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "B",
-        "score": 48,
-        "reasons": [
-          {
-            "label": "기관 강력매수 106억",
-            "score": 30
-          },
-          {
-            "label": "외국인 동반 매수 (쌍끌이)",
-            "score": 20
-          },
-          {
-            "label": "장중 상승 +1.1%",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
       {
         "stock": {
           "code": "003490",
@@ -97,22 +46,22 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 31850,
-          "priceChange": 300,
-          "changePct": 0.95,
+          "price": 31750,
+          "priceChange": 200,
+          "changePct": 0.63,
           "open": 31500,
           "high": 32000,
           "low": 31150,
-          "volume": 1283440,
-          "avgVolume20": 2766135,
-          "marketCap": 117278
+          "volume": 1350331,
+          "avgVolume20": 2769479,
+          "marketCap": 116910
         },
         "supply": {
           "code": "003490",
           "instNetBuy": 108848,
           "instNetBuyAmt": 3421,
           "instConsecutiveDays": 1,
-          "foreignNetBuy": 245934,
+          "foreignNetBuy": 260523,
           "foreignNetBuyAmt": 11506,
           "foreignConsecutiveDays": 4,
           "foreignHoldPct": 0
@@ -134,6 +83,53 @@
       },
       {
         "stock": {
+          "code": "316140",
+          "name": "우리금융지주",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261116",
+            "securityGroup": "ST"
+          },
+          "price": 32800,
+          "priceChange": 300,
+          "changePct": 0.92,
+          "open": 32300,
+          "high": 33000,
+          "low": 32000,
+          "volume": 1175220,
+          "avgVolume20": 1842147,
+          "marketCap": 241666
+        },
+        "supply": {
+          "code": "316140",
+          "instNetBuy": 321752,
+          "instNetBuyAmt": 10471,
+          "instConsecutiveDays": 1,
+          "foreignNetBuy": 56131,
+          "foreignNetBuyAmt": 1801,
+          "foreignConsecutiveDays": 2,
+          "foreignHoldPct": 0
+        },
+        "category": "INST_BUY",
+        "grade": "C",
+        "score": 40,
+        "reasons": [
+          {
+            "label": "기관 강력매수 106억",
+            "score": 30
+          },
+          {
+            "label": "외국인 동반 매수 (쌍끌이)",
+            "score": 20
+          }
+        ],
+        "passedFilter": true
+      },
+      {
+        "stock": {
           "code": "064400",
           "name": "LG씨엔에스",
           "market": "KOSPI",
@@ -144,15 +140,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 78400,
-          "priceChange": -100,
-          "changePct": -0.13,
+          "price": 77700,
+          "priceChange": -800,
+          "changePct": -1.02,
           "open": 79400,
           "high": 82600,
           "low": 77300,
-          "volume": 974806,
-          "avgVolume20": 1066025,
-          "marketCap": 75959
+          "volume": 1020102,
+          "avgVolume20": 1068291,
+          "marketCap": 75280
         },
         "supply": {
           "code": "064400",
@@ -191,15 +187,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 68700,
-          "priceChange": -100,
-          "changePct": -0.15,
+          "price": 68500,
+          "priceChange": -300,
+          "changePct": -0.44,
           "open": 68900,
           "high": 70000,
           "low": 67700,
-          "volume": 1584401,
-          "avgVolume20": 3847788,
-          "marketCap": 134652
+          "volume": 1657414,
+          "avgVolume20": 3851439,
+          "marketCap": 134260
         },
         "supply": {
           "code": "028050",
@@ -216,7 +212,7 @@
         "score": 36,
         "reasons": [
           {
-            "label": "기관 강력매수 158억",
+            "label": "기관 강력매수 157억",
             "score": 30
           },
           {
@@ -238,15 +234,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 3055,
-          "priceChange": 5,
-          "changePct": 0.16,
+          "price": 3060,
+          "priceChange": 10,
+          "changePct": 0.33,
           "open": 3080,
           "high": 3130,
           "low": 3020,
-          "volume": 2030451,
-          "avgVolume20": 4034423,
-          "marketCap": 31352
+          "volume": 2208911,
+          "avgVolume20": 4043346,
+          "marketCap": 31403
         },
         "supply": {
           "code": "018880",
@@ -285,15 +281,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 32400,
-          "priceChange": 700,
-          "changePct": 2.21,
+          "price": 32350,
+          "priceChange": 650,
+          "changePct": 2.05,
           "open": 31950,
           "high": 32750,
           "low": 31950,
-          "volume": 1055714,
-          "avgVolume20": 1671522,
-          "marketCap": 143532
+          "volume": 1138088,
+          "avgVolume20": 1675641,
+          "marketCap": 143311
         },
         "supply": {
           "code": "035720",
@@ -310,59 +306,12 @@
         "score": 32,
         "reasons": [
           {
-            "label": "기관 강력매수 66억",
+            "label": "기관 강력매수 65억",
             "score": 30
           },
           {
-            "label": "장중 상승 +2.2%",
+            "label": "장중 상승 +2.0%",
             "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "093370",
-          "name": "후성",
-          "market": "KOSPI",
-          "instrumentType": "STOCK",
-          "classification": {
-            "source": "KIS:CTPF1002R",
-            "version": 1,
-            "checkedOn": "20261116",
-            "securityGroup": "ST"
-          },
-          "price": 9310,
-          "priceChange": 10,
-          "changePct": 0.11,
-          "open": 9440,
-          "high": 9650,
-          "low": 8880,
-          "volume": 1207137,
-          "avgVolume20": 1565255,
-          "marketCap": 9985
-        },
-        "supply": {
-          "code": "093370",
-          "instNetBuy": 91978,
-          "instNetBuyAmt": 881,
-          "instConsecutiveDays": 1,
-          "foreignNetBuy": 110230,
-          "foreignNetBuyAmt": 1083,
-          "foreignConsecutiveDays": 1,
-          "foreignHoldPct": 0
-        },
-        "category": "INST_BUY",
-        "grade": "C",
-        "score": 24,
-        "reasons": [
-          {
-            "label": "기관 매수세 유입",
-            "score": 10
-          },
-          {
-            "label": "외국인 동반 매수 (쌍끌이)",
-            "score": 20
           }
         ],
         "passedFilter": true
@@ -379,15 +328,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 13190,
-          "priceChange": -310,
-          "changePct": -2.3,
+          "price": 13200,
+          "priceChange": -300,
+          "changePct": -2.22,
           "open": 13500,
           "high": 14250,
           "low": 12660,
-          "volume": 917535,
-          "avgVolume20": 788496,
-          "marketCap": 2849
+          "volume": 946356,
+          "avgVolume20": 789936,
+          "marketCap": 2851
         },
         "supply": {
           "code": "077500",
@@ -428,22 +377,22 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 31850,
-          "priceChange": 300,
-          "changePct": 0.95,
+          "price": 31750,
+          "priceChange": 200,
+          "changePct": 0.63,
           "open": 31500,
           "high": 32000,
           "low": 31150,
-          "volume": 1283440,
-          "avgVolume20": 2766135,
-          "marketCap": 117278
+          "volume": 1350331,
+          "avgVolume20": 2769479,
+          "marketCap": 116910
         },
         "supply": {
           "code": "003490",
           "instNetBuy": 108848,
           "instNetBuyAmt": 3421,
           "instConsecutiveDays": 1,
-          "foreignNetBuy": 245934,
+          "foreignNetBuy": 260523,
           "foreignNetBuyAmt": 11506,
           "foreignConsecutiveDays": 4,
           "foreignHoldPct": 0
@@ -457,7 +406,7 @@
             "score": 15
           },
           {
-            "label": "외국인 순매수 78억",
+            "label": "외국인 순매수 83억",
             "score": 20
           },
           {
@@ -483,15 +432,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 32850,
-          "priceChange": 350,
-          "changePct": 1.08,
+          "price": 32800,
+          "priceChange": 300,
+          "changePct": 0.92,
           "open": 32300,
           "high": 33000,
           "low": 32000,
-          "volume": 1100802,
-          "avgVolume20": 1838447,
-          "marketCap": 242034
+          "volume": 1175220,
+          "avgVolume20": 1842147,
+          "marketCap": 241666
         },
         "supply": {
           "code": "316140",
@@ -544,8 +493,8 @@
           "open": 5010,
           "high": 5040,
           "low": 4915,
-          "volume": 1370296,
-          "avgVolume20": 3245188,
+          "volume": 1562335,
+          "avgVolume20": 3254790,
           "marketCap": 26782
         },
         "supply": {
@@ -589,15 +538,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 78400,
-          "priceChange": -100,
-          "changePct": -0.13,
+          "price": 77700,
+          "priceChange": -800,
+          "changePct": -1.02,
           "open": 79400,
           "high": 82600,
           "low": 77300,
-          "volume": 974806,
-          "avgVolume20": 1066025,
-          "marketCap": 75959
+          "volume": 1020102,
+          "avgVolume20": 1068291,
+          "marketCap": 75280
         },
         "supply": {
           "code": "064400",
@@ -618,7 +567,7 @@
             "score": 15
           },
           {
-            "label": "외국인 순매수 153억",
+            "label": "외국인 순매수 152억",
             "score": 20
           },
           {
@@ -640,15 +589,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 16920,
-          "priceChange": 310,
-          "changePct": 1.87,
+          "price": 16730,
+          "priceChange": 120,
+          "changePct": 0.72,
           "open": 16640,
           "high": 17010,
           "low": 16500,
-          "volume": 1753087,
-          "avgVolume20": 4000388,
-          "marketCap": 148896
+          "volume": 1914223,
+          "avgVolume20": 4008445,
+          "marketCap": 147224
         },
         "supply": {
           "code": "010140",
@@ -669,7 +618,7 @@
             "score": 15
           },
           {
-            "label": "외국인 순매수 331억",
+            "label": "외국인 순매수 327억",
             "score": 20
           },
           {
@@ -691,15 +640,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 1431,
-          "priceChange": 201,
-          "changePct": 16.34,
+          "price": 1405,
+          "priceChange": 175,
+          "changePct": 14.23,
           "open": 1270,
           "high": 1525,
           "low": 1260,
-          "volume": 11434172,
-          "avgVolume20": 740322,
-          "marketCap": 1104
+          "volume": 12269048,
+          "avgVolume20": 782065,
+          "marketCap": 1084
         },
         "supply": {
           "code": "008700",
@@ -708,53 +657,6 @@
           "instConsecutiveDays": 10,
           "foreignNetBuy": 85540,
           "foreignNetBuyAmt": 106,
-          "foreignConsecutiveDays": 8,
-          "foreignHoldPct": 0
-        },
-        "category": "FOREIGN_BUY",
-        "grade": "C",
-        "score": 32,
-        "reasons": [
-          {
-            "label": "외국인 연속 8일 매집",
-            "score": 30
-          },
-          {
-            "label": "주가 상승 동반",
-            "score": 10
-          }
-        ],
-        "passedFilter": true
-      },
-      {
-        "stock": {
-          "code": "089590",
-          "name": "제주항공",
-          "market": "KOSPI",
-          "instrumentType": "STOCK",
-          "classification": {
-            "source": "KIS:CTPF1002R",
-            "version": 1,
-            "checkedOn": "20261116",
-            "securityGroup": "ST"
-          },
-          "price": 7215,
-          "priceChange": 365,
-          "changePct": 5.33,
-          "open": 6850,
-          "high": 7340,
-          "low": 6610,
-          "volume": 803716,
-          "avgVolume20": 1126735,
-          "marketCap": 5818
-        },
-        "supply": {
-          "code": "089590",
-          "instNetBuy": -524516,
-          "instNetBuyAmt": -3633,
-          "instConsecutiveDays": -2,
-          "foreignNetBuy": 95100,
-          "foreignNetBuyAmt": 4750,
           "foreignConsecutiveDays": 8,
           "foreignHoldPct": 0
         },
@@ -785,15 +687,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 5090,
-          "priceChange": 140,
-          "changePct": 2.83,
+          "price": 4855,
+          "priceChange": -95,
+          "changePct": -1.92,
           "open": 4900,
           "high": 5500,
           "low": 4700,
-          "volume": 1364404,
-          "avgVolume20": 2257511,
-          "marketCap": 1079
+          "volume": 1417460,
+          "avgVolume20": 2260164,
+          "marketCap": 1029
         },
         "supply": {
           "code": "051630",
@@ -807,15 +709,11 @@
         },
         "category": "FOREIGN_BUY",
         "grade": "C",
-        "score": 20,
+        "score": 12,
         "reasons": [
           {
             "label": "외국인 연속 4일 순매수",
             "score": 15
-          },
-          {
-            "label": "주가 상승 동반",
-            "score": 10
           }
         ],
         "passedFilter": true
@@ -835,15 +733,15 @@
             "checkedOn": "20261116",
             "securityGroup": "ST"
           },
-          "price": 78400,
-          "priceChange": -100,
-          "changePct": -0.13,
+          "price": 77700,
+          "priceChange": -800,
+          "changePct": -1.02,
           "open": 79400,
           "high": 82600,
           "low": 77300,
-          "volume": 974806,
-          "avgVolume20": 1066025,
-          "marketCap": 75959
+          "volume": 1020102,
+          "avgVolume20": 1068291,
+          "marketCap": 75280
         },
         "supply": {
           "code": "064400",
@@ -860,11 +758,11 @@
         "score": 44,
         "reasons": [
           {
-            "label": "강력 쌍끌이 (기관 65억, 외인 153억)",
+            "label": "강력 쌍끌이 (기관 65억, 외인 152억)",
             "score": 40
           },
           {
-            "label": "풍부한 거래대금 764억",
+            "label": "풍부한 거래대금 793억",
             "score": 15
           }
         ],
@@ -873,5 +771,5 @@
     ],
     "momentum": []
   },
-  "updatedAt": "2026-11-16T04:38:06.611Z"
+  "updatedAt": "2026-11-16T05:08:06.984Z"
 }
