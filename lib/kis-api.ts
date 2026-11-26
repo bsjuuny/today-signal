@@ -79,42 +79,37 @@ async function getToken(): Promise<string> {
   return _tokenPromise;
 }
 
+class TokenRateLimitError extends Error {}
+
 async function _issueTokenHttp(): Promise<{ access_token: string; expires_in: number }> {
-  let lastError: Error | null = null;
-  for (const retry of [true, false]) {
-    const res = await fetch(`${BASE_URL}/oauth2/tokenP`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        grant_type: 'client_credentials',
-        appkey: process.env.KIS_APP_KEY,
-        appsecret: process.env.KIS_APP_SECRET,
-      }),
-    });
-
-    const body = await res.text().catch(() => '');
-    if (res.ok) return JSON.parse(body);
-
-    // 1분 제한 오류(EGW00133)인 경우 1회 대기 후 재시도
-    if (retry && body.includes('EGW00133')) {
-      console.warn(`[KIS] 토큰 발급 제한(1분) 감지됨. 65초 대기 후 재시도합니다...`);
-      await new Promise(r => setTimeout(r, 65000));
-      continue;
-    }
-    lastError = new Error(`KIS 토큰 발급 실패: HTTP ${res.status}\n  ${body.slice(0, 300)}`);
-    break;
-  }
-  throw lastError;
+  const res = await fetch(`${BASE_URL}/oauth2/tokenP`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      grant_type: 'client_credentials',
+      appkey: process.env.KIS_APP_KEY,
+      appsecret: process.env.KIS_APP_SECRET,
+    }),
+  });
+  const body = await res.text().catch(() => '');
+  if (res.ok) return JSON.parse(body);
+  // 1분 제한(EGW00133): 호출한 쪽이 공유 락을 놓은 뒤 기다리도록 구분해서 던진다.
+  if (body.includes('EGW00133')) throw new TokenRateLimitError('KIS 토큰 발급 제한(1분)');
+  throw new Error(`KIS 토큰 발급 실패: HTTP ${res.status}
+  ${body.slice(0, 300)}`);
 }
 
 /**
  * 캐시 재확인 → 없으면 발급 → 저장을 공유 락 하나로 원자적으로 수행 (동시 재발급으로
  * 서로의 토큰을 무효화하는 경쟁 방지). 락 안에서도 다른 프로세스가 방금 발급해뒀을 수
  * 있으므로 cached를 다시 확인한다.
+ * 발급 제한 대기(65초)는 락 밖에서 한다 — 공유 락은 30초가 지나면 오래된 것으로 보고
+ * 다른 프로세스(실거래 엔진 포함)가 지울 수 있어, 락을 쥔 채 기다리면 두 곳이 동시에
+ * 발급해 서로의 토큰을 무효화할 수 있다.
  */
 async function _issueToken(): Promise<string> {
   const { withSharedTokenLock } = await sharedCache();
-  return withSharedTokenLock(
+  const attempt = () => withSharedTokenLock(
     { environment: 'live', appKey: process.env.KIS_APP_KEY },
     async ({ cached, save }) => {
       if (cached) {
@@ -130,6 +125,14 @@ async function _issueToken(): Promise<string> {
       return _token.value;
     },
   );
+  try {
+    return await attempt();
+  } catch (err) {
+    if (!(err instanceof TokenRateLimitError)) throw err;
+    console.warn('[KIS] 토큰 발급 제한(1분) 감지됨. 락을 놓고 65초 대기 후 재시도합니다...');
+    await new Promise(r => setTimeout(r, 65000));
+    return attempt(); // 그 사이 다른 프로세스가 발급했으면 락 안에서 cached 로 받는다
+  }
 }
 
 /** KIS API 공통 헤더 */
@@ -248,10 +251,17 @@ async function fetchJson(
   }
 }
 
+
+/** rt_cd 가 '0'이 아니면 오류. 출력이 비어 있는 오류 응답을 '0건'으로 오인하지 않게 한다. */
+function requireOk(data: Record<string, unknown>, label: string): void {
+  if (data.rt_cd !== '0') throw new Error(`[${label}] API 응답 오류: rt_cd=${String(data.rt_cd)}, msg=${String(data.msg1 ?? '')}`);
+}
+
 // ──────────────────────────────────────────────
 // 1. 업종별 등락률 (코스피/코스닥 지수)
 // ──────────────────────────────────────────────
 import { parseIndexQuote, type IndexQuote } from './market-data';
+import { kisInt, kisNumber, kisRows } from './safe-io';
 export type { IndexQuote } from './market-data';
 
 export async function getIndexQuote(code: '0001' | '1001'): Promise<IndexQuote> {
@@ -282,18 +292,19 @@ export async function getStockQuote(code: string): Promise<StockQuote> {
   const h = await headers('FHKST01010100');
   const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-price?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=${code}`;
   const data = await fetchJson(url, h);
+  requireOk(data, '현재가');
   const o = data.output as Record<string, string>;
   return {
     code,
     name: o.hts_kor_isnm,
-    price: parseInt(o.stck_prpr || '0'),
-    priceChange: parseInt(o.prdy_vrss || '0'),
-    changePct: parseFloat(o.prdy_ctrt || '0'),
-    open: parseInt(o.stck_oprc || '0'),
-    high: parseInt(o.stck_hgpr || '0'),
-    low: parseInt(o.stck_lwpr || '0'),
-    volume: parseInt(o.acml_vol || '0'),
-    marketCap: parseInt(o.hts_avls || '0'), // 억원 (KIS API가 이미 억원 단위로 반환)
+    price: kisInt(o.stck_prpr, 'stck_prpr'),
+    priceChange: kisInt(o.prdy_vrss, 'prdy_vrss'),
+    changePct: kisNumber(o.prdy_ctrt, 'prdy_ctrt'),
+    open: kisInt(o.stck_oprc, 'stck_oprc'),
+    high: kisInt(o.stck_hgpr, 'stck_hgpr'),
+    low: kisInt(o.stck_lwpr, 'stck_lwpr'),
+    volume: kisInt(o.acml_vol, 'acml_vol'),
+    marketCap: kisInt(o.hts_avls, 'hts_avls'), // 억원 (KIS API가 이미 억원 단위로 반환)
   };
 }
 
@@ -326,18 +337,17 @@ export async function getInstNetBuyTop(limit = 30): Promise<NetBuyItem[]> {
     + `&FID_VOL_CNT=&FID_INPUT_DATE_1=${date}&FID_RANK_SORT_CLS_CODE=0&FID_ETC_CLS_CODE=0`;
   const data = await fetchJson(url, h);
   if (data.rt_cd !== '0') {
-    console.warn(`  [기관순매수] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
-    return [];
+    throw new Error(`[기관순매수] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
   }
-  const rows: NetBuyItem[] = ((data.output as Record<string, string>[]) ?? []).slice(0, limit).map((o, i) => ({
+  const rows: NetBuyItem[] = kisRows(data, 'output', 'KIS').slice(0, limit).map((o, i) => ({
     rank: i + 1,
     code: o.mksc_shrn_iscd,
     name: o.hts_kor_isnm,
-    price: parseInt(o.stck_prpr || '0'),
-    changePct: parseFloat(o.prdy_ctrt || '0'),
-    netBuyQty: parseInt(o.orgn_ntby_qty || '0'),
-    netBuyAmt: parseInt(o.orgn_ntby_tr_pbmn || '0'),
-    volume: parseInt(o.acml_vol || '0'),
+    price: kisInt(o.stck_prpr, 'stck_prpr'),
+    changePct: kisNumber(o.prdy_ctrt, 'prdy_ctrt'),
+    netBuyQty: kisInt(o.orgn_ntby_qty, 'orgn_ntby_qty'),
+    netBuyAmt: kisInt(o.orgn_ntby_tr_pbmn, 'orgn_ntby_tr_pbmn'),
+    volume: kisInt(o.acml_vol, 'acml_vol'),
   }));
   return rows;
 }
@@ -355,18 +365,17 @@ export async function getForeignNetBuyTop(limit = 30): Promise<NetBuyItem[]> {
     + `&FID_VOL_CNT=&FID_INPUT_DATE_1=${date}&FID_RANK_SORT_CLS_CODE=0&FID_ETC_CLS_CODE=0`;
   const data = await fetchJson(url, h);
   if (data.rt_cd !== '0') {
-    console.warn(`  [외국인순매수] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
-    return [];
+    throw new Error(`[외국인순매수] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
   }
-  const rows: NetBuyItem[] = ((data.output as Record<string, string>[]) ?? []).slice(0, limit).map((o, i) => ({
+  const rows: NetBuyItem[] = kisRows(data, 'output', 'KIS').slice(0, limit).map((o, i) => ({
     rank: i + 1,
     code: o.mksc_shrn_iscd,
     name: o.hts_kor_isnm,
-    price: parseInt(o.stck_prpr || '0'),
-    changePct: parseFloat(o.prdy_ctrt || '0'),
-    netBuyQty: parseInt(o.frgn_ntby_qty || '0'),
-    netBuyAmt: parseInt(o.frgn_ntby_tr_pbmn || '0'),
-    volume: parseInt(o.acml_vol || '0'),
+    price: kisInt(o.stck_prpr, 'stck_prpr'),
+    changePct: kisNumber(o.prdy_ctrt, 'prdy_ctrt'),
+    netBuyQty: kisInt(o.frgn_ntby_qty, 'frgn_ntby_qty'),
+    netBuyAmt: kisInt(o.frgn_ntby_tr_pbmn, 'frgn_ntby_tr_pbmn'),
+    volume: kisInt(o.acml_vol, 'acml_vol'),
   }));
   return rows;
 }
@@ -395,17 +404,16 @@ export async function getVolumeSurgeTop(limit = 50, market: 'J' | 'Q' = 'J'): Pr
     + `&FID_VOL_CNT=100000&FID_INPUT_DATE_1=`;
   const data = await fetchJson(url, h);
   if (data.rt_cd !== '0') {
-    console.warn(`  [거래량급등/${market}] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
-    return [];
+    throw new Error(`[거래량급등/${market}] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
   }
-  const rows: VolumeSurgeItem[] = ((data.output as Record<string, string>[]) ?? []).slice(0, limit).map((o, i) => ({
+  const rows: VolumeSurgeItem[] = kisRows(data, 'output', 'KIS').slice(0, limit).map((o, i) => ({
     rank: i + 1,
     code: o.mksc_shrn_iscd,
     name: o.hts_kor_isnm,
-    price: parseInt(o.stck_prpr || '0'),
-    changePct: parseFloat(o.prdy_ctrt || '0'),
-    volume: parseInt(o.acml_vol || '0'),
-    volumeRatio: parseFloat(o.vol_inrt || '0'),
+    price: kisInt(o.stck_prpr, 'stck_prpr'),
+    changePct: kisNumber(o.prdy_ctrt, 'prdy_ctrt'),
+    volume: kisInt(o.acml_vol, 'acml_vol'),
+    volumeRatio: kisNumber(o.vol_inrt, 'vol_inrt'),
   }));
   return rows;
 }
@@ -434,16 +442,15 @@ export async function getChangePctTop(limit = 50, market: 'J' | 'Q' = 'J'): Prom
     + `&fid_div_cls_code=0&fid_rsfl_rate1=3&fid_rsfl_rate2=`;
   const data = await fetchJson(url, h);
   if (data.rt_cd !== '0') {
-    console.warn(`  [등락률상위/${market}] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
-    return [];
+    throw new Error(`[등락률상위/${market}] API 응답 오류: rt_cd=${data.rt_cd}, msg=${data.msg1}`);
   }
-  const rows: ChangePctItem[] = ((data.output as Record<string, string>[]) ?? []).slice(0, limit).map((o, i) => ({
+  const rows: ChangePctItem[] = kisRows(data, 'output', 'KIS').slice(0, limit).map((o, i) => ({
     rank: i + 1,
     code: o.stck_shrn_iscd || o.mksc_shrn_iscd,
     name: o.hts_kor_isnm,
-    price: parseInt(o.stck_prpr || '0'),
-    changePct: parseFloat(o.prdy_ctrt || '0'),
-    volume: parseInt(o.acml_vol || '0'),
+    price: kisInt(o.stck_prpr, 'stck_prpr'),
+    changePct: kisNumber(o.prdy_ctrt, 'prdy_ctrt'),
+    volume: kisInt(o.acml_vol, 'acml_vol'),
   }));
   return rows.filter(r => r.code && r.price >= 1000);
 }
@@ -464,15 +471,16 @@ export async function getInvestorHistory(code: string, days = 10): Promise<Inves
   const url = `${BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor`
     + `?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=${code}`;
   const data = await fetchJson(url, h);
+  requireOk(data, '투자자');
   // 장중에는 당일 entry의 투자자 필드가 빈 문자열 → 확정 데이터만 사용
-  const confirmed = ((data.output as Record<string, string>[]) ?? [])
+  const confirmed = kisRows(data, 'output', 'KIS')
     .filter(o => o.orgn_ntby_qty !== '' || o.frgn_ntby_qty !== '');
   return confirmed.slice(0, days).map((o) => ({
     date: o.stck_bsop_date,
-    instNetBuy: parseInt(o.orgn_ntby_qty || '0'),
-    instNetBuyAmt: parseInt(o.orgn_ntby_tr_pbmn || '0'),
-    foreignNetBuy: parseInt(o.frgn_ntby_qty || '0'),
-    foreignNetBuyAmt: parseInt(o.frgn_ntby_tr_pbmn || '0'),
+    instNetBuy: kisInt(o.orgn_ntby_qty, 'orgn_ntby_qty'),
+    instNetBuyAmt: kisInt(o.orgn_ntby_tr_pbmn, 'orgn_ntby_tr_pbmn'),
+    foreignNetBuy: kisInt(o.frgn_ntby_qty, 'frgn_ntby_qty'),
+    foreignNetBuyAmt: kisInt(o.frgn_ntby_tr_pbmn, 'frgn_ntby_tr_pbmn'),
   }));
 }
 
@@ -506,7 +514,8 @@ export async function getAvgVolume20(code: string): Promise<number> {
     + `?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=${code}`
     + `&FID_INPUT_DATE_1=${fromStr}&FID_INPUT_DATE_2=${toStr}&FID_PERIOD_DIV_CODE=D&FID_ORG_ADJ_PRC=0`;
   const data = await fetchJson(url, h);
-  const vols: number[] = ((data.output2 as Record<string, string>[]) ?? []).slice(0, 20).map((o) => parseInt(o.acml_vol || '0'));
+  requireOk(data, '일봉');
+  const vols: number[] = kisRows(data, 'output2', 'KIS').slice(0, 20).map((o) => kisInt(o.acml_vol, 'acml_vol'));
   if (vols.length === 0) return 0;
   return Math.round(vols.reduce((a, b) => a + b, 0) / vols.length);
 }
@@ -540,14 +549,15 @@ export async function getShortBalanceHistory(code: string, days = 7): Promise<Sh
     + `&FID_INPUT_DATE_2=${toStr}`;
 
   const data = await fetchJson(url, h);
-  const output = (data.output as Record<string, string>[]) ?? [];
+  requireOk(data, '공매도잔고');
+  const output = kisRows(data, 'output', 'KIS');
 
   return output
     .slice(0, days)
     .map(o => ({
       date:  o.stck_bsop_date ?? '',
-      qty:   parseInt(o.shnu_rsdq  ?? '0'),
-      ratio: parseFloat(o.shnu_rsdg_rt ?? '0'),
+      qty:   kisInt(o.shnu_rsdq, 'shnu_rsdq'),
+      ratio: kisNumber(o.shnu_rsdg_rt, 'shnu_rsdg_rt'),
     }))
     .filter(d => d.date && d.qty > 0);
 }

@@ -1,5 +1,6 @@
 import { parseInstrumentInfo, isClassifiedStock, filterStockSignals } from '../lib/instrument';
 import { saveUnavailableMarket } from '../lib/signal-storage';
+import { writeJsonAtomic, isRecentTradingDate } from '../lib/safe-io';
 import { buildMarketContext, isMarketUsable, parseIndexQuote } from '../lib/market-data';
 /**
  * 투자 신호 데이터 수집 스크립트
@@ -27,6 +28,8 @@ import { StockItem, SupplyDemand, MarketContext, TodaySignalData, StockSignal } 
 
 const OUTPUT_PATH       = path.join(process.cwd(), 'public', 'data', 'today_signal.json');
 const SHORT_BALANCE_PATH = path.join(process.cwd(), 'public', 'data', 'short_balance.json');
+// kis-trader 가 실제로 읽는 파일(정상 결과는 scheduler 셔틀이 쓰고, 실패 시엔 여기서 비운다)
+const TRADER_PATH = path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today', 'today_signal.json');
 
 function today(): string {
   return getLastTradingDate();
@@ -90,10 +93,12 @@ function loadShortCoveringMap(): Map<string, { consecDays: number; totalDeclineP
   try {
     if (!fs.existsSync(SHORT_BALANCE_PATH)) return map;
     const data = JSON.parse(fs.readFileSync(SHORT_BALANCE_PATH, 'utf-8'));
-    // 날짜 체크: 어제 데이터여야 함 (오늘 날짜면 오늘 18:30 이전이므로 당일 데이터)
+    // 최근 3거래일(평일 기준) 이내 데이터만 유효로 인정 — 오래된 자료에 보너스를 주지 않는다
     const today = getLastTradingDate();
-    if (!data?.date) return map;
-    // 최근 3거래일 이내 데이터만 유효로 인정
+    if (!isRecentTradingDate(data?.date, today, 3)) {
+      if (data?.date) console.warn(`  [공매도] short_balance.json 기준일 ${data.date} 이 오래돼 보너스 미적용`);
+      return map;
+    }
     for (const item of (data.items ?? [])) {
       if (item?.code) {
         map.set(item.code, {
@@ -145,6 +150,18 @@ function shortCoveringBonus(code: string, shortMap: Map<string, { consecDays: nu
   return { bonus, reason: parts.join(' + ') };
 }
 
+/** 최신 결과와 날짜별 기록을 원자적으로 저장한다. */
+function publish(result: TodaySignalData) {
+  writeJsonAtomic(OUTPUT_PATH, result);
+  try {
+    const historyPath = path.join(process.cwd(), 'public', 'data', 'history', `signal_${result.date}.json`);
+    writeJsonAtomic(historyPath, result);
+    console.log(`  [아카이브] 일별 신호 내역 백업 완료: ${historyPath}`);
+  } catch (e) {
+    console.warn('  [아카이브] 백업 실패:', (e as Error).message);
+  }
+}
+
 async function main() {
   if (!process.env.KIS_APP_KEY || !process.env.KIS_APP_SECRET) {
     console.error('[collect-data] 오류: KIS_APP_KEY, KIS_APP_SECRET 환경변수가 없습니다.');
@@ -173,17 +190,12 @@ async function main() {
 
   console.log(`  [시장] 코스피 ${(kospi.changePct ?? 0) > 0 ? '+' : ''}${kospi.changePct}% / 코스닥 ${(kosdaq.changePct ?? 0) > 0 ? '+' : ''}${kosdaq.changePct}%`);
 
-  if (isMarketSuppressed(market)) {
-    console.warn('  [시장] 시장 하락 또는 데이터 미검증 — 신호 수집 억제됨');
-  }
-
   if (!isMarketUsable(market)) {
     // Clear actionable signals in both consumer files; never retain yesterday's
     // recommendations as a successful result after market validation fails.
     // kis-trader reads data/today/ (written by the scheduler shuttle), so that
     // is the file that must be cleared.
-    saveUnavailableMarket(market, today(), OUTPUT_PATH,
-      path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today', 'today_signal.json'));
+    saveUnavailableMarket(market, today(), OUTPUT_PATH, TRADER_PATH);
     const issues = market.quality?.issues ?? [];
     // Pre-open runs are expected to fail validation (no session activity yet);
     // record the unavailable state but do not report it as an error.
@@ -194,36 +206,66 @@ async function main() {
     throw new Error(`시장 데이터 검증 실패: ${issues.join(', ')}`);
   }
 
+  // 하락장 필터: 신호를 실제로 비운다(예전엔 로그만 찍고 그대로 발행했다).
+  // 정상 판정(completed)이지만 빈 신호와 이유를 남겨 '수집 실패'와 구분한다.
+  if (isMarketSuppressed(market)) {
+    const reason = `시장 급락(코스피 ${market.kospiChange}%, 코스닥 ${market.kosdaqChange}%)`;
+    console.warn(`  [시장] ${reason} — 신호 발행 억제`);
+    publish({
+      status: 'completed', date: today(), market,
+      signals: { instBuy: [], foreignBuy: [], volumeSurge: [], strongDemand: [], momentum: [] },
+      suppressed: { reason },
+      updatedAt: new Date().toISOString(),
+    });
+    return;
+  }
+
   // ── 2. 기관/외국인/거래량 상위 조회 ──
+  // 조회 실패를 '0건'으로 바꾸지 않는다. 하나라도 실패하면 아래에서 발행을 막는다.
+  const sourceFailures: string[] = [];
+  async function source<T>(label: string, fetchList: () => Promise<T[]>): Promise<T[]> {
+    try {
+      return await fetchList();
+    } catch (e) {
+      sourceFailures.push(label);
+      console.error(`  [수집] ${label} 조회 실패:`, e instanceof Error ? e.message : e);
+      return [];
+    }
+  }
   console.log('  [수집] 기관 순매수 상위 (코스피 50)...');
-  const instList = await getInstNetBuyTop(50).catch(e => { console.error('  [수집] 기관 조회 실패:', e.message); return []; });
+  const instList = await source('기관', () => getInstNetBuyTop(50));
   console.log(`    → ${instList.length}개 종목 수신`);
   await sleep(300);
 
   console.log('  [수집] 외국인 순매수 상위 (코스피 50)...');
-  const foreignList = await getForeignNetBuyTop(50).catch(e => { console.error('  [수집] 외국인 조회 실패:', e.message); return []; });
+  const foreignList = await source('외국인', () => getForeignNetBuyTop(50));
   console.log(`    → ${foreignList.length}개 종목 수신`);
   await sleep(300);
 
   console.log('  [수집] 거래량 급등 상위 (코스피 50)...');
-  const volListKospi = await getVolumeSurgeTop(50, 'J').catch(e => { console.error('  [수집] 거래량(코스피) 조회 실패:', e.message); return []; });
+  const volListKospi = await source('거래량(코스피)', () => getVolumeSurgeTop(50, 'J'));
   console.log(`    → ${volListKospi.length}개 종목 수신`);
   await sleep(300);
 
   console.log('  [수집] 거래량 급등 상위 (코스닥 50)...');
-  const volListKosdaq = await getVolumeSurgeTop(50, 'Q').catch(e => { console.error('  [수집] 거래량(코스닥) 조회 실패:', e.message); return []; });
+  const volListKosdaq = await source('거래량(코스닥)', () => getVolumeSurgeTop(50, 'Q'));
   console.log(`    → ${volListKosdaq.length}개 종목 수신`);
   await sleep(300);
 
   console.log('  [수집] 등락률 상위 (코스피 50, +3% 이상)...');
-  const changeListKospi = await getChangePctTop(50, 'J').catch(e => { console.error('  [수집] 등락률(코스피) 조회 실패:', e.message); return []; });
+  const changeListKospi = await source('등락률(코스피)', () => getChangePctTop(50, 'J'));
   console.log(`    → ${changeListKospi.length}개 종목 수신`);
   await sleep(300);
 
   console.log('  [수집] 등락률 상위 (코스닥 50, +3% 이상)...');
-  const changeListKosdaq = await getChangePctTop(50, 'Q').catch(e => { console.error('  [수집] 등락률(코스닥) 조회 실패:', e.message); return []; });
+  const changeListKosdaq = await source('등락률(코스닥)', () => getChangePctTop(50, 'Q'));
   console.log(`    → ${changeListKosdaq.length}개 종목 수신`);
   await sleep(300);
+
+  if (sourceFailures.length > 0) {
+    saveUnavailableMarket(market, today(), OUTPUT_PATH, TRADER_PATH);
+    throw new Error(`순위 조회 실패(${sourceFailures.join(', ')}) — 신호 발행 중단`);
+  }
 
   const volList = [...volListKospi, ...volListKosdaq];
 
@@ -337,20 +379,21 @@ async function main() {
   // A failed metadata/detail lookup is not a successful empty recommendation run.
   // Do not archive an incomplete result or allow a previous actionable file to survive.
   if (itemFailures > 0) {
-    saveUnavailableMarket(market, today(), OUTPUT_PATH,
-      path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today', 'today_signal.json'));
-    saveUnavailableMarket(market, today(), OUTPUT_PATH,
-      path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today_signal.json'));
+    saveUnavailableMarket(market, today(), OUTPUT_PATH, TRADER_PATH);
     throw new Error(`종목 상세/분류 조회 실패 ${itemFailures}건 — 신호 발행 중단`);
   }
 
   // ── 4. 정렬 + TOP N 추출 ──
   const sort = (arr: typeof instSignals) => arr.sort((a, b) => b.score - a.score);
 
-  // 기관/외국인 API가 빈 결과를 반환하면 (주말·휴장일) 이전 데이터 보존
+  // 기관/외국인 순위가 정상 응답인데 비어 있으면 같은 날 앞 실행의 신호만 이어 쓴다.
+  // 다른 날 신호를 오늘 날짜로 다시 내보내지 않도록 날짜·상태를 확인한다.
   let prevData: TodaySignalData | null = null;
   if (fs.existsSync(OUTPUT_PATH)) {
-    try { prevData = JSON.parse(fs.readFileSync(OUTPUT_PATH, 'utf-8')); } catch {}
+    try {
+      const prev = JSON.parse(fs.readFileSync(OUTPUT_PATH, 'utf-8')) as TodaySignalData;
+      if (prev.status === 'completed' && prev.date === today() && !prev.suppressed) prevData = prev;
+    } catch {}
   }
   const noNewInstData = instList.length === 0 && instSignals.length === 0;
   const noNewForeignData = foreignList.length === 0 && foreignSignals.length === 0;
@@ -372,29 +415,8 @@ async function main() {
   if (noNewInstData && prevData) console.log('  [기관] 데이터 없음 — 이전 신호 유지');
   if (noNewForeignData && prevData) console.log('  [외국인] 데이터 없음 — 이전 신호 유지');
 
-  // ── 5. 저장 및 아카이빙 (검증용) 및 kis-trader 자동 전파 ──
-  fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(result, null, 2));
-
-  // 히스토리 아카이빙 (성과 검증용)
-  try {
-    const HISTORY_DIR = path.join(process.cwd(), 'public', 'data', 'history');
-    fs.mkdirSync(HISTORY_DIR, { recursive: true });
-    const historyPath = path.join(HISTORY_DIR, `signal_${today()}.json`);
-    fs.writeFileSync(historyPath, JSON.stringify(result, null, 2));
-    console.log(`  [아카이브] 일별 신호 내역 백업 완료: ${historyPath}`);
-  } catch (e) {
-    console.warn('  [아카이브] 백업 실패:', (e as Error).message);
-  }
-
-  try {
-    const KIS_DATA_DEST = path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today_signal.json');
-    fs.mkdirSync(path.dirname(KIS_DATA_DEST), { recursive: true });
-    fs.copyFileSync(OUTPUT_PATH, KIS_DATA_DEST);
-    console.log(`  [자동화] kis-trader로 today_signal.json 자동 전파 완료: ${KIS_DATA_DEST}`);
-  } catch (e) {
-    console.warn('  [자동화] kis-trader 전파 실패:', (e as Error).message);
-  }
+  // ── 5. 저장 및 아카이빙 (kis-trader 전달은 scheduler 셔틀이 맡는다) ──
+  publish(result);
 
   console.log(`\n[collect-data] 완료!`);
   console.log(`  기관 순매수 (스윙): ${result.signals.instBuy.length}개`);

@@ -89,5 +89,7 @@ export interface TodaySignalData {
     strongDemand: StockSignal[]; // 강한 수급 복합 — 단타+스윙
     momentum: StockSignal[];     // 당일 모멘텀 — 단타 전용
   };
+  /** 하락장 필터로 신호를 비운 경우의 이유. 이때 status 는 completed, signals 는 모두 빈 배열. */
+  suppressed?: { reason: string };
   updatedAt: string;
 }
