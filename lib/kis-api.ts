@@ -18,7 +18,7 @@ interface TokenCache {
 
 interface SharedCacheModule {
   loadSharedToken(args: { environment: string; appKey: string | undefined }): { accessToken: string; expiresAt: number } | null;
-  invalidateSharedToken(args: { environment: string; appKey: string | undefined }): void;
+  invalidateSharedToken(args: { environment: string; appKey: string | undefined; token?: string }): void;
   withSharedTokenLock<T>(
     args: { environment: string; appKey: string | undefined },
     fn: (ctx: { cached: { accessToken: string; expiresAt: number } | null; save: (token: string, expiresInSeconds: number) => void }) => Promise<T>,
@@ -84,6 +84,8 @@ class TokenRateLimitError extends Error {}
 async function _issueTokenHttp(): Promise<{ access_token: string; expires_in: number }> {
   const res = await fetch(`${BASE_URL}/oauth2/tokenP`, {
     method: 'POST',
+    // 공유 락을 쥔 채 부르므로 반드시 끝나야 한다(락은 30초 지나면 남이 지울 수 있다).
+    signal: AbortSignal.timeout(15000),
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       grant_type: 'client_credentials',
@@ -120,7 +122,7 @@ async function _issueToken(): Promise<string> {
       save(data.access_token, data.expires_in);
       _token = {
         value: data.access_token,
-        expiresAt: Date.now() + (data.expires_in - 60) * 1000,
+        expiresAt: Date.now() + (data.expires_in - 300) * 1000, // 공유 캐시와 같은 5분 여유
       };
       return _token.value;
     },
@@ -236,8 +238,10 @@ async function fetchJson(
     // 토큰 만료(EGW00123) → 캐시 무효화 후 1회 재시도
     if (tokenRetry && text.includes('EGW00123')) {
       console.warn('[KIS] 토큰 만료 감지 — 재발급 후 재시도');
+      const failed = String(h['Authorization'] ?? h['authorization'] ?? '').replace(/^Bearer\s+/i, '');
       _token = null;
-      try { (await sharedCache()).invalidateSharedToken({ environment: 'live', appKey: process.env.KIS_APP_KEY }); } catch {}
+      // 거절된 그 토큰일 때만 캐시를 지운다(다른 프로세스가 이미 새로 받아 뒀으면 그걸 쓴다)
+      try { (await sharedCache()).invalidateSharedToken({ environment: 'live', appKey: process.env.KIS_APP_KEY, token: failed || undefined }); } catch {}
       const trId = h['tr_id'] ?? '';
       const newHeaders = await headers(trId);
       return fetchJson(url, newHeaders, false, rateLimitAttempt);
