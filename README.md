@@ -18,7 +18,7 @@
 - Next.js 16 / React 19 / TypeScript
 - Tailwind CSS 4
 - 한국투자증권 Open API
-- GitHub Actions / Cafe24 FTP
+- 로컬 scheduler(PM2) 실행 + Cafe24 FTP 배포 (GitHub Actions 는 쓰지 않음)
 
 ## 로컬 실행
 

@@ -17,6 +17,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { getShortBalanceHistory, sleep, getLastTradingDate } from '../lib/kis-api';
+import { writeJsonAtomic } from '../lib/safe-io';
 
 const SIGNAL_PATH  = path.resolve(process.cwd(), 'public', 'data', 'today_signal.json');
 const OUTPUT_PATH  = path.resolve(process.cwd(), 'public', 'data', 'short_balance.json');
@@ -35,18 +36,26 @@ interface ShortInfo {
   latestQty: number;      // 최신 공매도 잔고 수량
 }
 
-function loadCandidateCodes(): { code: string; name: string }[] {
+/** 후보 종목. 신호 파일을 못 읽거나 형식이 이상하면 null(입력 장애) — 정상 0건([])과 구분한다. */
+function loadCandidateCodes(): { code: string; name: string }[] | null {
   try {
     if (!fs.existsSync(SIGNAL_PATH)) {
       console.warn(`[short-balance] SIGNAL_PATH 미존재: ${SIGNAL_PATH}`);
-      return [];
+      return null;
     }
     const data = JSON.parse(fs.readFileSync(SIGNAL_PATH, 'utf-8'));
-    const signals = data?.signals ?? {};
+    const signals = data?.signals;
+    const keys = ['instBuy', 'foreignBuy', 'strongDemand', 'volumeSurge'];
+    // 수집 실패(status≠completed)나 분류 누락은 입력 장애다. 하락장 억제는 completed + 빈 배열이라 정상 0건으로 처리된다.
+    if (data?.status !== 'completed' || !signals || typeof signals !== 'object'
+      || keys.some(k => !Array.isArray(signals[k]))) {
+      console.warn(`[short-balance] today_signal.json 사용 불가 (status=${data?.status})`);
+      return null;
+    }
     const seen = new Set<string>();
     const result: { code: string; name: string }[] = [];
-    for (const key of ['instBuy', 'foreignBuy', 'strongDemand', 'volumeSurge']) {
-      for (const sig of (signals[key] ?? [])) {
+    for (const key of keys) {
+      for (const sig of signals[key]) {
         const code: string = (sig?.stock?.code || sig?.code || '').toString();
         const name: string = (sig?.stock?.name || sig?.name || '').toString();
         if (code && !seen.has(code)) {
@@ -59,7 +68,7 @@ function loadCandidateCodes(): { code: string; name: string }[] {
     return result;
   } catch (e) {
     console.warn('[short-balance] today_signal.json 로드 실패:', (e as Error).message);
-    return [];
+    return null;
   }
 }
 
@@ -90,16 +99,36 @@ function calcShortTrend(history: { date: string; qty: number; ratio: number }[])
 
 
 
+/** 결과를 원자적으로 저장하고 kis-trader 로도 복사한다. */
+function save(output: { date: string; generatedAt: string; count: number; items: ShortInfo[] }) {
+  writeJsonAtomic(OUTPUT_PATH, output);
+  console.log(`[short-balance] 저장 완료: ${output.count}개 → ${OUTPUT_PATH}`);
+  try {
+    writeJsonAtomic(KIS_COPY, output);
+    console.log(`[short-balance] kis-trader 자동 동기화 완료: ${KIS_COPY}`);
+  } catch (e) {
+    console.warn('[short-balance] kis-trader 동기화 실패:', (e as Error).message);
+  }
+}
+
 async function main() {
   console.log(`[short-balance] 시작: ${new Date().toLocaleString('ko-KR')}`);
 
+  const today = getLastTradingDate();
   const candidates = loadCandidateCodes();
+  if (candidates === null) {
+    // 입력 장애는 '후보 0건'이 아니다. 기존 파일을 덮지 않고 실패로 끝낸다
+    // (다음 신호 수집은 기준일 신선도 확인으로 오래된 자료를 거른다).
+    throw new Error('today_signal.json 을 읽을 수 없어 공매도 잔고 수집 중단');
+  }
   if (candidates.length === 0) {
-    console.warn('[short-balance] 후보 없음 — 종료');
+    // 후보가 없어도 오늘 날짜의 빈 결과를 남긴다 — 예전엔 그냥 끝나서 며칠 지난 자료가
+    // 그대로 남아 다음 신호 수집이 오래된 공매도 가산점을 줬다(2026-11-26).
+    console.warn('[short-balance] 후보 없음 — 빈 결과 저장');
+    save({ date: today, generatedAt: new Date().toISOString(), count: 0, items: [] });
     return;
   }
 
-  const today = getLastTradingDate();
   const results: ShortInfo[] = [];
   const spikes: { code: string; name: string; pct: number }[] = [];
 
@@ -149,20 +178,7 @@ async function main() {
     items: results,
   };
 
-  // 저장
-  fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
-  console.log(`[short-balance] 저장 완료: ${results.length}개 → ${OUTPUT_PATH}`);
-
-  // kis-trader로 결과 자동 전파 (자동화 고도화)
-  try {
-    const KIS_DATA_DEST = path.resolve(process.cwd(), '..', 'kis-trader', 'data', 'today', 'short_balance.json');
-    fs.mkdirSync(path.dirname(KIS_DATA_DEST), { recursive: true });
-    fs.copyFileSync(OUTPUT_PATH, KIS_DATA_DEST);
-    console.log(`[short-balance] kis-trader 자동 동기화 완료: ${KIS_DATA_DEST}`);
-  } catch (e) {
-    console.warn('[short-balance] kis-trader 동기화 실패:', (e as Error).message);
-  }
+  save(output);
 
   // 텔레그램 발송 (급증 종목)
   if (spikes.length > 0) {

@@ -4,7 +4,7 @@ import { writeJsonAtomic, isRecentTradingDate } from '../lib/safe-io';
 import { buildMarketContext, isMarketUsable, parseIndexQuote } from '../lib/market-data';
 /**
  * 투자 신호 데이터 수집 스크립트
- * GitHub Actions에서 장 마감 후 실행 (16:00 KST)
+ * scheduler(run-today-signal.mjs)가 평일 09:05~15:35 30분마다·16:10 에 실행
  *
  * 실행: npm run data:update
  * 필요 환경변수: KIS_APP_KEY, KIS_APP_SECRET

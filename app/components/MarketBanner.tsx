@@ -4,6 +4,8 @@ import { MarketContext } from '@/types/stock';
 interface Props {
   market: MarketContext;
   date: string;
+  /** 하락장 필터로 신호를 비운 이유(today_signal.suppressed.reason) */
+  suppressedReason?: string;
 }
 
 function pct(v: number | null) {
@@ -25,10 +27,10 @@ function indexBg(v: number | null) {
   return 'bg-zinc-800/50';
 }
 
-export default function MarketBanner({ market, date }: Props) {
+export default function MarketBanner({ market, date, suppressedReason }: Props) {
   const dateStr = `${date.slice(0, 4)}.${date.slice(4, 6)}.${date.slice(6, 8)}`;
 
-  const isSuppressed = (market.kospiChange ?? 0) <= -1.5 || (market.kosdaqChange ?? 0) <= -2.0;
+  const isSuppressed = Boolean(suppressedReason) || (market.kospiChange ?? 0) <= -1.5 || (market.kosdaqChange ?? 0) <= -2.0;
 
   return (
     <div className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4 flex flex-col gap-3">
@@ -70,8 +72,13 @@ export default function MarketBanner({ market, date }: Props) {
       {isSuppressed && (
         <div className="rounded-xl bg-red-950/50 border border-red-800/40 px-3 py-2.5">
           <p className="text-xs text-red-400 font-bold text-center">
-            ⚠ 시장 급락 — 신호 신뢰도가 낮습니다. 관망을 권장합니다.
+            {suppressedReason
+              ? '⚠ 시장 급락으로 오늘 신호를 내지 않습니다. 관망을 권장합니다.'
+              : '⚠ 시장 급락 — 신호 신뢰도가 낮습니다. 관망을 권장합니다.'}
           </p>
+          {suppressedReason && (
+            <p className="text-[11px] text-red-400/70 text-center mt-1 tabular-nums">{suppressedReason}</p>
+          )}
         </div>
       )}
     </div>

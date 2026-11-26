@@ -81,6 +81,7 @@ async function verifyCategory(name: string, signals: StockSignal[]) {
   const topSignals = signals.slice(0, 5); // 상위 5개만 검증
   let totalMaxProfit = 0;
   let totalCloseProfit = 0;
+  let checked = 0; // 조회에 성공한 종목 수 — 평균·승률의 분모
   let winCount = 0;
 
   for (const sig of topSignals) {
@@ -94,6 +95,7 @@ async function verifyCategory(name: string, signals: StockSignal[]) {
       
       totalMaxProfit += maxProfit;
       totalCloseProfit += closeProfit;
+      checked++;
       if (maxProfit >= 3) winCount++; // 3% 이상 상승하면 승리(Win)로 간주
       
       const isWin = maxProfit >= 3 ? '✅' : (maxProfit > 0 ? '⚠️' : '❌');
@@ -107,7 +109,14 @@ async function verifyCategory(name: string, signals: StockSignal[]) {
   }
   
   log(`--------------------------------------------------------`);
-  log(` 💡 섹터 평균: 최고 <b>+${(totalMaxProfit / topSignals.length).toFixed(2)}%</b> | 승률: <b>${(winCount / topSignals.length * 100).toFixed(0)}%</b> (3% 기준)`);
+  if (checked === 0) {
+    log(` 💡 섹터 평균: 조회 성공 종목 없음`);
+    return;
+  }
+  const avgMax = totalMaxProfit / checked;
+  const avgClose = totalCloseProfit / checked;
+  const failNote = checked < topSignals.length ? ` (조회 실패 ${topSignals.length - checked}개 제외)` : '';
+  log(` 💡 섹터 평균: 최고 <b>${avgMax > 0 ? '+' : ''}${avgMax.toFixed(2)}%</b> | 종가 <b>${avgClose > 0 ? '+' : ''}${avgClose.toFixed(2)}%</b> | 승률: <b>${(winCount / checked * 100).toFixed(0)}%</b> (3% 기준)${failNote}`);
 }
 
 async function main() {

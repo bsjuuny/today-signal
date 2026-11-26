@@ -515,7 +515,12 @@ export async function getAvgVolume20(code: string): Promise<number> {
     + `&FID_INPUT_DATE_1=${fromStr}&FID_INPUT_DATE_2=${toStr}&FID_PERIOD_DIV_CODE=D&FID_ORG_ADJ_PRC=0`;
   const data = await fetchJson(url, h);
   requireOk(data, '일봉');
-  const vols: number[] = kisRows(data, 'output2', 'KIS').slice(0, 20).map((o) => kisInt(o.acml_vol, 'acml_vol'));
+  // 오늘 봉은 뺀다 — 오늘 거래량과 비교할 기준이라 오늘(장중엔 덜 찬 봉)이 섞이면 평균이 낮아져 배수가 부푼다.
+  const kstToday = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10).replace(/-/g, '');
+  const vols: number[] = kisRows(data, 'output2', 'KIS')
+    .filter((o) => o.stck_bsop_date !== kstToday)
+    .slice(0, 20)
+    .map((o) => kisInt(o.acml_vol, 'acml_vol'));
   if (vols.length === 0) return 0;
   return Math.round(vols.reduce((a, b) => a + b, 0) / vols.length);
 }

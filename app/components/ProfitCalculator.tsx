@@ -14,7 +14,6 @@ interface ProfitCalculatorProps {
  */
 export default function ProfitCalculator({ 
   currentPrice, 
-  stockName, 
   defaultAmount = 1000000 
 }: ProfitCalculatorProps) {
   const [buyAmount, setBuyAmount] = useState(defaultAmount);

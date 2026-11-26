@@ -10,7 +10,7 @@
 
 1.  **데이터 분석**: `scripts/collect-data.ts`가 KIS API를 사용해 당일 수급, 거래량 상위 종목 등을 스코어링합니다.
 2.  **데이터 확정**: 최종 선정된 종목들은 `public/data/today_signal.json`에 저장됩니다.
-3.  **데이터 셔틀 (중요!)**: `scheduler` 프로젝트에 의해 이 JSON 파일이 **`c:/github/kis-trader/data/`** 폴더로 자동 복사됩니다. (이걸 통해 실전 매매 로직이 가동됩니다.)
+3.  **데이터 셔틀 (중요!)**: `scheduler` 프로젝트에 의해 이 JSON 파일이 **`c:/github/kis-trader/data/today/today_signal.json`** 으로 전달됩니다(`scheduler/run-today-signal.mjs`, 평일 08:25 장전·09:05~15:35 30분마다·16:10). 장전에는 직전 거래일 장마감 신호를 오늘 날짜로 재전달합니다. (이걸 통해 실전 매매 로직이 가동됩니다.)
 
 ---
 
@@ -41,6 +41,10 @@
 
 **Q: 추천된 종목이 하나도 없어요.**
 - A: 코스피/코스닥 지수가 너무 안 좋아서 '하락장 필터'가 작동했거나, 분석 데이터(API 응답)가 유효하지 않을 수 있습니다. 로그를 통해 수집 단계의 에러를 확인하세요.
+- `today_signal.json`으로 구분합니다(2026-11-26부터):
+  - `status: completed` + `suppressed.reason` = 하락장 필터(코스피 -1.5% 이하 또는 코스닥 -2% 이하)로 신호를 비운 정상 판정
+  - `status: failed` + `market.quality.issues` = 시장 데이터 검증 실패 또는 순위·종목 조회 실패로 발행 중단
+  - kis-trader 는 둘 다 신규 매수를 하지 않습니다(`universe.today_signal_state`).
 
 **Q: 셔틀이 작동하지 않아서 트레이더가 옛날 종목으로 매매해요.**
 - A: 스케줄러(`c:/github/scheduler`)에서 파일 복사 로직(`run-today-signal.mjs`)에 권한 문제가 없는지, 경로가 올바른지 확인해야 합니다.
