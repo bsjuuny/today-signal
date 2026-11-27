@@ -2,11 +2,11 @@
   "status": "completed",
   "date": "20261127",
   "market": {
-    "kospiChange": -0.11,
-    "kosdaqChange": 3.58,
-    "kospiVolume": 18778.72,
+    "kospiChange": 0.8,
+    "kosdaqChange": 4.37,
+    "kospiVolume": 29606.48,
     "isIntraday": true,
-    "fetchedAt": "2026-11-27T00:35:05.421Z",
+    "fetchedAt": "2026-11-27T01:05:11.682Z",
     "quality": {
       "status": "valid",
       "issues": [],
@@ -14,20 +14,20 @@
       "tradingValueUnit": "MILLION_KRW",
       "raw": {
         "kospi": {
-          "bstp_nmix_prpr": "4705.91",
-          "bstp_nmix_prdy_vrss": "-5.30",
-          "bstp_nmix_prdy_ctrt": "-0.11",
-          "prdy_vrss_sign": "5",
-          "acml_vol": "28312",
-          "acml_tr_pbmn": "1877872"
+          "bstp_nmix_prpr": "4749.01",
+          "bstp_nmix_prdy_vrss": "37.80",
+          "bstp_nmix_prdy_ctrt": "0.80",
+          "prdy_vrss_sign": "2",
+          "acml_vol": "45363",
+          "acml_tr_pbmn": "2960648"
         },
         "kosdaq": {
-          "bstp_nmix_prpr": "679.18",
-          "bstp_nmix_prdy_vrss": "23.47",
-          "bstp_nmix_prdy_ctrt": "3.58",
+          "bstp_nmix_prpr": "684.34",
+          "bstp_nmix_prdy_vrss": "28.63",
+          "bstp_nmix_prdy_ctrt": "4.37",
           "prdy_vrss_sign": "2",
-          "acml_vol": "121604",
-          "acml_tr_pbmn": "1543863"
+          "acml_vol": "182263",
+          "acml_tr_pbmn": "2347910"
         }
       }
     }
@@ -35,9 +35,90 @@
   "signals": {
     "instBuy": [],
     "foreignBuy": [],
-    "volumeSurge": [],
+    "volumeSurge": [
+      {
+        "stock": {
+          "code": "439960",
+          "name": "코스모로보틱스",
+          "market": "KOSDAQ",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261127",
+            "securityGroup": "ST"
+          },
+          "price": 5720,
+          "priceChange": 1320,
+          "changePct": 30,
+          "open": 4500,
+          "high": 5720,
+          "low": 4500,
+          "volume": 6218821,
+          "avgVolume20": 1422537,
+          "marketCap": 1856
+        },
+        "supply": {
+          "code": "439960",
+          "instNetBuy": null,
+          "instNetBuyAmt": null,
+          "instNetBuyEstimatedAmt": null,
+          "instConsecutiveDays": -4,
+          "foreignNetBuy": null,
+          "foreignNetBuyAmt": null,
+          "foreignNetBuyEstimatedAmt": null,
+          "foreignConsecutiveDays": -1,
+          "foreignHoldPct": 0,
+          "netBuyAmtUnit": "MILLION_KRW",
+          "quality": {
+            "expectedDate": "20261127",
+            "inst": {
+              "observationDate": null,
+              "quantitySource": "missing",
+              "amountSource": "missing",
+              "direction": "indeterminate",
+              "issues": [
+                "inst:quantity_missing",
+                "inst:amount_missing"
+              ]
+            },
+            "foreign": {
+              "observationDate": null,
+              "quantitySource": "missing",
+              "amountSource": "missing",
+              "direction": "indeterminate",
+              "issues": [
+                "foreign:quantity_missing",
+                "foreign:amount_missing"
+              ]
+            },
+            "issues": [
+              "inst:quantity_missing",
+              "inst:amount_missing",
+              "foreign:quantity_missing",
+              "foreign:amount_missing",
+              "history_date_mismatch:20261126"
+            ]
+          }
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "C",
+        "score": 20,
+        "reasons": [
+          {
+            "label": "거래량 4.4배 유입",
+            "score": 10
+          },
+          {
+            "label": "+30.0% 급등",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      }
+    ],
     "strongDemand": [],
     "momentum": []
   },
-  "updatedAt": "2026-11-27T00:38:37.960Z"
+  "updatedAt": "2026-11-27T01:09:28.368Z"
 }
