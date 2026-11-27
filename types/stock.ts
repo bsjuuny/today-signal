@@ -22,13 +22,30 @@ export interface StockItem extends InstrumentClassification {
 /** 수급 데이터 */
 export interface SupplyDemand {
   code: string;
-  instNetBuy: number;        // 기관 순매수 (주)
-  instNetBuyAmt: number;     // 기관 순매수 금액 (원)
+  instNetBuy: number | null;        // 기관 순매수 (주), 결측은 null
+  instNetBuyAmt: number | null;     // 기관 실제 순매수 거래대금 (백만원, KIS *_ntby_tr_pbmn)
+  instNetBuyEstimatedAmt?: number | null; // 수량×종가 추정액 (백만원, 점수 미사용)
   instConsecutiveDays: number; // 기관 연속 순매수 일수 (양수=매수, 음수=매도)
-  foreignNetBuy: number;     // 외국인 순매수 (주)
-  foreignNetBuyAmt: number;  // 외국인 순매수 금액 (원)
+  foreignNetBuy: number | null;     // 외국인 순매수 (주), 결측은 null
+  foreignNetBuyAmt: number | null;  // 외국인 실제 순매수 거래대금 (백만원, KIS *_ntby_tr_pbmn)
+  foreignNetBuyEstimatedAmt?: number | null; // 수량×종가 추정액 (백만원, 점수 미사용)
   foreignConsecutiveDays: number; // 외국인 연속 순매수 일수
   foreignHoldPct: number;    // 외국인 보유 비중 (%)
+  netBuyAmtUnit?: 'MILLION_KRW';
+  quality?: {
+    expectedDate: string;
+    inst: SupplyInvestorQuality;
+    foreign: SupplyInvestorQuality;
+    issues: string[];
+  };
+}
+
+export interface SupplyInvestorQuality {
+  observationDate: string | null;
+  quantitySource: 'ranking' | 'history' | 'missing';
+  amountSource: 'ranking' | 'history' | 'missing';
+  direction: 'consistent' | 'mismatch' | 'indeterminate';
+  issues: string[];
 }
 
 /** 시장 컨텍스트 */

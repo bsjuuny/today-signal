@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { kisInt, kisNumber, kisRows, writeJsonAtomic, isRecentTradingDate } from '../lib/safe-io';
+import { kisInt, kisNumber, kisOptionalInt, kisRows, writeJsonAtomic, isRecentTradingDate } from '../lib/safe-io';
 
 test('kisNumber keeps blanks as 0 but rejects non-numeric text instead of NaN', () => {
   assert.equal(kisNumber('', 'f'), 0);
@@ -18,6 +18,14 @@ test('kisNumber keeps blanks as 0 but rejects non-numeric text instead of NaN', 
   assert.throws(() => kisNumber('12,34', 'f'));
   assert.throws(() => kisInt('12.9', 'acml_vol'), /acml_vol/);
   assert.equal(kisInt('12.00', 'f'), 12);
+});
+
+test('kisOptionalInt distinguishes missing values from a genuine zero', () => {
+  assert.equal(kisOptionalInt('', 'amount'), null);
+  assert.equal(kisOptionalInt(undefined, 'amount'), null);
+  assert.equal(kisOptionalInt('0', 'amount'), 0);
+  assert.equal(kisOptionalInt('-8,723', 'amount'), -8723);
+  assert.throws(() => kisOptionalInt('unknown', 'amount'), /amount/);
 });
 
 test('kisRows accepts an empty list but rejects a missing or malformed list', () => {

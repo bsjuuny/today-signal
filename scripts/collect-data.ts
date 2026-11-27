@@ -18,8 +18,9 @@ import path from 'path';
 import {
   getIndexQuote, getInstNetBuyTop, getForeignNetBuyTop,
   getVolumeSurgeTop, getChangePctTop, getStockQuote, getInvestorHistory, getInstrumentInfo,
-  calcConsecutiveDays, getAvgVolume20, sleep, getLastTradingDate,
+  getAvgVolume20, sleep, getLastTradingDate,
 } from '../lib/kis-api';
+import { reconcileSupplyDemand, type NetBuyObservation } from '../lib/supply-demand';
 import {
   scoreInstBuy, scoreForeignBuy, scoreVolumeSurge, scoreStrongDemand, scoreMomentum,
   isMarketSuppressed,
@@ -65,26 +66,16 @@ async function buildStockItem(code: string, name: string, price: number, changeP
   };
 }
 
-async function buildSupply(code: string, instNetBuy: number, foreignNetBuy: number, instAmt: number, foreignAmt: number): Promise<SupplyDemand> {
+async function buildSupply(
+  code: string,
+  price: number,
+  expectedDate: string,
+  instRanking: NetBuyObservation | null,
+  foreignRanking: NetBuyObservation | null,
+): Promise<SupplyDemand> {
   const history = await getInvestorHistory(code, 10);
   await sleep(150);
-  const instConsec = calcConsecutiveDays(history, 'inst');
-  const foreignConsec = calcConsecutiveDays(history, 'foreign');
-  // history[0]이 가장 최근 거래일 실제 수치 — 리스트 API가 0을 반환할 때 fallback
-  const actualInstNetBuy = instNetBuy !== 0 ? instNetBuy : (history[0]?.instNetBuy ?? 0);
-  const actualForeignNetBuy = foreignNetBuy !== 0 ? foreignNetBuy : (history[0]?.foreignNetBuy ?? 0);
-  const actualInstAmt = instAmt !== 0 ? instAmt : (history[0]?.instNetBuyAmt ?? 0);
-  const actualForeignAmt = foreignAmt !== 0 ? foreignAmt : (history[0]?.foreignNetBuyAmt ?? 0);
-  return {
-    code,
-    instNetBuy: actualInstNetBuy,
-    instNetBuyAmt: actualInstAmt,
-    instConsecutiveDays: instConsec,
-    foreignNetBuy: actualForeignNetBuy,
-    foreignNetBuyAmt: actualForeignAmt,
-    foreignConsecutiveDays: foreignConsec,
-    foreignHoldPct: 0,
-  };
+  return reconcileSupplyDemand({ code, price, expectedDate, instRanking, foreignRanking, history });
 }
 
 /** 전날 18:30에 수집된 공매도 잔고 감소 종목 로드 */
@@ -272,15 +263,24 @@ async function main() {
   // ── 3. 종목별 상세 데이터 + 스코어링 ──
   const processedCodes = new Set<string>();
   let itemFailures = 0;
+  const collectionDate = today();
 
-  async function processItem(code: string, name: string, price: number, changePct: number, volume: number, instBuy: number, foreignBuy: number, instAmt: number, foreignAmt: number) {
+  async function processItem(
+    code: string,
+    name: string,
+    price: number,
+    changePct: number,
+    volume: number,
+    instRanking: NetBuyObservation | null,
+    foreignRanking: NetBuyObservation | null,
+  ) {
     if (processedCodes.has(code)) return { stock: null, supply: null };
     processedCodes.add(code);
     try {
       const stock = await buildStockItem(code, name, price, changePct, volume);
       if (!stock || !isClassifiedStock(stock, today())) return { stock: null, supply: null };
       await sleep(200);
-      const supply = await buildSupply(code, instBuy, foreignBuy, instAmt, foreignAmt);
+      const supply = await buildSupply(code, stock.price, collectionDate, instRanking, foreignRanking);
       return { stock, supply };
     } catch (err) {
       itemFailures++;
@@ -290,24 +290,46 @@ async function main() {
   }
 
   // ── 3개 리스트 통합 → 종목별 instBuy/foreignBuy 머지 후 중복 제거 ──
-  const candidateMap = new Map<string, { code: string; name: string; price: number; changePct: number; volume: number; instBuy: number; foreignBuy: number; instAmt: number; foreignAmt: number }>();
+  const candidateMap = new Map<string, {
+    code: string;
+    name: string;
+    price: number;
+    changePct: number;
+    volume: number;
+    instRanking: NetBuyObservation | null;
+    foreignRanking: NetBuyObservation | null;
+  }>();
   for (const i of instList) {
-    candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: i.netBuyQty, foreignBuy: 0, instAmt: i.netBuyAmt, foreignAmt: 0 });
+    candidateMap.set(i.code, {
+      code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume,
+      instRanking: { date: i.date, quantity: i.netBuyQty, amountMillionKrw: i.netBuyAmt },
+      foreignRanking: null,
+    });
   }
   for (const i of foreignList) {
     const existing = candidateMap.get(i.code);
-    if (existing) { existing.foreignBuy = i.netBuyQty; existing.foreignAmt = i.netBuyAmt; }
-    else candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: i.netBuyQty, instAmt: 0, foreignAmt: i.netBuyAmt });
+    const observation = { date: i.date, quantity: i.netBuyQty, amountMillionKrw: i.netBuyAmt };
+    if (existing) existing.foreignRanking = observation;
+    else candidateMap.set(i.code, {
+      code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume,
+      instRanking: null, foreignRanking: observation,
+    });
   }
   for (const i of volList) {
     if (!candidateMap.has(i.code)) {
-      candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: 0, instAmt: 0, foreignAmt: 0 });
+      candidateMap.set(i.code, {
+        code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume,
+        instRanking: null, foreignRanking: null,
+      });
     }
   }
   // 등락률 상위 추가 (momentum 신호 전용 소스)
   for (const i of [...changeListKospi, ...changeListKosdaq]) {
     if (!candidateMap.has(i.code)) {
-      candidateMap.set(i.code, { code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume, instBuy: 0, foreignBuy: 0, instAmt: 0, foreignAmt: 0 });
+      candidateMap.set(i.code, {
+        code: i.code, name: i.name, price: i.price, changePct: i.changePct, volume: i.volume,
+        instRanking: null, foreignRanking: null,
+      });
     }
   }
   const allCandidates = [...candidateMap.values()];
@@ -321,7 +343,9 @@ async function main() {
 
   console.log('\n  [스코어링] 전체 후보 처리...');
   for (const item of allCandidates) {
-    const { stock, supply } = await processItem(item.code, item.name, item.price, item.changePct, item.volume, item.instBuy, item.foreignBuy, item.instAmt, item.foreignAmt);
+    const { stock, supply } = await processItem(
+      item.code, item.name, item.price, item.changePct, item.volume, item.instRanking, item.foreignRanking,
+    );
     if (!stock || !supply) continue;
 
     // 공매도 잔고 감소 보너스

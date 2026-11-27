@@ -265,7 +265,8 @@ function requireOk(data: Record<string, unknown>, label: string): void {
 // 1. 업종별 등락률 (코스피/코스닥 지수)
 // ──────────────────────────────────────────────
 import { parseIndexQuote, type IndexQuote } from './market-data';
-import { kisInt, kisNumber, kisRows } from './safe-io';
+import { kisInt, kisNumber, kisOptionalInt, kisRows } from './safe-io';
+import { calculateConsecutiveDays } from './supply-demand';
 export type { IndexQuote } from './market-data';
 
 export async function getIndexQuote(code: '0001' | '1001'): Promise<IndexQuote> {
@@ -317,12 +318,13 @@ export async function getStockQuote(code: string): Promise<StockQuote> {
 // ──────────────────────────────────────────────
 export interface NetBuyItem {
   rank: number;
+  date: string;           // 요청 기준 거래일 (YYYYMMDD)
   code: string;
   name: string;
   price: number;
   changePct: number;
-  netBuyQty: number;    // 순매수 수량
-  netBuyAmt: number;    // 순매수 금액 (원)
+  netBuyQty: number | null; // 순매수 수량, 빈 필드는 null
+  netBuyAmt: number | null; // 실제 순매수 거래대금 (백만원, KIS *_ntby_tr_pbmn)
   volume: number;
 }
 
@@ -345,12 +347,13 @@ export async function getInstNetBuyTop(limit = 30): Promise<NetBuyItem[]> {
   }
   const rows: NetBuyItem[] = kisRows(data, 'output', 'KIS').slice(0, limit).map((o, i) => ({
     rank: i + 1,
+    date,
     code: o.mksc_shrn_iscd,
     name: o.hts_kor_isnm,
     price: kisInt(o.stck_prpr, 'stck_prpr'),
     changePct: kisNumber(o.prdy_ctrt, 'prdy_ctrt'),
-    netBuyQty: kisInt(o.orgn_ntby_qty, 'orgn_ntby_qty'),
-    netBuyAmt: kisInt(o.orgn_ntby_tr_pbmn, 'orgn_ntby_tr_pbmn'),
+    netBuyQty: kisOptionalInt(o.orgn_ntby_qty, 'orgn_ntby_qty'),
+    netBuyAmt: kisOptionalInt(o.orgn_ntby_tr_pbmn, 'orgn_ntby_tr_pbmn'),
     volume: kisInt(o.acml_vol, 'acml_vol'),
   }));
   return rows;
@@ -373,12 +376,13 @@ export async function getForeignNetBuyTop(limit = 30): Promise<NetBuyItem[]> {
   }
   const rows: NetBuyItem[] = kisRows(data, 'output', 'KIS').slice(0, limit).map((o, i) => ({
     rank: i + 1,
+    date,
     code: o.mksc_shrn_iscd,
     name: o.hts_kor_isnm,
     price: kisInt(o.stck_prpr, 'stck_prpr'),
     changePct: kisNumber(o.prdy_ctrt, 'prdy_ctrt'),
-    netBuyQty: kisInt(o.frgn_ntby_qty, 'frgn_ntby_qty'),
-    netBuyAmt: kisInt(o.frgn_ntby_tr_pbmn, 'frgn_ntby_tr_pbmn'),
+    netBuyQty: kisOptionalInt(o.frgn_ntby_qty, 'frgn_ntby_qty'),
+    netBuyAmt: kisOptionalInt(o.frgn_ntby_tr_pbmn, 'frgn_ntby_tr_pbmn'),
     volume: kisInt(o.acml_vol, 'acml_vol'),
   }));
   return rows;
@@ -464,10 +468,10 @@ export async function getChangePctTop(limit = 50, market: 'J' | 'Q' = 'J'): Prom
 // ──────────────────────────────────────────────
 export interface InvestorDaily {
   date: string;
-  instNetBuy: number;
-  instNetBuyAmt: number;
-  foreignNetBuy: number;
-  foreignNetBuyAmt: number;
+  instNetBuy: number | null;
+  instNetBuyAmt: number | null;       // 백만원
+  foreignNetBuy: number | null;
+  foreignNetBuyAmt: number | null;    // 백만원
 }
 
 export async function getInvestorHistory(code: string, days = 10): Promise<InvestorDaily[]> {
@@ -476,32 +480,23 @@ export async function getInvestorHistory(code: string, days = 10): Promise<Inves
     + `?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=${code}`;
   const data = await fetchJson(url, h);
   requireOk(data, '투자자');
-  // 장중에는 당일 entry의 투자자 필드가 빈 문자열 → 확정 데이터만 사용
-  const confirmed = kisRows(data, 'output', 'KIS')
-    .filter(o => o.orgn_ntby_qty !== '' || o.frgn_ntby_qty !== '');
-  return confirmed.slice(0, days).map((o) => ({
+  // 부분 결측을 0으로 바꾸지 않는다. 날짜가 있고 수급 필드가 하나라도 관측된 행만 유지한다.
+  const observed = kisRows(data, 'output', 'KIS')
+    .filter(o => /^\d{8}$/.test(o.stck_bsop_date ?? ''))
+    .filter(o => [o.orgn_ntby_qty, o.frgn_ntby_qty, o.orgn_ntby_tr_pbmn, o.frgn_ntby_tr_pbmn]
+      .some(value => value !== undefined && value !== null && String(value).trim() !== ''));
+  return observed.slice(0, days).map((o) => ({
     date: o.stck_bsop_date,
-    instNetBuy: kisInt(o.orgn_ntby_qty, 'orgn_ntby_qty'),
-    instNetBuyAmt: kisInt(o.orgn_ntby_tr_pbmn, 'orgn_ntby_tr_pbmn'),
-    foreignNetBuy: kisInt(o.frgn_ntby_qty, 'frgn_ntby_qty'),
-    foreignNetBuyAmt: kisInt(o.frgn_ntby_tr_pbmn, 'frgn_ntby_tr_pbmn'),
+    instNetBuy: kisOptionalInt(o.orgn_ntby_qty, 'orgn_ntby_qty'),
+    instNetBuyAmt: kisOptionalInt(o.orgn_ntby_tr_pbmn, 'orgn_ntby_tr_pbmn'),
+    foreignNetBuy: kisOptionalInt(o.frgn_ntby_qty, 'frgn_ntby_qty'),
+    foreignNetBuyAmt: kisOptionalInt(o.frgn_ntby_tr_pbmn, 'frgn_ntby_tr_pbmn'),
   }));
 }
 
 /** 연속 순매수/매도 일수 계산 */
 export function calcConsecutiveDays(history: InvestorDaily[], type: 'inst' | 'foreign'): number {
-  const values = history.map(d => type === 'inst' ? d.instNetBuy : d.foreignNetBuy);
-  if (values.length === 0) return 0;
-
-  const direction = values[0] > 0 ? 1 : values[0] < 0 ? -1 : 0;
-  if (direction === 0) return 0;
-
-  let count = 0;
-  for (const v of values) {
-    if ((direction > 0 && v > 0) || (direction < 0 && v < 0)) count++;
-    else break;
-  }
-  return direction * count;
+  return calculateConsecutiveDays(history, type);
 }
 
 /** 20일 평균 거래량 조회 */

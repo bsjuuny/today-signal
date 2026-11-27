@@ -22,6 +22,15 @@ export function kisInt(value: unknown, field: string): number {
   return n;
 }
 
+/**
+ * KIS 선택 숫자 필드 파싱. 빈 값은 실제 0과 구분하기 위해 null로 보존한다.
+ * 수급처럼 0이 유효한 관측값인 필드에 사용한다.
+ */
+export function kisOptionalInt(value: unknown, field: string): number | null {
+  if (value === undefined || value === null || String(value).trim() === '') return null;
+  return kisInt(value, field);
+}
+
 /** 응답의 목록 필드가 실제 배열인지 확인. 빈 배열은 정상, 없거나 다른 형식이면 오류. */
 export function kisRows(data: Record<string, unknown>, key: string, label: string): Record<string, string>[] {
   const rows = data[key];

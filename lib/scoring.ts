@@ -1,5 +1,6 @@
 import { isClassifiedStock } from './instrument';
 import { isMarketUsable } from './market-data';
+import { hasComparableInvestorSnapshots, trustedNetBuyAmount100M } from './supply-demand';
 /**
  * 투자 신호 스코어링 엔진
  * 필수 조건(Hard filter) → 가점(Score) → 등급 결정
@@ -43,11 +44,6 @@ function getTradingValue100M(stock: StockItem): number {
   return (stock.price * stock.volume) / 100000000;
 }
 
-/** 순매수 금액을 억원 단위로 환산 */
-function getNetBuyAmt100M(netBuyShares: number, price: number): number {
-  return (netBuyShares * price) / 100000000;
-}
-
 /** 1. 소외주/잡주 기본 필터 */
 function isValidStock(stock: StockItem): boolean {
   if (!isClassifiedStock(stock)) return false;
@@ -80,8 +76,8 @@ export function scoreInstBuy(
   if (!isValidStock(stock)) return null;
   if (isStrongYinCandle(stock)) return null; // 음봉 투매 배제
   
-  const instNetBuyAmt100M = getNetBuyAmt100M(supply.instNetBuy, stock.price);
-  if (instNetBuyAmt100M < 3) return null; // 최소 3억 이상 순매수해야 유의미한 수급으로 인정
+  const instNetBuyAmt100M = trustedNetBuyAmount100M(supply, 'inst');
+  if (instNetBuyAmt100M === null || instNetBuyAmt100M < 3) return null; // 실제 거래대금 최소 3억
 
   if (market.isIntraday) {
     if (stock.changePct < -3) return null;
@@ -107,8 +103,8 @@ export function scoreInstBuy(
     score += 15; reasons.push({ label: `기관 연속 ${supply.instConsecutiveDays}일 매집`, score: 15 });
   }
 
-  const foreignNetBuyAmt100M = getNetBuyAmt100M(supply.foreignNetBuy, stock.price);
-  if (foreignNetBuyAmt100M >= 3) {
+  const foreignNetBuyAmt100M = trustedNetBuyAmount100M(supply, 'foreign');
+  if (foreignNetBuyAmt100M !== null && foreignNetBuyAmt100M >= 3 && hasComparableInvestorSnapshots(supply)) {
     score += 20; reasons.push({ label: '외국인 동반 매수 (쌍끌이)', score: 20 });
   }
 
@@ -148,7 +144,8 @@ export function scoreForeignBuy(
   if (isStrongYinCandle(stock)) return null;
   if (supply.foreignConsecutiveDays < 2) return null;
   
-  const foreignNetBuyAmt100M = getNetBuyAmt100M(supply.foreignNetBuy, stock.price);
+  const foreignNetBuyAmt100M = trustedNetBuyAmount100M(supply, 'foreign');
+  if (foreignNetBuyAmt100M === null) return null;
   if (foreignNetBuyAmt100M < 3 && supply.foreignConsecutiveDays < 3) return null; // 금액이 작으면 연속 3일은 되어야 인정
 
   // 외국인 매수라도 주가가 방어되지 않으면(음봉 마감) 탈락
@@ -168,8 +165,8 @@ export function scoreForeignBuy(
     score += 20; reasons.push({ label: `외국인 순매수 ${Math.round(foreignNetBuyAmt100M)}억`, score: 20 });
   }
 
-  const instNetBuyAmt100M = getNetBuyAmt100M(supply.instNetBuy, stock.price);
-  if (instNetBuyAmt100M >= 3) {
+  const instNetBuyAmt100M = trustedNetBuyAmount100M(supply, 'inst');
+  if (instNetBuyAmt100M !== null && instNetBuyAmt100M >= 3 && hasComparableInvestorSnapshots(supply)) {
     score += 20; reasons.push({ label: '기관 동반 매수 (쌍끌이)', score: 20 });
   }
 
@@ -228,9 +225,9 @@ export function scoreVolumeSurge(
     score += 10; reasons.push({ label: `거래량 ${volRatio.toFixed(1)}배 유입`, score: 10 });
   }
 
-  const instAmt = getNetBuyAmt100M(supply.instNetBuy, stock.price);
-  const forAmt = getNetBuyAmt100M(supply.foreignNetBuy, stock.price);
-  if (instAmt >= 5 && forAmt >= 5) {
+  const instAmt = trustedNetBuyAmount100M(supply, 'inst') ?? 0;
+  const forAmt = trustedNetBuyAmount100M(supply, 'foreign') ?? 0;
+  if (instAmt >= 5 && forAmt >= 5 && hasComparableInvestorSnapshots(supply)) {
     score += 30; reasons.push({ label: '메이저 쌍끌이 매수 가담', score: 30 });
   } else if (instAmt >= 3 || forAmt >= 3) {
     score += 10; reasons.push({ label: '메이저 수급 확인', score: 10 });
@@ -262,13 +259,14 @@ export function scoreStrongDemand(
   if (isStrongYinCandle(stock)) return null;
 
   const tradingValue100M = getTradingValue100M(stock);
-  const instAmt = getNetBuyAmt100M(supply.instNetBuy, stock.price);
-  const forAmt = getNetBuyAmt100M(supply.foreignNetBuy, stock.price);
+  const instAmt = trustedNetBuyAmount100M(supply, 'inst') ?? 0;
+  const forAmt = trustedNetBuyAmount100M(supply, 'foreign') ?? 0;
 
-  const isTwinBuy = instAmt >= 3 && forAmt >= 3;
+  const isTwinBuy = instAmt >= 3 && forAmt >= 3 && hasComparableInvestorSnapshots(supply);
   const hasInstAndVol = instAmt >= 5 && stock.avgVolume20 > 0 && (stock.volume / stock.avgVolume20 >= 2);
   
-  if (!isTwinBuy && !hasInstAndVol && supply.foreignConsecutiveDays < 3) return null;
+  const hasTrustedForeignStreak = forAmt > 0 && supply.foreignConsecutiveDays >= 3;
+  if (!isTwinBuy && !hasInstAndVol && !hasTrustedForeignStreak) return null;
 
   if (!market.isIntraday) {
     if (stock.price <= stock.open) return null;
@@ -366,9 +364,10 @@ export function scoreMomentum(
   // supply는 momentum에서 미사용 — 빈 객체로 채움
   const emptySupply: import('@/types/stock').SupplyDemand = {
     code: stock.code,
-    instNetBuy: 0, instNetBuyAmt: 0, instConsecutiveDays: 0,
-    foreignNetBuy: 0, foreignNetBuyAmt: 0, foreignConsecutiveDays: 0,
+    instNetBuy: 0, instNetBuyAmt: 0, instNetBuyEstimatedAmt: 0, instConsecutiveDays: 0,
+    foreignNetBuy: 0, foreignNetBuyAmt: 0, foreignNetBuyEstimatedAmt: 0, foreignConsecutiveDays: 0,
     foreignHoldPct: 0,
+    netBuyAmtUnit: 'MILLION_KRW',
   };
 
   return {
