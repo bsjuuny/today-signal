@@ -2,11 +2,11 @@
   "status": "completed",
   "date": "20261127",
   "market": {
-    "kospiChange": 2.12,
-    "kosdaqChange": 5.91,
-    "kospiVolume": 41808.18,
+    "kospiChange": 1.86,
+    "kosdaqChange": 5.94,
+    "kospiVolume": 49696.76,
     "isIntraday": true,
-    "fetchedAt": "2026-11-27T01:35:04.055Z",
+    "fetchedAt": "2026-11-27T02:05:04.063Z",
     "quality": {
       "status": "valid",
       "issues": [],
@@ -14,20 +14,20 @@
       "tradingValueUnit": "MILLION_KRW",
       "raw": {
         "kospi": {
-          "bstp_nmix_prpr": "4810.99",
-          "bstp_nmix_prdy_vrss": "99.78",
-          "bstp_nmix_prdy_ctrt": "2.12",
+          "bstp_nmix_prpr": "4798.94",
+          "bstp_nmix_prdy_vrss": "87.73",
+          "bstp_nmix_prdy_ctrt": "1.86",
           "prdy_vrss_sign": "2",
-          "acml_vol": "61348",
-          "acml_tr_pbmn": "4180818"
+          "acml_vol": "74307",
+          "acml_tr_pbmn": "4969676"
         },
         "kosdaq": {
-          "bstp_nmix_prpr": "694.44",
-          "bstp_nmix_prdy_vrss": "38.73",
-          "bstp_nmix_prdy_ctrt": "5.91",
+          "bstp_nmix_prpr": "694.63",
+          "bstp_nmix_prdy_vrss": "38.92",
+          "bstp_nmix_prdy_ctrt": "5.94",
           "prdy_vrss_sign": "2",
-          "acml_vol": "226003",
-          "acml_tr_pbmn": "2976445"
+          "acml_vol": "256132",
+          "acml_tr_pbmn": "3404802"
         }
       }
     }
@@ -36,6 +36,86 @@
     "instBuy": [],
     "foreignBuy": [],
     "volumeSurge": [
+      {
+        "stock": {
+          "code": "084670",
+          "name": "동양고속",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261127",
+            "securityGroup": "ST"
+          },
+          "price": 39450,
+          "priceChange": 6050,
+          "changePct": 18.11,
+          "open": 33550,
+          "high": 39650,
+          "low": 30500,
+          "volume": 1413314,
+          "avgVolume20": 82209,
+          "marketCap": 1142
+        },
+        "supply": {
+          "code": "084670",
+          "instNetBuy": 0,
+          "instNetBuyAmt": null,
+          "instNetBuyEstimatedAmt": 0,
+          "instConsecutiveDays": 0,
+          "foreignNetBuy": 0,
+          "foreignNetBuyAmt": null,
+          "foreignNetBuyEstimatedAmt": 0,
+          "foreignConsecutiveDays": 0,
+          "foreignHoldPct": 0,
+          "netBuyAmtUnit": "MILLION_KRW",
+          "quality": {
+            "expectedDate": "20261127",
+            "inst": {
+              "observationDate": "20261127",
+              "quantitySource": "ranking",
+              "amountSource": "missing",
+              "direction": "indeterminate",
+              "issues": [
+                "inst:amount_missing"
+              ]
+            },
+            "foreign": {
+              "observationDate": "20261127",
+              "quantitySource": "ranking",
+              "amountSource": "missing",
+              "direction": "indeterminate",
+              "issues": [
+                "foreign:amount_missing"
+              ]
+            },
+            "issues": [
+              "inst:amount_missing",
+              "foreign:amount_missing",
+              "history_date_mismatch:20261126"
+            ]
+          }
+        },
+        "category": "VOLUME_SURGE",
+        "grade": "C",
+        "score": 40,
+        "reasons": [
+          {
+            "label": "대규모 거래대금 558억",
+            "score": 10
+          },
+          {
+            "label": "거래량 17배 폭발",
+            "score": 20
+          },
+          {
+            "label": "+18.1% 급등",
+            "score": 10
+          }
+        ],
+        "passedFilter": true
+      },
       {
         "stock": {
           "code": "439960",
@@ -54,7 +134,7 @@
           "open": 4500,
           "high": 5720,
           "low": 4500,
-          "volume": 6283556,
+          "volume": 6343072,
           "avgVolume20": 1422537,
           "marketCap": 1856
         },
@@ -106,7 +186,7 @@
         "score": 20,
         "reasons": [
           {
-            "label": "거래량 4.4배 유입",
+            "label": "거래량 4.5배 유입",
             "score": 10
           },
           {
@@ -118,7 +198,66 @@
       }
     ],
     "strongDemand": [],
-    "momentum": []
+    "momentum": [
+      {
+        "stock": {
+          "code": "084670",
+          "name": "동양고속",
+          "market": "KOSPI",
+          "instrumentType": "STOCK",
+          "classification": {
+            "source": "KIS:CTPF1002R",
+            "version": 1,
+            "checkedOn": "20261127",
+            "securityGroup": "ST"
+          },
+          "price": 39450,
+          "priceChange": 6050,
+          "changePct": 18.11,
+          "open": 33550,
+          "high": 39650,
+          "low": 30500,
+          "volume": 1413314,
+          "avgVolume20": 82209,
+          "marketCap": 1142
+        },
+        "supply": {
+          "code": "084670",
+          "instNetBuy": 0,
+          "instNetBuyAmt": 0,
+          "instNetBuyEstimatedAmt": 0,
+          "instConsecutiveDays": 0,
+          "foreignNetBuy": 0,
+          "foreignNetBuyAmt": 0,
+          "foreignNetBuyEstimatedAmt": 0,
+          "foreignConsecutiveDays": 0,
+          "foreignHoldPct": 0,
+          "netBuyAmtUnit": "MILLION_KRW"
+        },
+        "category": "MOMENTUM",
+        "grade": "A",
+        "score": 70,
+        "reasons": [
+          {
+            "label": "거래대금 558억 통과",
+            "score": 10
+          },
+          {
+            "label": "거래량 17배 폭주",
+            "score": 25
+          },
+          {
+            "label": "+18.1% 강세파동",
+            "score": 20
+          },
+          {
+            "label": "고가 근접 마감 (돌파 형태)",
+            "score": 15
+          }
+        ],
+        "passedFilter": true
+      }
+    ]
   },
-  "updatedAt": "2026-11-27T01:38:19.806Z"
+  "updatedAt": "2026-11-27T02:08:19.837Z"
 }
